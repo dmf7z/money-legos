@@ -1,0 +1,29 @@
+{
+  "elements": [
+    {
+      "type": "assetInput",
+      "address": "0xF3320aDc1A0bfb5236c5C3a630E6Bc3cB308964C", //DAI
+      "output": 1 //Only one output
+    },
+    {
+      "type": "divisor",
+      "split": 0.3,
+      "output": 2, //Always 2 outputs
+      "output2": 3
+    },
+    {
+      "type": "operation",
+      "address": "0xF3320aDc1A0bfb5236c5C3a630E6Bc3cB308964C", //Compound DAI TO CDAI
+      "output": 5
+    },
+    {
+      "type": "operation",
+      "address": "0xF3320aDc1A0bfb5236c5C3a630E6Bc3cB308964C", //UniswapmETH to DAI
+      "output": 4
+    },
+    {
+      "type": "address",
+      "address": "0xF3320aDc1A0bfb5236c5C3a630E6Bc3cB308964C"
+    }
+  ]
+}
