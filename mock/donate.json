@@ -1,0 +1,53 @@
+{
+  "elements": [
+    {
+      "type": "input", //index 0
+      "asset": "0x8873A6C4E5Cb383365ec6e2aF94b78eBaC2Ab9BA", //DAI
+      "output": 7
+    },
+    {
+      "type": "input", //index 1
+      "asset": "0x520C3D2f627cDfBb24718358d2321D49C92032dB", //WBTC
+      "output": 4
+    },
+    {
+      "type": "input", //index 2
+      "asset": "0x52e6840bB1CdF2B4aE92A4839BC8D9025fB996F9", //USDC
+      "output": 5
+    },
+    {
+      "type": "input", //index 3
+      "asset": "0x0000000000000000000000000000000000000000", //ETH
+      "output": 6
+    },
+    {
+      "type": "operation", //index 4
+      "asset": "0x93C90E9D605BE37B1dcf28686e9A7A1f3f3fa2FC", //Uniswap  WBTC to ETH
+      "output": 6
+    },
+    {
+      "type": "operation", //index 5
+      "asset": "0xe8Fc9365bE3265A18994fa8f926E53D6EaF3B45a", //Uniswap  USDC to ETH
+      "output": 6
+    },
+    {
+      "type": "operation", //index 6
+      "asset": "0xFf954B243B5b397a132F83BB8df0B4f5302dCA78", //Uniswap  ETH to DAI
+      "output": 7
+    },
+    {
+      "type": "divisor", //index 7
+      "percentageAmount1": 0.5, //or "fixedAmount1": "5000300000000". Rest goes to output2
+      "output1": 8, //Always 2 outputs
+      "output2": 9
+    },
+    {
+      "type": "address", //index 8
+      "address": "0xbd11852f6f10A2F7aa1faF497081eB6B895657Cd"
+    },
+    {
+      "type": "address", //index 9
+      "address": "0x7dD939b85d30472410c2bB45b7b94cF49BF7D169"
+    }
+  ]
+}

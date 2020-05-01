@@ -1,0 +1,23 @@
+{
+  "elements": [
+    {
+      "type": "operation", //index 0
+      "asset": "0x2e6dd47ABdEfcf3d46bffA86FE3CBF2Bb9576124", //flashloan DyDx - get DAI
+      "output": 1
+    },
+    {
+      "type": "operation", //index 1
+      "asset": "0x3935f857c304d9D9b4Bba950a572F4296c462Eae", //Uniswap - trade DAI to ETH
+      "output": 2
+    },
+    {
+      "type": "operation", //index 2
+      "asset": "0x95eBDfecc7f4f146aC8E770d1767A53546b02e62", //Maker - trade ETH to DAI
+      "output": 3
+    },
+    {
+      "type": "operation", //index 3
+      "asset": "0xf4eFfc19343D49C27FfF6D02A9D0b9329287edeE", //flashloan DyDx - return  DAI, surplus back to account
+    }
+  ]
+}
