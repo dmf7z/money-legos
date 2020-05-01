@@ -1,0 +1,1 @@
+Library to create smart contract from JSON and viceversa.
