@@ -61,9 +61,8 @@ describe("Graph", function () {
     const loadedGraph = await factory.loadGraph(graphAddress);
 
     //Execute graph
-    const params = {};
     graph.setInputValue(0, "500000000000"); //Donate DAI
     graph.setInputValue(2, "3300000000000"); //Donate USDC
-    await graph.execute();
+    await loadedGraph.execute();
   });
 });
