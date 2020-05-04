@@ -4,5 +4,5 @@ module.exports = {
   createAddressElement: () => {},
   createSplitterElement: () => {},
   createGraph: () => {},
-  loeadGraph: (address) => {},
+  loadGraph: (address) => {},
 };
