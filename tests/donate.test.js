@@ -2,8 +2,9 @@ const chaiAsPromised = require("chai-as-promised");
 const chai = require("chai");
 const Web3 = require("web3");
 const factory = require("../library/src/factory");
-const assets = require("../library/src/utils/assets");
-const operations = require("../library/src/utils/operations");
+const config = require("../library/src/config");
+const assets = config.ASSETS;
+const operations = config.OPERATIONS;
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;

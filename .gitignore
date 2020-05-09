@@ -7,3 +7,11 @@ node_modules/
 
 # yarn
 yarn.lock
+.openzeppelin/.session
+
+secrets.json
+
+# oz
+.openzeppelin
+build/
+networks.js
