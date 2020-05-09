@@ -21,14 +21,14 @@ class Splitter extends Element {
       return true;
     } else if (
       !connection1 &&
-      index == 1 &&
-      connection1.assetAddress == addrIn
+      index == 0 &&
+      (addrIn == "all" || connection2.assetAddress == addrIn)
     ) {
       return true;
     } else if (
       !connection2 &&
-      index == 0 &&
-      connection2.assetAddress == addrIn
+      index == 1 &&
+      (addrIn == "all" || connection1.assetAddress == addrIn)
     ) {
       return true;
     }

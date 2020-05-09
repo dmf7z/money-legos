@@ -64,7 +64,7 @@ describe("Graph", function () {
     splitter.connectOutput(0, addressElement1, 0);
     splitter.connectOutput(1, addressElement2, 0);
 
-    console.log(JSON.stringify(graph));
+    //console.log(JSON.stringify(graph));
     //Deploy graph
     //const graphAddress = await graph.deploy();
 

@@ -9,9 +9,8 @@ node_modules/
 yarn.lock
 .openzeppelin/.session
 
-secrets.json
-
 # oz
 .openzeppelin
 build/
 networks.js
+secrets.json
