@@ -1,1 +1,0 @@
-User interface to manually connect the legos and execute them.
