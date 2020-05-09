@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "test": "mocha --timeout 100000 --exit --recursive tests/"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^7.1.2",
+    "web3": "^1.2.7"
+  }
+}

@@ -1,8 +1,10 @@
+const helper = require("../utils/helper");
 const Element = require("./element");
 
 class Operation extends Element {
-  constructor(address) {
-    this.address = address;
+  constructor(operationAddress, inAssets, outAssets) {
+    super(inAssets, outAssets);
+    this.operationAddress = operationAddress;
   }
 }
 
