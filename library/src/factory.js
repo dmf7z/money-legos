@@ -1,4 +1,4 @@
-const config = require("./config");
+const config = require("../../common/contracts");
 const Graph = require("./graph/graph");
 const InputElement = require("./graph/elements/input");
 const OperationElement = require("./graph/elements/operation");

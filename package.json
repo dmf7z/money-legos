@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "mocha --timeout 100000 --exit --recursive tests/"
+    "test": "oz compile && mocha --timeout 100000 --exit --recursive tests/"
   },
   "dependencies": {
     "web3-eth-abi": "^1.2.7"
@@ -8,6 +8,7 @@
   "devDependencies": {
     "@openzeppelin/cli": "^2.8.2",
     "@openzeppelin/contracts-ethereum-package": "^2.5.0",
+    "@openzeppelin/upgrades": "^2.8.0",
     "@truffle/hdwallet-provider": "^1.0.35",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",

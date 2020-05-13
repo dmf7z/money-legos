@@ -1,4 +1,4 @@
-const config = require("../../config");
+const config = require("../../../../common/contracts");
 const Element = require("./element");
 
 class Splitter extends Element {
