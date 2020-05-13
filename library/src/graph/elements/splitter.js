@@ -1,10 +1,10 @@
+const config = require("../../config");
 const Element = require("./element");
 
 class Splitter extends Element {
-  constructor(percentage1, percentage2) {
-    super(["all"], ["all", "all"]);
-    this.percentage1 = percentage1;
-    this.percentage2 = percentage2;
+  constructor(percentage) {
+    super(config.OPERATIONS.SPLITTER, ["all"], ["all", "all"]);
+    this.percentage = percentage;
   }
 
   canConnectOutput(index, toElement, toIndex) {

@@ -1,7 +1,8 @@
-const helper = require("../utils/helper");
+const helper = require("../../utils/helper");
 
 class Element {
-  constructor(inputs, outputs) {
+  constructor(address, inputs, outputs) {
+    this.address = address;
     this.id = helper.uuidv4();
     this.inputs = inputs; //can zero, have many, or all
     this.outputs = outputs;
@@ -41,8 +42,12 @@ class Element {
     const addrOut = this.getOutput(index);
     const addrIn = toElement.getInput(toIndex);
     const connection = this.getConnection(index);
-
-    if (addrOut && addrIn && (addrIn == "all" || addrOut == addrIn) && !connection) {
+    if (
+      addrOut &&
+      addrIn &&
+      (addrIn == "all" || addrOut == addrIn) &&
+      !connection
+    ) {
       return true;
     }
     return false;
@@ -52,7 +57,7 @@ class Element {
       this.connections[index] = {
         element: toElement,
         index: toIndex,
-        assetAddress: toElement.getInput(toIndex)
+        assetAddress: this.getOutput(index),
       };
       return true;
     }
