@@ -18,10 +18,16 @@ contract Op_0x {
         return abi.encode(order, signature, asset);
     }
 
-    function isValidOrderSignature(
-        IExchange.Order memory order,
-        bytes memory signature
-    ) public view returns (bool isValid) {
+    function isValidOrderSignature(bytes memory _params)
+        public
+        view
+        returns (bool isValid)
+    {
+        (
+            IExchange.Order memory order,
+            bytes memory signature,
+            address asset
+        ) = abi.decode(_params, (IExchange.Order, bytes, address));
         return
             IExchange(0x61935CbDd02287B511119DDb11Aeb42F1593b7Ef)
                 .isValidOrderSignature(order, signature);
@@ -42,17 +48,18 @@ contract Op_0x {
             address asset
         ) = abi.decode(_params, (IExchange.Order, bytes, address));
         IERC20(asset).approve(
-            0x61935CbDd02287B511119DDb11Aeb42F1593b7Ef,
+            0x95E6F48254609A6ee006F7D493c8e5fB97094ceF,
             _inAmounts[0]
         );
         IExchange.FillResults memory results = IExchange(
             0x61935CbDd02287B511119DDb11Aeb42F1593b7Ef
         )
-            .fill(order, _inAmounts[0], signature);
+            .fillOrder
+            .value(tx.gasprice * 150000)(order, _inAmounts[0], signature);
 
         //Returns out assets amounts
         uint256[] memory outAmounts = new uint256[](1);
-        //  outAmounts[0] = results.makerAssetFilledAmount;
+        outAmounts[0] = 1; //results.makerAssetFilledAmount;
         return outAmounts;
     }
 }

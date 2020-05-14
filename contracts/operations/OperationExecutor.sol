@@ -37,7 +37,7 @@ contract OperationExecutor {
         (bool success, bytes memory returnedData) = _operation.delegatecall(
             data
         );
-        require(success);
+        require(success, string(returnedData));
         return abi.decode(returnedData, (uint256[]));
     }
 

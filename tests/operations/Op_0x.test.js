@@ -33,7 +33,10 @@ const getOrder = (contracts) => {
     client.subscribeToOrdersAsync(function(orders) {
       for (let index = 0; index < orders.length; index++) {
         const order = orders[index];
-        if (isPair(order, contracts.ASSETS.DAI, contracts.ASSETS.WETH)) {
+        if (
+          isPair(order, contracts.ASSETS.DAI, contracts.ASSETS.WETH) &&
+          order.fillableTakerAssetAmount.gt(new BN("1000000000000000"))
+        ) {
           return resolve(order);
         }
       }
@@ -47,7 +50,6 @@ describe("Operation 0x", function() {
   before(async function() {
     contracts = await Deployer.deploy();
     order = await getOrder(contracts);
-    console.log(order);
   });
 
   it("trade 0x order", async function() {
@@ -61,6 +63,7 @@ describe("Operation 0x", function() {
       Op0xABI,
       contracts.OPERATIONS.OP_0X
     );
+    const wethContract = new web3.eth.Contract(ERC20ABI, contracts.ASSETS.WETH);
     const daiContract = new web3.eth.Contract(ERC20ABI, contracts.ASSETS.DAI);
 
     await web3.eth.sendTransaction({
@@ -107,11 +110,15 @@ describe("Operation 0x", function() {
       .call();
 
     const result = await op0xContract.methods
-      .isValidOrderSignature(orderParam, order.signedOrder.signature)
+      .isValidOrderSignature(paramsOp2)
       .call();
     expect(result).to.equal(true);
 
-    const amount = order.signedOrder.takerAssetAmount.toString(10);
+    const amount = order.fillableTakerAssetAmount.gt(
+      new BN("1000000000000000000")
+    )
+      ? "1000000000000000000"
+      : order.fillableTakerAssetAmount.toString(10);
 
     await executorContract.methods
       .executeOperations([
@@ -129,21 +136,24 @@ describe("Operation 0x", function() {
       .send({
         from: accounts[0],
         gas: 1500000,
+        value: 0,
       });
 
-    ethBalance = await web3.eth.getBalance(contracts.OPERATION_EXECUTOR);
-    expect(ethBalance.toString(10)).to.equal("0");
+    //Check WETH balance
+    const wethBalance = await wethContract.methods
+      .balanceOf(contracts.OPERATION_EXECUTOR)
+      .call();
+    expect(wethBalance.toString(10)).to.equal(
+      new BN("1000000000000000000").sub(new BN(amount)).toString(10)
+    );
 
-    // const expectedDAI = new BN("1000000000000000000")
-    //   .mul(order.makerAssetAmount)
-    //   .div(order.takerAssetAmount);
-
-    // console.log(expectedDAI.toString(10));
-
-    // daiBalance = await daiContract.methods
-    //   .balanceOf(contracts.OPERATION_EXECUTOR)
-    //   .call();
-
-    // expect(daiBalance.toString(10)).to.equal(expectedDAI.toString(10));
+    //Check DAI balance
+    const expectedDAI = new BN(amount)
+      .mul(new BN(orderParam.makerAssetAmount))
+      .div(new BN(orderParam.takerAssetAmount));
+    daiBalance = await daiContract.methods
+      .balanceOf(contracts.OPERATION_EXECUTOR)
+      .call();
+    expect(daiBalance.toString(10)).to.equal(expectedDAI.toString(10));
   });
 });

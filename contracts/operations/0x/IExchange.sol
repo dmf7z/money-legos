@@ -37,7 +37,7 @@ contract IExchange {
         view
         returns (bool isValid);
 
-    function fill(
+    function fillOrder(
         Order memory order,
         uint256 takerAssetFillAmount,
         bytes memory signature
