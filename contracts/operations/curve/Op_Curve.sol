@@ -15,19 +15,17 @@ contract Op_Curve {
      * @param _params params contains the min amount to buy and the time deadline
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
-        internal
+        public
         returns (uint256[] memory)
     {
         //Get params
-        address pool;
-        uint128 indexAsset1;
-        uint128 indexAsset2;
-        uint256 minAsset2;
-        uint256 deadline;
-        (pool, indexAsset1, indexAsset2, minAsset2, deadline) = abi.decode(
-            _params,
-            (address, uint128, uint128, uint256, uint256)
-        );
+        (
+            address pool,
+            uint128 indexAsset1,
+            uint128 indexAsset2,
+            uint256 minAsset2,
+            uint256 deadline
+        ) = abi.decode(_params, (address, uint128, uint128, uint256, uint256));
 
         //Execute operation
         uint256 outAmount = ICurve(pool).exchange(

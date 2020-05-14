@@ -15,19 +15,17 @@ contract Op_Uniswap {
      * @param _params params contains the min amount to buy and the time deadline
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
-        internal
+        public
         returns (uint256[] memory)
     {
         //Get params
-        address exchange;
-        address asset;
-        bool tokenToEth;
-        uint256 minOutAsset;
-        uint256 deadline;
-        (exchange, asset, tokenToEth, minOutAsset, deadline) = abi.decode(
-            _params,
-            (address, address, bool, uint256, uint256)
-        );
+        (
+            address exchange,
+            address asset,
+            bool tokenToEth,
+            uint256 minOutAsset,
+            uint256 deadline
+        ) = abi.decode(_params, (address, address, bool, uint256, uint256));
 
         //Execute operation
         uint256 bought;

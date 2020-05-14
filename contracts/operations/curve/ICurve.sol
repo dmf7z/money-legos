@@ -11,5 +11,5 @@ contract ICurve {
         uint256 dx,
         uint256 min_dy,
         uint256 timestamp
-    ) external returns (uint256);
+    ) public returns (uint256);
 }

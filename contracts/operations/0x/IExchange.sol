@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 /**
  * @title IExchange
  */
-interface IExchange {
+contract IExchange {
     struct FillResults {
         uint256 makerAssetFilledAmount; // Total amount of makerAsset(s) filled.
         uint256 takerAssetFilledAmount; // Total amount of takerAsset(s) filled.
@@ -32,9 +32,14 @@ interface IExchange {
         bytes takerFeeAssetData; // Encoded data that can be decoded by a specified proxy contract when transferring takerFeeAsset. The leading bytes4 references the id of the asset proxy.
     }
 
-    function fillOrKillOrder(
-        Order calldata order,
+    function isValidOrderSignature(Order memory order, bytes memory signature)
+        public
+        view
+        returns (bool isValid);
+
+    function fill(
+        Order memory order,
         uint256 takerAssetFillAmount,
-        bytes calldata signature
-    ) external payable returns (FillResults memory fillResults);
+        bytes memory signature
+    ) public payable returns (FillResults memory fillResults);
 }

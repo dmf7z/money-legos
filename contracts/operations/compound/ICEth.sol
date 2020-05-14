@@ -5,5 +5,5 @@ pragma solidity ^0.5.0;
  * @title ICEth
  */
 contract ICEth {
-    function mint() external payable returns (uint256);
+    function mint() public payable returns (uint256);
 }

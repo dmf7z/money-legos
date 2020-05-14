@@ -19,17 +19,17 @@ contract Op_Oasis {
      * @param _params params contains the min amount to buy and the time deadline
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
-        internal
+        public
         returns (uint256[] memory)
     {
         uint256 offerId = abi.decode(_params, (uint256));
 
-        uint256 payAmount;
-        address payAsset;
-        uint256 buyAmount;
-        (payAmount, payAsset, buyAmount, ) = IMarketMatching(
-            0x794e6e91555438aFc3ccF1c5076A74F42133d08D
-        )
+        (
+            uint256 payAmount,
+            address payAsset,
+            uint256 buyAmount,
+
+        ) = IMarketMatching(0x794e6e91555438aFc3ccF1c5076A74F42133d08D)
             .getOffer(offerId);
 
         uint256 toBuy = _inAmounts[0].mul(payAmount).div(buyAmount);

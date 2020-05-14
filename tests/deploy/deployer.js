@@ -5,6 +5,7 @@ const contracts = require("../../common/contracts");
 
 const OperationExecutor = require("../../build/contracts/OperationExecutor.json");
 const Op_WrapETH = require("../../build/contracts/Op_WrapETH.json");
+const Op_0x = require("../../build/contracts/Op_0x.json");
 
 module.exports = {
   deploy: async () => {
@@ -37,6 +38,19 @@ module.exports = {
       });
 
     contracts.OPERATIONS.OP_WRAP_ETH = opWrapEthInstance.options.address;
+
+    const op0xContract = new web3.eth.Contract(Op_0x.abi);
+    const op0xInstance = await op0xContract
+      .deploy({
+        data: Op_0x.bytecode,
+        arguments: [],
+      })
+      .send({
+        from: admin,
+        gas: 1500000,
+      });
+
+    contracts.OPERATIONS.OP_0X = op0xInstance.options.address;
 
     console.log(contracts);
 

@@ -45,6 +45,44 @@ module.exports = [
       },
     ],
     name: "executeOperation",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "addr",
+            type: "address",
+          },
+          {
+            internalType: "uint256[]",
+            name: "inAmounts",
+            type: "uint256[]",
+          },
+          {
+            internalType: "bytes",
+            name: "params",
+            type: "bytes",
+          },
+        ],
+        internalType: "struct OperationExecutor.Operation[]",
+        name: "_operations",
+        type: "tuple[]",
+      },
+    ],
+    name: "executeOperations",
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",

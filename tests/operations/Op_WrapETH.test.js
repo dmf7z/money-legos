@@ -35,10 +35,13 @@ describe("Operation Wrap", function() {
     let ethBalance = await web3.eth.getBalance(contracts.OPERATION_EXECUTOR);
     expect(ethBalance.toString(10)).to.equal("2000000000000000000");
 
-    let wethBalance = await wethContract.methods.balanceOf(accounts[1]).call();
+    let wethBalance = await wethContract.methods
+      .balanceOf(contracts.OPERATION_EXECUTOR)
+      .call();
     expect(wethBalance.toString(10)).to.equal("0");
 
-    const params = ABICoder.encodeParameter("bool", true);
+    //Wrap
+    let params = ABICoder.encodeParameter("bool", true);
     await executorContract.methods
       .executeOperation(
         contracts.OPERATIONS.OP_WRAP_ETH,
@@ -56,5 +59,25 @@ describe("Operation Wrap", function() {
       .balanceOf(contracts.OPERATION_EXECUTOR)
       .call();
     expect(wethBalance.toString(10)).to.equal("1000000000000000000");
+
+    //Unwrap
+    params = ABICoder.encodeParameter("bool", false);
+    await executorContract.methods
+      .executeOperation(
+        contracts.OPERATIONS.OP_WRAP_ETH,
+        ["1000000000000000000"],
+        params
+      )
+      .send({
+        from: accounts[0],
+      });
+
+    ethBalance = await web3.eth.getBalance(contracts.OPERATION_EXECUTOR);
+    expect(ethBalance.toString(10)).to.equal("2000000000000000000");
+
+    wethBalance = await wethContract.methods
+      .balanceOf(contracts.OPERATION_EXECUTOR)
+      .call();
+    expect(wethBalance.toString(10)).to.equal("0");
   });
 });

@@ -19,14 +19,14 @@ contract Op_Compound {
      * @param _params params contains the min amount to buy and the time deadline
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
-        internal
+        public
         returns (uint256[] memory)
     {
         //Get params
-        address ctoken;
-        address asset;
-        bool isLend;
-        (ctoken, asset, isLend) = abi.decode(_params, (address, address, bool));
+        (address ctoken, address asset, bool isLend) = abi.decode(
+            _params,
+            (address, address, bool)
+        );
 
         uint256 outAmount;
 
