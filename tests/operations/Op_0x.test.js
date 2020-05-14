@@ -80,8 +80,34 @@ describe("Operation 0x", function() {
       .call();
     expect(daiBalance.toString(10)).to.equal("0");
 
-    const params = ABICoder.encodeParameter("bool", true);
-   
+    const orderParam = {
+      makerAddress: order.signedOrder.makerAddress,
+      takerAddress: order.signedOrder.takerAddress,
+      feeRecipientAddress: order.signedOrder.feeRecipientAddress,
+      senderAddress: order.signedOrder.senderAddress,
+      makerAssetAmount: order.signedOrder.makerAssetAmount.toString(10),
+      takerAssetAmount: order.signedOrder.takerAssetAmount.toString(10),
+      makerFee: order.signedOrder.makerFee.toString(10),
+      takerFee: order.signedOrder.takerFee.toString(10),
+      expirationTimeSeconds: order.signedOrder.expirationTimeSeconds.toString(
+        10
+      ),
+      salt: order.signedOrder.salt.toString(10),
+      makerAssetData: order.signedOrder.makerAssetData,
+      takerAssetData: order.signedOrder.takerAssetData,
+      makerFeeAssetData: order.signedOrder.makerFeeAssetData,
+      takerFeeAssetData: order.signedOrder.takerFeeAssetData,
+    };
+
+    //Trade
+    const paramsOp1 = ABICoder.encodeParameter("bool", true);
+    const paramsOp2 = await op0xContract.methods
+      .encodeParams(
+        orderParam,
+        order.signedOrder.signature,
+        contracts.ASSETS.WETH
+      )
+      .call();
 
     const result = await op0xContract.methods
       .isValidOrderSignature(paramsOp2)
@@ -117,9 +143,9 @@ describe("Operation 0x", function() {
     const wethBalance = await wethContract.methods
       .balanceOf(contracts.OPERATION_EXECUTOR)
       .call();
-    expect(wethBalance.toString(10)).to.equal(
-      new BN("1000000000000000000").sub(new BN(amount)).toString(10)
-    );
+    expect(wethBalance.toString(10))
+      .to.equal("0")
+      .toString(10);
 
     //Check DAI balance
     const expectedDAI = new BN(amount)

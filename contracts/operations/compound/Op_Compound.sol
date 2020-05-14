@@ -20,7 +20,7 @@ contract Op_Compound {
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
         public
-        returns (uint256[] memory)
+        returns (uint256[] memory outAmounts)
     {
         //Get params
         (address ctoken, address asset, bool isLend) = abi.decode(
@@ -28,11 +28,11 @@ contract Op_Compound {
             (address, address, bool)
         );
 
-        uint256 outAmount;
+        outAmounts = new uint256[](1);
 
         //Execute operation
         if (isLend) {
-            outAmount = _inAmounts[0]
+            outAmounts[0] = _inAmounts[0]
                 .mul(ICToken(ctoken).exchangeRateCurrent())
                 .div(1 ether);
             if (asset == address(0)) {
@@ -46,7 +46,7 @@ contract Op_Compound {
                 );
             }
         } else {
-            outAmount = _inAmounts[0].mul(1 ether).div(
+            outAmounts[0] = _inAmounts[0].mul(1 ether).div(
                 ICToken(ctoken).exchangeRateCurrent()
             );
             require(
@@ -54,10 +54,5 @@ contract Op_Compound {
                 "Compound redeem  operation failed"
             );
         }
-
-        //Returns out assets amounts
-        uint256[] memory outAmounts = new uint256[](1);
-        outAmounts[0] = outAmount;
-        return outAmounts;
     }
 }

@@ -7,6 +7,8 @@ const OperationExecutor = require("../../build/contracts/OperationExecutor.json"
 const Op_WrapETH = require("../../build/contracts/Op_WrapETH.json");
 const Op_0x = require("../../build/contracts/Op_0x.json");
 const Op_Compound = require("../../build/contracts/Op_Compound.json");
+const Op_Uniswap = require("../../build/contracts/Op_Uniswap.json");
+const Op_Curve = require("../../build/contracts/Op_Curve.json");
 
 module.exports = {
   deploy: async () => {
@@ -61,6 +63,30 @@ module.exports = {
         gas: 1500000,
       });
     contracts.OPERATIONS.OP_COMPOUND = compoundInstance.options.address;
+
+    const uniswapContract = new web3.eth.Contract(Op_Uniswap.abi);
+    const uniswapInstance = await uniswapContract
+      .deploy({
+        data: Op_Uniswap.bytecode,
+        arguments: [],
+      })
+      .send({
+        from: admin,
+        gas: 1500000,
+      });
+    contracts.OPERATIONS.OP_UNISWAP = uniswapInstance.options.address;
+
+    const curveContract = new web3.eth.Contract(Op_Curve.abi);
+    const curveInstance = await curveContract
+      .deploy({
+        data: Op_Curve.bytecode,
+        arguments: [],
+      })
+      .send({
+        from: admin,
+        gas: 1500000,
+      });
+    contracts.OPERATIONS.OP_CURVE = curveInstance.options.address;
 
     console.log(contracts);
 

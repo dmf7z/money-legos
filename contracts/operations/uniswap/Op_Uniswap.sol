@@ -16,7 +16,7 @@ contract Op_Uniswap {
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
         public
-        returns (uint256[] memory)
+        returns (uint256[] memory outAmounts)
     {
         //Get params
         (
@@ -27,27 +27,24 @@ contract Op_Uniswap {
             uint256 deadline
         ) = abi.decode(_params, (address, address, bool, uint256, uint256));
 
+        outAmounts = new uint256[](1);
+
         //Execute operation
         uint256 bought;
         if (tokenToEth) {
             //Apprive token
             IERC20(asset).approve(exchange, uint256(-1));
-            bought = IUniswap(exchange).tokenToEthSwapInput(
+            outAmounts[0] = IUniswap(exchange).tokenToEthSwapInput(
                 _inAmounts[0],
                 minOutAsset,
                 deadline
             );
         } else {
-            bought = IUniswap(exchange).ethToTokenSwapInput.value(
+            outAmounts[0] = IUniswap(exchange).ethToTokenSwapInput.value(
                 _inAmounts[0]
             )(minOutAsset, deadline);
         }
 
-        require(bought > 0, "Uniswap operation failed");
-
-        //Returns out assets amounts
-        uint256[] memory outAmounts = new uint256[](1);
-        outAmounts[0] = bought;
-        return outAmounts;
+        require(outAmounts[0] > 0, "Uniswap operation failed");
     }
 }

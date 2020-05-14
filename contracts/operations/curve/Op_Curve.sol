@@ -16,31 +16,32 @@ contract Op_Curve {
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
         public
-        returns (uint256[] memory)
+        returns (uint256[] memory outAmounts)
     {
         //Get params
         (
             address pool,
-            uint128 indexAsset1,
-            uint128 indexAsset2,
-            uint256 minAsset2,
-            uint256 deadline
-        ) = abi.decode(_params, (address, uint128, uint128, uint256, uint256));
+            address asset,
+            int128 indexAsset1,
+            int128 indexAsset2,
+            uint256 minAsset2
+        ) = abi.decode(_params, (address, address, int128, int128, uint256));
+
+        IERC20(asset).approve(pool, _inAmounts[0]);
+
+        outAmounts = new uint256[](1);
+        outAmounts[0] = ICurve(pool).get_dy(
+            indexAsset1,
+            indexAsset2,
+            _inAmounts[0]
+        );
 
         //Execute operation
-        uint256 outAmount = ICurve(pool).exchange(
+        ICurve(pool).exchange(
             indexAsset1,
             indexAsset2,
             _inAmounts[0],
-            minAsset2,
-            deadline
+            minAsset2
         );
-
-        require(outAmount > 0, "Curve operation failed");
-
-        //Returns out assets amounts
-        uint256[] memory outAmounts = new uint256[](1);
-        outAmounts[0] = outAmount;
-        return outAmounts;
     }
 }

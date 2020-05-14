@@ -15,7 +15,7 @@ contract Op_WrapETH {
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
         public
-        returns (uint256[] memory)
+        returns (uint256[] memory outAmounts)
     {
         //Get params
         bool isWrap = abi.decode(_params, (bool));
@@ -33,8 +33,7 @@ contract Op_WrapETH {
         }
 
         //Returns out assets amounts
-        uint256[] memory outAmounts = new uint256[](1);
+        outAmounts = new uint256[](1);
         outAmounts[0] = _inAmounts[0];
-        return outAmounts;
     }
 }

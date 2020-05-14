@@ -40,7 +40,7 @@ contract Op_0x {
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
         public
-        returns (uint256[] memory)
+        returns (uint256[] memory outAmounts)
     {
         (
             IExchange.Order memory order,
@@ -58,8 +58,7 @@ contract Op_0x {
             .value(tx.gasprice * 150000)(order, _inAmounts[0], signature);
 
         //Returns out assets amounts
-        uint256[] memory outAmounts = new uint256[](1);
-        outAmounts[0] = 1; //results.makerAssetFilledAmount;
-        return outAmounts;
+        outAmounts = new uint256[](1);
+        outAmounts[0] = results.makerAssetFilledAmount;
     }
 }
