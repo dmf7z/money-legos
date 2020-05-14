@@ -1,19 +1,22 @@
-export const stackReducer = (state, action) => {
+export const graphReducer = (state, action) => {
   console.log("action ", action);
 //   console.log("1 state ", state);
   switch (action.type) {
-    case "SELECT_STACK":
+    case "ADD_STACK":
     //   console.log("Stack selected ", action.id);
     //   console.log("2 state ", state);
       return state.concat(
-        action.element
+        action.newMap
       );
-    case "UNSELECT_STACK":
-    //   console.log("Stack selected ", action.id);
-    //   console.log("2 state ", state);
 
-      let filter = state.filter((obj)=>obj.id!=action.id);
-      return filter
+      case "CHANGE_STACK":
+          console.log("Stack selected ", action.element);
+
+        //   console.log("2 state ", state);
+          // return state[action.element.pos[1]][action.element.pos[0]] = action.element
+          return state.concat(
+            action.element
+          );
 
       case "CLEAR_STACK":
         return []

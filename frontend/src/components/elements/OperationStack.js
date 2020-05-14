@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { ArcherElement } from "react-archer";
-import { arrowStyle } from "../styles/graphStyles";
-import { StackContext } from "../contexts/stack";
+import { arrowStyle } from "../../styles/graphStyles";
+import { StackContext } from "../../contexts/stack";
 import { isEmpty } from "lodash";
 
 function OperationStack(props) {
@@ -18,13 +18,8 @@ function OperationStack(props) {
     setShowModal(!selected);
   };
 
-  // const isSelected = () ={
-
-  // }
-
   useEffect(() => {
     let available = stack.filter((obj) => obj.id == props.id);
-
     setSelected(!isEmpty(available));
   }, [stack]);
 
@@ -54,7 +49,7 @@ function OperationStack(props) {
               {props.assetIn.toUpperCase()}
             </div>
             <div className="stack-color__square stack-color__darken stack-color__darken--in">
-              <img src={require(`../assets/icons/${props.assetIn}.svg`)}></img>
+              <img src={require(`../../assets/icons/${props.assetIn}.svg`)}></img>
             </div>
           </div>
           <div className={`stack-color  stack-color--${props.assetOut}`}>
@@ -62,7 +57,7 @@ function OperationStack(props) {
               {props.assetOut.toUpperCase()}
             </div>
             <div className="stack-color__square stack-color__darken stack-color__darken--out">
-              <img src={require(`../assets/icons/${props.assetOut}.svg`)}></img>
+              <img src={require(`../../assets/icons/${props.assetOut}.svg`)}></img>
             </div>
           </div>
         </div>
