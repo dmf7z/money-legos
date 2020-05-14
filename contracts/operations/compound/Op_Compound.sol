@@ -37,10 +37,7 @@ contract Op_Compound {
                 .div(1 ether);
             if (asset == address(0)) {
                 //ETH
-                require(
-                    ICEth(ctoken).mint.value(_inAmounts[0])() == 0,
-                    "Compound lend eth operation failed"
-                );
+                ICEth(ctoken).mint.value(_inAmounts[0])();
             } else {
                 IERC20(asset).approve(ctoken, uint256(_inAmounts[0]));
                 require(
