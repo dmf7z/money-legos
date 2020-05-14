@@ -1,9 +1,9 @@
-const helper = require("../utils/helper");
+const config = require("../../../../common/contracts");
 const Element = require("./element");
 
 class Input extends Element {
   constructor(assetAddress) {
-    super([], [assetAddress]);
+    super(config.OPERATIONS.INPUT, [], [assetAddress]);
   }
 }
 
