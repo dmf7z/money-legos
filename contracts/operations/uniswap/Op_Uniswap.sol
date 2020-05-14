@@ -30,7 +30,6 @@ contract Op_Uniswap {
         outAmounts = new uint256[](1);
 
         //Execute operation
-        uint256 bought;
         if (tokenToEth) {
             //Apprive token
             IERC20(asset).approve(exchange, uint256(-1));

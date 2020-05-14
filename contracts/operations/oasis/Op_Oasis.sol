@@ -20,35 +20,36 @@ contract Op_Oasis {
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
         public
-        returns (uint256[] memory)
+        returns (uint256[] memory outAmounts)
     {
         uint256 offerId = abi.decode(_params, (uint256));
 
+        outAmounts = new uint256[](1);
+
         (
             uint256 payAmount,
-            address payAsset,
+            ,
             uint256 buyAmount,
-
+            address buyAsset
         ) = IMarketMatching(0x794e6e91555438aFc3ccF1c5076A74F42133d08D)
             .getOffer(offerId);
 
-        uint256 toBuy = _inAmounts[0].mul(payAmount).div(buyAmount);
+        outAmounts[0] = _inAmounts[0]
+            .mul(1 ether)
+            .mul(payAmount)
+            .div(buyAmount)
+            .div(1 ether);
 
-        IERC20(payAsset).approve(
+        IERC20(buyAsset).approve(
             0x794e6e91555438aFc3ccF1c5076A74F42133d08D,
             _inAmounts[0]
         );
         require(
             IMarketMatching(0x794e6e91555438aFc3ccF1c5076A74F42133d08D).buy(
                 offerId,
-                toBuy
+                outAmounts[0]
             ),
             "Oasis operation failed"
         );
-
-        //Returns out assets amounts
-        uint256[] memory outAmounts = new uint256[](1);
-        outAmounts[0] = toBuy;
-        return outAmounts;
     }
 }

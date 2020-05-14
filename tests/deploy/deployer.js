@@ -9,6 +9,7 @@ const Op_0x = require("../../build/contracts/Op_0x.json");
 const Op_Compound = require("../../build/contracts/Op_Compound.json");
 const Op_Uniswap = require("../../build/contracts/Op_Uniswap.json");
 const Op_Curve = require("../../build/contracts/Op_Curve.json");
+const Op_Oasis = require("../../build/contracts/Op_Oasis.json");
 
 module.exports = {
   deploy: async () => {
@@ -87,6 +88,18 @@ module.exports = {
         gas: 1500000,
       });
     contracts.OPERATIONS.OP_CURVE = curveInstance.options.address;
+
+    const oasisContract = new web3.eth.Contract(Op_Oasis.abi);
+    const oasisInstance = await oasisContract
+      .deploy({
+        data: Op_Oasis.bytecode,
+        arguments: [],
+      })
+      .send({
+        from: admin,
+        gas: 1500000,
+      });
+    contracts.OPERATIONS.OP_OASIS = oasisInstance.options.address;
 
     console.log(contracts);
 

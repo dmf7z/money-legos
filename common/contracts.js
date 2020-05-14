@@ -29,4 +29,7 @@ module.exports = {
       indexes: ["DAI", "USDC", "USDT", "SUSD"],
     },
   },
+  OASIS: {
+    OASIS_MATCHING_MARKET: "0x794e6e91555438aFc3ccF1c5076A74F42133d08D",
+  },
 };
