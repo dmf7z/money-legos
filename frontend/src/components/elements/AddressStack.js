@@ -1,7 +1,7 @@
 import React from "react";
 import { ArcherElement } from "react-archer";
-import { arrowStyle } from "../styles/graphStyles";
-import IdenticonAddress from "./IdenticonAddress";
+import { arrowStyle } from "../../styles/graphStyles";
+import IdenticonAddress from "../IdenticonAddress";
 
 function AddressStack(props) {
   return (
