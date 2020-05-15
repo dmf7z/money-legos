@@ -59,4 +59,13 @@ module.exports = {
   address: (value) => {
     return ethUtil.isValidAddress(value);
   },
+  order0x: (value) => {
+    return true; //TODO
+  },
+  signature0x: (value) => {
+    return true; //TODO
+  },
+  orderOasis: (value) => {
+    return true; //TODO
+  },
 };
