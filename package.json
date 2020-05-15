@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "bn.js": "^5.1.1",
+    "ethereumjs-util": "^7.0.0",
     "web3-eth-abi": "^1.2.7"
   },
   "devDependencies": {
