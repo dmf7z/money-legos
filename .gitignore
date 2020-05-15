@@ -14,3 +14,6 @@ yarn.lock
 build/
 networks.js
 secrets.json
+
+lib/moneylegos.js
+lib/moneylegos.min.js
