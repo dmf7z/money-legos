@@ -112,6 +112,12 @@ body {
   }
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .box--square {
   width: 200px;
   height: 200px;
