@@ -13,15 +13,16 @@ const addInputElement = (elements, name) => {
     executionData: [
       {
         type: "raw",
+        dataType: "address",
         data: contracts.ASSETS[name],
       },
       {
         type: "input",
-        valueType: "uint256",
+        dataType: "uint256",
         title: `Amount of ${name}`,
         description: `Please enter the amount of ${name} to execute`,
         required: true,
-        data: null,
+        data: 0,
         isValid: validator.notNullAmount,
       },
     ],
@@ -40,32 +41,37 @@ const addUniswapOperations = (elements, name) => {
     executionData: [
       {
         type: "raw",
+        dataType: "address",
         data: contracts.UNISWAP[`UNISWAP_EXCHANGE_${name}_ETH`],
       },
       {
         type: "raw",
+        dataType: "address",
         data: contracts.ASSETS[name],
       },
       {
         type: "raw",
+        dataType: "bool",
         data: false,
       },
       {
         type: "input",
+        dataType: "uint256",
         title: "Min amount",
         description: "Please enter the min amount of ETH to buy",
         required: false,
         default: "1",
-        data: null,
+        data: 1,
         isValid: validator.nullOrAmount,
       },
       {
         type: "input",
+        dataType: "uint256",
         title: "Deadline",
         description: "Please enter the deadline for trade to expire in seconds",
         required: false,
         default: 4745221884, //year 2120
-        data: null,
+        data: 4745221884,
         isValid: validator.nullOrTimeStamp,
       },
     ],
@@ -81,32 +87,37 @@ const addUniswapOperations = (elements, name) => {
     executionData: [
       {
         type: "raw",
+        dataType: "address",
         data: contracts.UNISWAP[`UNISWAP_EXCHANGE_${name}_ETH`],
       },
       {
         type: "raw",
+        dataType: "address",
         data: contracts.ASSETS[name],
       },
       {
         type: "raw",
+        dataType: "bool",
         data: true,
       },
       {
         type: "input",
+        dataType: "uint256",
         title: "Min amount",
         description: `Please enter the min amount of ${name} to buy`,
         required: false,
         default: "1",
-        data: null,
+        data: 1,
         isValid: validator.nullOrAmount,
       },
       {
         type: "input",
+        dataType: "uint256",
         title: "Deadline",
         description: "Please enter the deadline for trade to expire in seconds",
         required: false,
         default: 4745221884, //year 2120
-        data: null,
+        data: 4745221884,
         isValid: validator.nullOrTimeStamp,
       },
     ],
@@ -125,22 +136,25 @@ const add0xOperations = (elements, asset1, asset2) => {
     executionData: [
       {
         type: "input",
+        dataType: "bytes",
         title: "Order",
         description: "0x order to execute",
         required: true,
-        data: null,
+        data: {},
         isValid: validator.order0x,
       },
       {
         type: "input",
+        dataType: "bytes",
         title: "Signature",
         description: "0x order signature to execute",
         required: true,
-        data: null,
+        data: "0x0",
         isValid: validator.signature0x,
       },
       {
         type: "raw",
+        dataType: "address",
         data: [contracts.ASSETS[asset1]],
       },
     ],
@@ -156,22 +170,25 @@ const add0xOperations = (elements, asset1, asset2) => {
     executionData: [
       {
         type: "input",
+        dataType: "bytes",
         title: "Order",
         description: "0x order to execute",
         required: true,
-        data: null,
+        data: {},
         isValid: validator.order0x,
       },
       {
         type: "input",
+        dataType: "bytes",
         title: "Signature",
         description: "0x order signature to execute",
         required: true,
-        data: null,
+        data: "0x0",
         isValid: validator.signature0x,
       },
       {
         type: "raw",
+        dataType: "address",
         data: [contracts.ASSETS[asset2]],
       },
     ],
@@ -190,14 +207,17 @@ const addCompoundOperations = (elements, asset, cAsset) => {
     executionData: [
       {
         type: "raw",
+        dataType: "address",
         data: [contracts.ASSETS[cAsset]],
       },
       {
         type: "raw",
+        dataType: "address",
         data: [contracts.ASSETS[asset]],
       },
       {
         type: "raw",
+        dataType: "bool",
         data: [true],
       },
     ],
@@ -213,14 +233,17 @@ const addCompoundOperations = (elements, asset, cAsset) => {
     executionData: [
       {
         type: "raw",
+        dataType: "address",
         data: [contracts.ASSETS[cAsset]],
       },
       {
         type: "raw",
+        dataType: "address",
         data: [contracts.ASSETS[asset]],
       },
       {
         type: "raw",
+        dataType: "bool",
         data: [false],
       },
     ],
@@ -239,26 +262,31 @@ const addCurveSUSDOperations = (elements, asset1, asset2) => {
     executionData: [
       {
         type: "raw",
+        dataType: "address",
         data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.address,
       },
       {
         type: "raw",
+        dataType: "address",
         data: contracts.ASSETS[asset1],
       },
       {
         type: "raw",
+        dataType: "uint128",
         data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf(
           asset1
         ),
       },
       {
         type: "raw",
+        dataType: "uint128",
         data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf(
           asset2
         ),
       },
       {
         type: "raw",
+        dataType: "uint256",
         data: ["1"],
       },
     ],
@@ -274,26 +302,31 @@ const addCurveSUSDOperations = (elements, asset1, asset2) => {
     executionData: [
       {
         type: "raw",
+        dataType: "address",
         data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.address,
       },
       {
         type: "raw",
+        dataType: "address",
         data: contracts.ASSETS[asset2],
       },
       {
         type: "raw",
+        dataType: "uint128",
         data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf(
           asset2
         ),
       },
       {
         type: "raw",
+        dataType: "uint128",
         data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf(
           asset1
         ),
       },
       {
         type: "raw",
+        dataType: "uint256",
         data: ["1"],
       },
     ],
@@ -312,10 +345,11 @@ const addOasisOperations = (elements, asset1, asset2) => {
     executionData: [
       {
         type: "input",
+        dataType: "uint256",
         title: "Order Id",
         description: "Id of Oasis order",
         required: true,
-        data: null,
+        data: 0,
         isValid: validator.orderOasis,
       },
     ],
@@ -331,10 +365,11 @@ const addOasisOperations = (elements, asset1, asset2) => {
     executionData: [
       {
         type: "input",
+        dataType: "uint256",
         title: "Order Id",
         description: "Id of Oasis order",
         required: true,
-        data: null,
+        data: 0,
         isValid: validator.orderOasis,
       },
     ],
@@ -353,6 +388,7 @@ const addWrapOperations = (elements) => {
     executionData: [
       {
         type: "raw",
+        dataType: "bool",
         data: [true],
       },
     ],
@@ -368,6 +404,7 @@ const addWrapOperations = (elements) => {
     executionData: [
       {
         type: "raw",
+        dataType: "bool",
         data: [false],
       },
     ],
@@ -386,14 +423,14 @@ const addSplitterElement = (elements, name) => {
     executionData: [
       {
         type: "input",
-        valueType: "uint8",
+        dataType: "uint8",
         min: 0,
         max: 100,
         title: "% of split",
         description: "Please enter a percentage to split. Default: 50%",
         required: false,
         default: 50,
-        data: null,
+        data: 50,
         isValid: validator.nullOrPercentage,
       },
     ],
@@ -425,10 +462,11 @@ const addAddressElement = (elements) => {
     executionData: [
       {
         type: "input",
+        dataType: "address",
         title: "Destination address",
         description: "Please enter the destination address",
         required: true,
-        data: null,
+        data: "0x0000000000000000000000000000000000000000",
         isValid: validator.address,
       },
     ],

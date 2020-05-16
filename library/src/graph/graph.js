@@ -1,5 +1,6 @@
 const helper = require("../utils/helper");
 const GraphData = require("../../build/contracts/Graph.json");
+const ABICoder = require("web3-eth-abi");
 
 class Graph {
   constructor() {
@@ -60,6 +61,9 @@ class Graph {
     }
     throw "Cannot add a root element that receives assets";
   }
+  // setExecutionData(element, paramIndex, data) {
+  //   if()
+  // }
   connectElements(parentItems, coreElement, elementInputIndex, x, y) {
     const element = JSON.parse(JSON.stringify(coreElement));
     element.id = helper.uuidv4();
@@ -96,7 +100,13 @@ class Graph {
   async deploy(web3) {
     //Prepare elements
     const elements = this.elements.map((element) => {
-      const params = element.executionData.map((element) => element.data);
+      const typesList = [];
+      const dataList = [];
+      for (const data of element.executionData) {
+        typesList.push(data.dataType);
+        dataList.push(data.data);
+      }
+      const params = ABICoder.encodeParameters(typesList, dataList);
       const elementOutputsIndexes = [];
       const elementOuputsOutIndexes = [];
       for (const connection of element.connections) {
@@ -110,7 +120,7 @@ class Graph {
         elementOuputsOutIndexes,
       };
     });
-    console.log(JSON.stringify(elements))
+    console.log(JSON.stringify(elements));
     //Deploy contract
     const [admin] = await web3.eth.getAccounts();
     const graphContract = new web3.eth.Contract(GraphData.abi);
@@ -121,7 +131,7 @@ class Graph {
       })
       .send({
         from: admin,
-        gas: 2500000,
+        gas: 3500000,
       });
     return graphInstance.options.address;
   }
