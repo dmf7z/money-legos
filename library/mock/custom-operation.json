@@ -1,0 +1,43 @@
+{
+  "elements": [
+    {
+      "type": "input", //index 0
+      "asset": "0x8873A6C4E5Cb383365ec6e2aF94b78eBaC2Ab9BA", //DAI
+      "output": 4
+    },
+    {
+      "type": "input", //index 1
+      "asset": "0x520C3D2f627cDfBb24718358d2321D49C92032dB", //WBTC
+      "output": 4
+    },
+    {
+      "type": "input", //index 2
+      "asset": "0x52e6840bB1CdF2B4aE92A4839BC8D9025fB996F9", //USDC
+      "output": 4
+    },
+    {
+      "type": "input", //index 3
+      "asset": "0x0000000000000000000000000000000000000000", //ETH
+      "output": 4
+    },
+    {
+      "type": "operation", //index 4
+      "asset": "0x93C90E9D605BE37B1dcf28686e9A7A1f3f3fa2FC", //Custom Operation
+      "output": 5
+    },
+    {
+      "type": "divisor", //index 5
+      "percentageAmount1": 0.5, //or "fixedAmount1": "5000300000000". Rest goes to output2
+      "output1": 6, //Always 2 outputs
+      "output2": 7
+    },
+    {
+      "type": "address", //index 6
+      "address": "0xbd11852f6f10A2F7aa1faF497081eB6B895657Cd"
+    },
+    {
+      "type": "address", //index 7
+      "address": "0x7dD939b85d30472410c2bB45b7b94cF49BF7D169"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-const contracts = require("../../common/contracts");
+const contracts = require("../common/contracts");
 const validator = require("./utils/validator");
 
 const addInputElement = (elements, name) => {

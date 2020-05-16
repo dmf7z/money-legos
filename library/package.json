@@ -1,0 +1,26 @@
+{
+  "main": "src/index.js",
+  "scripts": {
+    "build": "rm -rf lib/ && webpack --config webpack.dev.js && webpack --config webpack.prod.js",
+    "test": "oz compile && mocha --timeout 100000 --exit --recursive tests/"
+  },
+  "dependencies": {
+    "bn.js": "^5.1.1",
+    "ethereumjs-util": "^7.0.0",
+    "web3-eth-abi": "^1.2.7",
+    "webpack": "^4.43.0"
+  },
+  "devDependencies": {
+    "@0x/mesh-rpc-client": "^9.3.0",
+    "@openzeppelin/cli": "^2.8.2",
+    "@openzeppelin/contracts-ethereum-package": "^2.5.0",
+    "@openzeppelin/upgrades": "^2.8.0",
+    "@truffle/hdwallet-provider": "^1.0.35",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^7.1.2",
+    "web3": "^1.2.7",
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2"
+  }
+}
