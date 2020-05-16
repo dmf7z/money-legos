@@ -4,7 +4,7 @@ import { StackContext } from "../contexts/stack";
 
 
 export default function ModalAction() {
-  const { showModal, setShowModal, dispatchStack, stack, setShowAvailable } = useContext(
+  const { showModal, setShowModal, dispatchGraph, dispatchStack, stack, setShowAvailable } = useContext(
     StackContext
   );
 
@@ -24,12 +24,15 @@ export default function ModalAction() {
 
   const handleClose = () => {
     dispatchStack({ type: "CLEAR_STACK" });
+
     setShowModal(false);
   };
 
-  const handleAction= () => {
-    setShowAvailable(true)
-    setShowModal(false);
+  const handleAction = () => {
+    // setShowAvailable(true)
+    // setShowModal(false);
+    dispatchGraph({ type: "ADD_GRAPH" });
+
   }
 
   return (
@@ -60,7 +63,7 @@ export default function ModalAction() {
           </div>
           <div className="modal__content">Options:
           <div>
-            {actionOption(stack, () => handleAction())}
+            {<ActionOption action={() =>handleAction()} />}
           </div>
           
           </div>
@@ -80,15 +83,15 @@ export default function ModalAction() {
   );
 }
 
-function actionOption(stack, action){
+function ActionOption(props){
 
-  let options = stack.map((st)=>{
-    console.log(st.type, st.output)
-    if(st.type == 'InputElement' && st.output == 'wbtc'){
-      return <button onClick={() => action()} >Operation WTC/ ETH</button>
-    }
+  // let options = stack.map((st)=>{
+  //   console.log(st.type, st.output)
+    // if(st.type == 'InputElement' && st.output == 'wbtc'){
+      return <button onClick={props.action} >Operation WTC/ ETH</button>
+    // }
     
-  })
-  return options
+  // })
+  // return options
 }
 

@@ -15,12 +15,12 @@ function EmptyStack(props) {
       input: "wbtc",
       output: "eth",
       connections: ["stack02-02"],
-      index: props.element.index
+      index: props.index
     }
 
   const handleClick = (id) => {
     if (isAvailable) {
-      dispatchGraph({ type: "CHANGE_STACK", element });
+      dispatchGraph({ type: "CHANGE_STACK", id });
     } 
     setShowAvailable(!isAvailable);
     setIsAvailable(!isAvailable);

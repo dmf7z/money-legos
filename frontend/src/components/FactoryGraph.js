@@ -1,25 +1,32 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { ArcherContainer } from "react-archer";
-import { columnStyle } from "../styles/graphStyles";
-import selectElement from "./elements";
+import { StackContext } from "../contexts/stack";
+
+import { columnStyle, gridWrapper } from "../styles/graphStyles";
+import RenderElement from "./elements/RenderElement";
+import { isEmpty } from "lodash";
+import { EMPTY_ELEMENT } from "../constants";
+
+const MAP_INDEX = [4, 4];
 
 function FactoryGraph(props) {
-  const WidthHeightBox = "2000px";
+  const { graph } = useContext(StackContext);
 
-  const gridWrapper = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    width: WidthHeightBox,
-    height: WidthHeightBox,
-  };
+  const [isLoading, setIsLoading] = useState(true);
+  const [graphMap, setgraphMap] = useState([{}]);
 
   const ref = useRef();
-  console.log(props);
 
   useEffect(() => {
-    console.log(ref.current.scrollWidth);
-  }, []);
+    // let useMap = isEmpty(graph) ? props.graph : graph;
+    console.log(graph)
+    console.log(graph)
+
+    let newMap = GenerateMap(graph);
+
+    setgraphMap(newMap);
+    setIsLoading(false);
+  }, [graph]);
 
   return (
     <ArcherContainer
@@ -27,18 +34,48 @@ function FactoryGraph(props) {
       svgContainerStyle={{ zIndex: 0 }}
       strokeColor="red"
     >
+      {isLoading && <div>LOADING...</div>}
+
       <div ref={ref} style={gridWrapper}>
-        {props.graph.map((level) => {
-          return (
-            <div style={columnStyle}>
-              {level.elements.map((element) => selectElement(element))}
-            </div>
-          );
-        })}
+        {!isLoading &&
+          graphMap.map((line) => {
+            return (
+              <div style={columnStyle}>
+                {line.map((element) => <RenderElement {...element} /> )}
+              </div>
+            );
+          })}
       </div>
     </ArcherContainer>
   );
 }
 
-
 export default FactoryGraph;
+
+function GenerateMap(graph) {
+  console.log("starting map", graph);
+  if (isEmpty(graph.elements)){ return []}
+  let elementsMap = [];
+  for (let i = 0; i < MAP_INDEX[1]; i++) {
+    let line = [];
+    for (let m = 0; m < MAP_INDEX[0]; m++) {
+      let graphElement = graph.elements.filter(
+        (el) => el.index[0] == m && el.index[1] == i
+      );
+      let emptyWithPos = EMPTY_ELEMENT;
+      emptyWithPos.index = [m, i];
+      let squareElement =
+        graphElement.length > 0 ? graphElement[0] : emptyWithPos;
+
+      line[m] = squareElement;
+      console.log(`element [${m}][${i}] = ${squareElement}`);
+    }
+    elementsMap[i] = line;
+    console.log("LINE! ", i);
+    console.log(line);
+  }
+
+  // console.log("FINAL: ", elementsMap);
+
+  return elementsMap;
+}
