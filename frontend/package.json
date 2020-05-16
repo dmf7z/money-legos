@@ -14,7 +14,8 @@
     "react-archer": "^2.0.1",
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "library": "file:../library/src"
   },
   "scripts": {
     "start": "react-scripts start",

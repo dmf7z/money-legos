@@ -1,12 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, Children } from "react";
 import { arrowStyle } from "../../styles/graphStyles";
 import { ArcherElement } from "react-archer";
 import { StackContext } from "../../contexts/stack";
 import { isEmpty } from "lodash";
 import { ASSETS } from "../../constants";
 
-function InputStack(props) {
-  console.log(props)
+function WrapperStack(props) {
   const {connections, id, outputs} = props
   const [targetRelation, setTargetRelation] = useState([]);
   const [selected, setSelected] = useState(false);
@@ -50,25 +49,9 @@ function InputStack(props) {
       id={id}
       relations={targetRelation}
     >
-      <div  onClick={() => handleClick(props.id)}>
-        <div className={`stack stack--square box box--square ${
-            selected && "selection__box"
-          }`}>
-          <div className="stack-color__content">
-            <div className="stack-color__name">START WITH {asset}</div>
-          </div>
-          <div className={`stack-color stack-color--${asset.toLowerCase()}`}>
-            <div className="stack-color__square stack-color__lighten stack-color__lighten--out">
-              {asset}
-            </div>
-            <div className="stack-color__square stack-color__darken stack-color__darken--out">
-              <img src={require(`../../assets/icons/${asset.toLowerCase()}.svg`)}></img>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Children {...props} />
     </ArcherElement>
   );
 }
 
-export default InputStack;
+export default WrapperStack;

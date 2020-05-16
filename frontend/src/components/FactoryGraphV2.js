@@ -3,14 +3,14 @@ import { ArcherContainer } from "react-archer";
 import { StackContext } from "../contexts/stack";
 
 import { columnStyle, gridWrapper } from "../styles/graphStyles";
-import selectElement from "./elements";
+import RenderElement from "./elements/RenderElement";
 import { isEmpty } from "lodash";
 import { EMPTY_ELEMENT } from "../constants";
 
-const MAP_INDEX = [8, 8];
+const MAP_INDEX = [4, 4];
 
 function FactoryGraphV2(props) {
-  const { dispatchGraph, graph } = useContext(StackContext);
+  const { graph } = useContext(StackContext);
 
   const [isLoading, setIsLoading] = useState(true);
   const [graphMap, setgraphMap] = useState([{}]);
@@ -18,13 +18,15 @@ function FactoryGraphV2(props) {
   const ref = useRef();
 
   useEffect(() => {
-    let useMap = isEmpty(graph) ? props.graph : graph;
-    let newMap = GenerateMap(useMap);
+    // let useMap = isEmpty(graph) ? props.graph : graph;
+    console.log(graph)
+    console.log(graph)
+
+    let newMap = GenerateMap(graph);
 
     setgraphMap(newMap);
-    dispatchGraph({ type: "ADD_STACK", useMap });
     setIsLoading(false);
-  }, []);
+  }, [graph]);
 
   return (
     <ArcherContainer
@@ -39,7 +41,7 @@ function FactoryGraphV2(props) {
           graphMap.map((line) => {
             return (
               <div style={columnStyle}>
-                {line.map((element) => selectElement(element))}
+                {line.map((element) => <RenderElement {...element} /> )}
               </div>
             );
           })}
@@ -52,11 +54,12 @@ export default FactoryGraphV2;
 
 function GenerateMap(graph) {
   console.log("starting map", graph);
+  if (isEmpty(graph.elements)){ return []}
   let elementsMap = [];
   for (let i = 0; i < MAP_INDEX[1]; i++) {
     let line = [];
     for (let m = 0; m < MAP_INDEX[0]; m++) {
-      let graphElement = graph.filter(
+      let graphElement = graph.elements.filter(
         (el) => el.index[0] == m && el.index[1] == i
       );
       let emptyWithPos = EMPTY_ELEMENT;
