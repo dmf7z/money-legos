@@ -4,24 +4,16 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol";
+import "./GraphBase.sol";
 import "./operations/OperationExecutor.sol";
 
 
-contract Graph is OperationExecutor {
+contract Graph is GraphBase, OperationExecutor {
     string public constant VERSION = "1.0.0";
 
     using SafeMath for uint256;
 
-    struct Element {
-        address addr;
-        bytes params;
-        uint64[] elementOutputsIndexes;
-        uint64[] elementOuputsOutIndexes;
-    }
-
-    Element[] public elements;
-
-    constructor(Element[] memory _elements) public {
+    constructor(GraphBase.Element[] memory _elements) public {
         for (uint256 i; i < _elements.length; i++) {
             elements.length++;
             elements[i] = Element({
@@ -41,16 +33,17 @@ contract Graph is OperationExecutor {
     /**
      * Execute many operations.
      * @param _paramsList params for each element to execute
+     * @param _maxElementInputs max inputs an element has
      */
-    function execute(bytes[] memory _paramsList, uint256 maxElementInputs)
+    function execute(bytes[] memory _paramsList, uint256 _maxElementInputs)
         public
     {
         uint256[][] memory inputs = new uint256[][](elements.length);
         for (uint256 i; i < elements.length; i++) {
-            inputs[i] = new uint256[](maxElementInputs);
+            inputs[i] = new uint256[](_maxElementInputs);
         }
         for (uint8 i = 0; i < _paramsList.length; i++) {
-            Element memory element = elements[i];
+            GraphBase.Element memory element = elements[i];
             bytes memory params = _paramsList[i];
             if (element.addr == address(1)) {
                 //InputElement

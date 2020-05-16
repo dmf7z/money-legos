@@ -103,5 +103,8 @@ describe("Graph", function() {
 
     console.log(JSON.stringify(graph.elements));
 
+   // const address = await graph.deploy(web3);
+
+    //console.log(address);
   });
 });

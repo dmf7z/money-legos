@@ -1,4 +1,5 @@
 const helper = require("../utils/helper");
+const GraphData = require("../../build/contracts/Graph.json");
 
 class Graph {
   constructor() {
@@ -7,6 +8,9 @@ class Graph {
   //GETTERS
   getElementById(id) {
     return this.elements.find((element) => element.id == id);
+  }
+  getElementIndexById(id) {
+    return this.elements.findIndex((element) => element.id == id);
   }
   //VALIDATIONS
   canBeRootElement(element) {
@@ -81,10 +85,45 @@ class Graph {
       const parentId = parentItem[0];
       const parentOutputIndex = parentItem[1];
       const parent = this.getElementById(parentId);
-      parent.connections[parentOutputIndex] = [element.id];
+      parent.connections[parentOutputIndex] = {
+        id: element.id,
+        index: elementInputIndex,
+      };
     }
     this.elements.push(element);
     return element.id;
+  }
+  async deploy(web3) {
+    //Prepare elements
+    const elements = this.elements.map((element) => {
+      const params = element.executionData.map((element) => element.data);
+      const elementOutputsIndexes = [];
+      const elementOuputsOutIndexes = [];
+      for (const connection of element.connections) {
+        elementOutputsIndexes.push(this.getElementIndexById(connection.id));
+        elementOuputsOutIndexes.push(connection.index);
+      }
+      return {
+        addr: element.address,
+        params,
+        elementOutputsIndexes,
+        elementOuputsOutIndexes,
+      };
+    });
+    console.log(JSON.stringify(elements))
+    //Deploy contract
+    const [admin] = await web3.eth.getAccounts();
+    const graphContract = new web3.eth.Contract(GraphData.abi);
+    const graphInstance = await graphContract
+      .deploy({
+        data: GraphData.bytecode,
+        arguments: [elements],
+      })
+      .send({
+        from: admin,
+        gas: 2500000,
+      });
+    return graphInstance.options.address;
   }
 }
 

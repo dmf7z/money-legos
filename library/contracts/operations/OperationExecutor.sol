@@ -3,8 +3,6 @@ pragma experimental ABIEncoderV2;
 
 
 contract OperationExecutor {
-    string public constant VERSION = "1.0.0";
-
     struct Operation {
         address addr;
         uint256[] inAmounts;
