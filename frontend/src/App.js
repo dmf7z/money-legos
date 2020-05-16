@@ -1,8 +1,8 @@
 import React from "react";
 import "./App.scss";
 import { DONATE_PARTIAL } from "./graph/graph-example";
-import FactoryGraphV2 from "./components/FactoryGraphV2";
 import ModalAction from "./components/ModalAction";
+import FactoryGraph from "./components/FactoryGraph";
 
 function App() {
   return (
@@ -18,12 +18,7 @@ function App() {
           </span>
         </div>
       </div>
-
-      {/*  */}
-      <FactoryGraphV2 graph={DONATE_PARTIAL} />
-
-      {/* MAP! */}
-      {/* <FactoryGraphV2 graph={DONATE_V2} /> */}
+      <FactoryGraph />
 
       <ModalAction />
     </section>

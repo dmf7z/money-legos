@@ -6,13 +6,16 @@ import EmptyStack from "./EmptyStack";
 import NewInitStack from "./NewInitStack";
 import SplitterStack from "./SplitterStack";
 import AddressStack from "./AddressStack";
+import WrapperStack from "./WrapperStack";
+
+
 
 function RenderElement(props) {
   switch (props.type) {
     case "InputElement":
-      return <InputStack {...props} />;
+      return <WrapperStack {...props} ><InputStack {...props} /></WrapperStack> ;
     case "OperationElement":
-      return <OperationStack {...props} />;
+      return <WrapperStack {...props} ><OperationStack {...props} /></WrapperStack>;
     case "SplitterElement":
       return <SplitterStack {...props} />;
     case "AddressElement":
