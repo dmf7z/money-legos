@@ -12,7 +12,12 @@ const addInputElement = (elements, name) => {
     connections: [],
     executionData: [
       {
+        type: "raw",
+        data: contracts.ASSETS[name],
+      },
+      {
         type: "input",
+        valueType: "uint256",
         title: `Amount of ${name}`,
         description: `Please enter the amount of ${name} to execute`,
         required: true,
@@ -381,6 +386,9 @@ const addSplitterElement = (elements, name) => {
     executionData: [
       {
         type: "input",
+        valueType: "uint8",
+        min: 0,
+        max: 100,
         title: "% of split",
         description: "Please enter a percentage to split. Default: 50%",
         required: false,
