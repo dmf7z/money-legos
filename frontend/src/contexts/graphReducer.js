@@ -1,7 +1,9 @@
 import * as factory from "library";
 
 export const graphReducer = (state, action) => {
-  console.log("action ", action);
+  console.log("graphReducer action ", action);
+  let element 
+  let parent
   //   console.log("1 state ", state);
   switch (action.type) {
     case "ADD_STACK":
@@ -10,14 +12,21 @@ export const graphReducer = (state, action) => {
       return state;
 
     case "ADD_OPERATION":
-      element = factory.getElements().OP_UNISWAP_WBTC_TO_ETH;
-      //Add element to graph
-      state.connectElements([[action.uuid, 0]], element, 0, 0, 1);
+      console.log('ADD_OPERATION MY FRIEND', action)
+      parent = state.getElementById(action.addElement.parent[0]);
+      console.log('PARENT MY FRIEND', action.addElement.parent[0])
 
-      return state;
+      element = factory.getElements()[action.addElement.element.key];
+      console.log('element MY FRIEND', element)
+      console.log(1,state)
+
+      //Add element to graph
+      state.connectElements([[parent.id, 0]], element, 0, parent.index[0], parent.index[1] + 1);
+      console.log(2,state)
+      return state
 
     case "ADD_GRAPH":
-      let element = factory.getElements().INPUT_DAI;
+      element = factory.getElements().INPUT_DAI;
       state.addElement(element, 0, 0);
 
       console.log("2 state ", state);

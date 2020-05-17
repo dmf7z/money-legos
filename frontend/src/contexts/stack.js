@@ -32,6 +32,7 @@ const StackProvider = (props) => {
     const [graph, dispatchGraph] = useReducer(graphReducer, startGraph);
     
     useEffect(() => {
+      console.log(id2)
         console.log('SELECTED ITEMS: ', uiStack)
         console.log('TOTAL GRAPG: ', JSON.stringify(graph.elements))
     }, [uiStack, graph]);

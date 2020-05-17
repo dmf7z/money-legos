@@ -2,7 +2,7 @@ import React from "react";
 import { ASSETS_NAMES } from "../../constants";
 
 const OperationStack = React.forwardRef((props, ref) => {
-  console.log("props op: ", props);
+  // console.log("props op: ", props);
   const { id, outputs, inputs, isSelected } = props;
   let assetIn = ASSETS_NAMES[inputs[0]].toLowerCase();
   let assetOut = ASSETS_NAMES[outputs[0]].toLowerCase();

@@ -10,7 +10,7 @@ import { EMPTY_ELEMENT } from "../constants";
 const MAP_INDEX = [4, 4];
 
 function FactoryGraph(props) {
-  const { graph } = useContext(StackContext);
+  const { graph, uiStack } = useContext(StackContext);
 
   const [isLoading, setIsLoading] = useState(true);
   const [graphMap, setgraphMap] = useState([{}]);
@@ -19,24 +19,39 @@ function FactoryGraph(props) {
 
   useEffect(() => {
     // let useMap = isEmpty(graph) ? props.graph : graph;
-    console.log(graph)
+    console.log('getting new Graph!')
     console.log(graph)
 
     let newMap = GenerateMap(graph);
 
     setgraphMap(newMap);
     setIsLoading(false);
-  }, [graph]);
+    // 
+
+    
+  }, [graph, uiStack]);
+
+  const tryAs = () =>{
+    console.log('rrrr')
+    console.log(ref)
+    GenerateMap(graph)
+    ref.current.refreshScreen()
+  }
 
   return (
+    <>
+    <div><button onClick={tryAs }>RRRR</button></div>
     <ArcherContainer
+      ref={ref}
       className={"test3"}
       svgContainerStyle={{ zIndex: 0 }}
       strokeColor="red"
     >
       {isLoading && <div>LOADING...</div>}
 
-      <div ref={ref} style={gridWrapper}>
+      <div  style={gridWrapper}>
+      
+
         {!isLoading &&
           graphMap.map((line) => {
             return (
@@ -47,6 +62,7 @@ function FactoryGraph(props) {
           })}
       </div>
     </ArcherContainer>
+    </>
   );
 }
 
@@ -68,7 +84,7 @@ function GenerateMap(graph) {
         graphElement.length > 0 ? graphElement[0] : emptyWithPos;
 
       line[m] = squareElement;
-      console.log(`element [${m}][${i}] = ${squareElement}`);
+      // console.log(`element [${m}][${i}] = ${squareElement}`);
     }
     elementsMap[i] = line;
     console.log("LINE! ", i);
