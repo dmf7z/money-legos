@@ -45,6 +45,12 @@ describe("Graph", function() {
     //Add element to graph
     let id4 = graph.addElement(element, 0, 3);
 
+    //Check connection
+    let availableElements = graph.getAvailableElements([id2]);
+    expect(availableElements)
+      .to.be.an("array")
+      .that.includes(elements.OP_UNISWAP_WBTC_TO_ETH);
+
     //Create operation and connect them
     element = elements.OP_UNISWAP_WBTC_TO_ETH;
     result = graph.isElementReadyToCreate(element);
@@ -52,11 +58,23 @@ describe("Graph", function() {
     //Add element to graph
     let id5 = graph.connectElements([[id2, 0]], element, 0, 1, 1);
 
+    //Check connection
+     availableElements = graph.getAvailableElements([id3]);
+    expect(availableElements)
+      .to.be.an("array")
+      .that.includes(elements.OP_UNISWAP_USDC_TO_ETH);
+
     element = elements.OP_UNISWAP_USDC_TO_ETH;
     result = graph.isElementReadyToCreate(element);
     expect(result).to.be.true;
     //Add element to graph
     let id6 = graph.connectElements([[id3, 0]], element, 0, 1, 2);
+
+    //Check connection
+     availableElements = graph.getAvailableElements([id4, id5, id6]);
+    expect(availableElements)
+      .to.be.an("array")
+      .that.includes(elements.OP_UNISWAP_ETH_TO_DAI);
 
     element = elements.OP_UNISWAP_ETH_TO_DAI;
     result = graph.isElementReadyToCreate(element);
@@ -74,6 +92,12 @@ describe("Graph", function() {
       0
     );
 
+    //Check connection
+     availableElements = graph.getAvailableElements([id1, id7]);
+    expect(availableElements)
+      .to.be.an("array")
+      .that.includes(elements.SPLITTER_DAI);
+
     element = elements.SPLITTER_DAI;
     result = graph.isElementReadyToCreate(element);
     expect(result).to.be.true;
@@ -89,6 +113,12 @@ describe("Graph", function() {
       0
     );
 
+    //Check connection
+     availableElements = graph.getAvailableElements([id8]);
+    expect(availableElements)
+      .to.be.an("array")
+      .that.includes(elements.ADDRESS);
+
     element = elements.ADDRESS;
     result = graph.isElementReadyToCreate(element);
     expect(result).to.be.true;
@@ -103,5 +133,8 @@ describe("Graph", function() {
 
     console.log(JSON.stringify(graph.elements));
 
+    const address = await graph.deploy(web3);
+
+    console.log(address);
   });
 });
