@@ -1,6 +1,7 @@
 const helper = require("../utils/helper");
 const GraphData = require("../../build/contracts/Graph.json");
 const ABICoder = require("web3-eth-abi");
+const AllElements = require("../elements");
 
 class Graph {
   constructor() {
@@ -96,6 +97,27 @@ class Graph {
     }
     this.elements.push(element);
     return element.id;
+  }
+  getAvailableElements(parentIds) {
+    var assetsSet = new Set();
+    for (const id of parentIds) {
+      const parent = this.getElementById(id);
+      for (const asset of parent.outputs) {
+        assetsSet.add(asset);
+      }
+    }
+    const assets = Array.from(assetsSet);
+    const availableElements = [];
+    for (const key in AllElements) {
+      const element = AllElements[key];
+      for (const input of element.inputs) {
+        if (assets.indexOf(input) >= 0) {
+          availableElements.push(element);
+          break;
+        }
+      }
+    }
+    return availableElements;
   }
   async deploy(web3) {
     //Prepare elements
