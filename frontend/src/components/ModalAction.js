@@ -100,27 +100,30 @@ export default function ModalAction() {
           </div>
           <div className="modal__content">
             <div>
+            <div className="modal__options">
               <span class="tag is-info is-light is-small is-fullwidth">
-                ! You choose an instrument + output
+                Here you can choose an instrument to trade / swap tokens!
               </span>
+            </div>
+
 
               {/* definir inputs! en un UseEffects */}
               <OperationsOption ids={uiStack} closeModal={closeModal} />
             </div>
           </div>
-
+{/* 
           <button
             onClick={() => closeModal}
             className="button is-warning is-fullwidth is-rounded"
           >
             OK!
-          </button>
-          {/* <div
+          </button> */}
+          <div
             className="has-text-centered is-fullwidth has-text-info"
             onClick={() => closeModal}
           >
             Cancel
-          </div> */}
+          </div>
         </div>
       </Modal>
     </div>
