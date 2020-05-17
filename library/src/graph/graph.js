@@ -1,10 +1,15 @@
-const helper = require("../utils/helper");
-const GraphData = require("../../build/contracts/Graph.json");
 const ABICoder = require("web3-eth-abi");
+const BN = require("bn.js");
+const helper = require("../utils/helper");
+const ERC20ABI = require("../abi/erc20");
+const GraphData = require("../../build/contracts/Graph.json");
 const AllElements = require("../elements");
+
+const ETHER = "0x0000000000000000000000000000000000000000";
 
 class Graph {
   constructor() {
+    this.address = null;
     this.elements = [];
   }
   //GETTERS
@@ -18,27 +23,67 @@ class Graph {
   canBeRootElement(element) {
     return element.inputs.length == 0;
   }
-  isElementReadyToCreate(element) {
-    /*for (let index = 0; index < element.creationData.length; index++) {
-      const data = element.creationData[index];
-      if (!data.isValid(data.value)) return false;
-    }*/
-    return true;
+  async isElementReadyToExecute(web3, element) {
+    if (!this.address) {
+      return "Graph has not been deployed yet";
+    }
+    for (const data of element.executionData) {
+      console.log(data);
+      if (data.type === "input") {
+        switch(data.dataType) {
+          case "uint256": {
+
+          }
+          case "uint8": {
+            
+          }
+          case "timestamp": {
+            
+          }
+          case "address": {
+
+          }
+          case "0xOrder": {
+
+          }
+          case "0xSignature": {
+           // return `${dara.title} not valid`;
+            
+          }
+        }
+      }
+    }
+    if (
+      element.type == "InputElement" &&
+      element.executionData[0].data != ETHER
+    ) {
+      //Check enough allowance
+      const value = element.executionData[1].data;
+      const [account] = await web3.eth.getAccounts();
+      const erc20Contract = new web3.eth.Contract(
+        ERC20ABI,
+        element.executionData[0].data
+      );
+      const allowedBalance = await erc20Contract.methods
+        .allowance(account, this.address)
+        .call();
+      if (new BN(value).gt(new BN(allowedBalance))) {
+        return "Not enough allowance for the input value";
+      }
+    }
+    return "ready";
   }
-  isReadyToCreate() {
-    //Check all elements are isElementReadyToCreate
-    //Check it has at least one in and one out
-  }
-  isElementReadyToExecute(element) {
-    //TODO: if element is input check allowance!!!
-    //TODO: execpt if ETH, then it needs to execute in value
-    /*for (const data of element.executionData) {
-      if (!data.isValid(data.value)) return false;
-    }*/
-    return true;
-  }
-  isReadyToExecute() {
-    //Check all elements are isElementReadyToExecute
+  async isReadyToExecute(web3) {
+    for (const element of this.elements) {
+      const result = await this.isElementReadyToExecute(web3, element);
+      if (result !== "ready") {
+        return {
+          elementId: element.id,
+          error: result,
+        };
+      }
+    }
+    return "ready";
   }
   canConnectOutput(parent, parentOutputIndex, element, elementInputIndex) {
     if (
@@ -51,10 +96,7 @@ class Graph {
   //ADDITION, CONNECTION, REMOVAL
   addElement(coreElement, x, y) {
     const element = JSON.parse(JSON.stringify(coreElement));
-    if (
-      this.canBeRootElement(element) &&
-      this.isElementReadyToCreate(element)
-    ) {
+    if (this.canBeRootElement(element)) {
       element.id = helper.uuidv4();
       element.index = [x, y];
       this.elements.push(element);
@@ -125,7 +167,15 @@ class Graph {
       const typesList = [];
       const dataList = [];
       for (const data of element.executionData) {
-        typesList.push(data.dataType);
+        typesList.push(
+          data.dataType == "0xOrder"
+            ? "bytes"
+            : data.dataType == "0xSignature"
+            ? "bytes"
+            : data.dataType == "timestamp"
+            ? "uint256"
+            : data.dataType
+        );
         dataList.push(data.data);
       }
       const params = ABICoder.encodeParameters(typesList, dataList);
@@ -155,7 +205,13 @@ class Graph {
         from: admin,
         gas: 3500000,
       });
-    return graphInstance.options.address;
+    this.address = graphInstance.options.address;
+    return this.address;
+  }
+  async execute() {
+    if (this.isReadyToExecute() == "ready") {
+    }
+    //TODO: ETH  needs to execute in value
   }
 }
 

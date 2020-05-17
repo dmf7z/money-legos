@@ -3,6 +3,7 @@ const validator = require("./utils/validator");
 
 const addInputElement = (elements, name) => {
   elements[`INPUT_${name}`] = {
+    key: `INPUT_${name}`,
     type: "InputElement",
     instrument: "Local",
     description: "Input token to start",
@@ -22,8 +23,8 @@ const addInputElement = (elements, name) => {
         title: `Amount of ${name}`,
         description: `Please enter the amount of ${name} to execute`,
         required: true,
-        data: 0,
-        isValid: validator.notNullAmount,
+        data: "1",
+        min: "1",
       },
     ],
   };
@@ -31,6 +32,7 @@ const addInputElement = (elements, name) => {
 
 const addUniswapOperations = (elements, name) => {
   elements[`OP_UNISWAP_${name}_TO_ETH`] = {
+    key: `OP_UNISWAP_${name}_TO_ETH`,
     type: "OperationElement",
     instrument: "Uniswap",
     description: `Trade ${name} for ETH`,
@@ -61,22 +63,21 @@ const addUniswapOperations = (elements, name) => {
         description: "Please enter the min amount of ETH to buy",
         required: false,
         default: "1",
-        data: 1,
-        isValid: validator.nullOrAmount,
+        data: "1",
       },
       {
         type: "input",
-        dataType: "uint256",
+        dataType: "timestamp",
         title: "Deadline",
         description: "Please enter the deadline for trade to expire in seconds",
         required: false,
         default: 4745221884, //year 2120
         data: 4745221884,
-        isValid: validator.nullOrTimeStamp,
       },
     ],
   };
   elements[`OP_UNISWAP_ETH_TO_${name}`] = {
+    key: `OP_UNISWAP_ETH_TO_${name}`,
     type: "OperationElement",
     instrument: "Uniswap",
     description: `Trade ETH for ${name}`,
@@ -107,18 +108,16 @@ const addUniswapOperations = (elements, name) => {
         description: `Please enter the min amount of ${name} to buy`,
         required: false,
         default: "1",
-        data: 1,
-        isValid: validator.nullOrAmount,
+        data: "1",
       },
       {
         type: "input",
-        dataType: "uint256",
+        dataType: "timestamp",
         title: "Deadline",
         description: "Please enter the deadline for trade to expire in seconds",
         required: false,
         default: 4745221884, //year 2120
         data: 4745221884,
-        isValid: validator.nullOrTimeStamp,
       },
     ],
   };
@@ -126,6 +125,7 @@ const addUniswapOperations = (elements, name) => {
 
 const add0xOperations = (elements, asset1, asset2) => {
   elements[`OP_0x_${asset1}_TO_${asset2}`] = {
+    key: `OP_0x_${asset1}_TO_${asset2}`,
     type: "OperationElement",
     instrument: "0x",
     description: `Trade ${asset1} for ${asset2}`,
@@ -136,21 +136,19 @@ const add0xOperations = (elements, asset1, asset2) => {
     executionData: [
       {
         type: "input",
-        dataType: "bytes",
+        dataType: "0xOrder",
         title: "Order",
         description: "0x order to execute",
         required: true,
-        data: {},
-        isValid: validator.order0x,
+        data: "0x0",
       },
       {
         type: "input",
-        dataType: "bytes",
+        dataType: "0xSignature",
         title: "Signature",
         description: "0x order signature to execute",
         required: true,
         data: "0x0",
-        isValid: validator.signature0x,
       },
       {
         type: "raw",
@@ -160,6 +158,7 @@ const add0xOperations = (elements, asset1, asset2) => {
     ],
   };
   elements[`OP_0x_${asset2}_TO_${asset1}`] = {
+    key: `OP_0x_${asset2}_TO_${asset1}`,
     type: "OperationElement",
     instrument: "0x",
     description: `Trade ${asset2} for ${asset1}`,
@@ -170,21 +169,19 @@ const add0xOperations = (elements, asset1, asset2) => {
     executionData: [
       {
         type: "input",
-        dataType: "bytes",
+        dataType: "0xOrder",
         title: "Order",
         description: "0x order to execute",
         required: true,
-        data: {},
-        isValid: validator.order0x,
+        data: "0x0",
       },
       {
         type: "input",
-        dataType: "bytes",
+        dataType: "0xSignature",
         title: "Signature",
         description: "0x order signature to execute",
         required: true,
         data: "0x0",
-        isValid: validator.signature0x,
       },
       {
         type: "raw",
@@ -197,6 +194,7 @@ const add0xOperations = (elements, asset1, asset2) => {
 
 const addCompoundOperations = (elements, asset, cAsset) => {
   elements[`OP_COMPOUND_${asset}_TO_${cAsset}`] = {
+    key: `OP_COMPOUND_${asset}_TO_${cAsset}`,
     type: "OperationElement",
     instrument: "Compound",
     description: `Lend ${asset}, get ${cAsset}`,
@@ -223,6 +221,7 @@ const addCompoundOperations = (elements, asset, cAsset) => {
     ],
   };
   elements[`OP_COMPOUND_${cAsset}_TO_${asset}`] = {
+    key: `OP_COMPOUND_${cAsset}_TO_${asset}`,
     type: "OperationElement",
     instrument: "Compound",
     description: `Redeem ${cAsset}, get ${asset}`,
@@ -252,6 +251,7 @@ const addCompoundOperations = (elements, asset, cAsset) => {
 
 const addCurveSUSDOperations = (elements, asset1, asset2) => {
   elements[`OP_CURVE_SUSD_${asset1}_TO_${asset2}`] = {
+    key: `OP_CURVE_SUSD_${asset1}_TO_${asset2}`,
     type: "OperationElement",
     instrument: "Curve",
     description: `Trade ${asset1} for ${asset2}`,
@@ -292,6 +292,7 @@ const addCurveSUSDOperations = (elements, asset1, asset2) => {
     ],
   };
   elements[`OP_CURVE_SUSD_${asset2}_TO_${asset1}`] = {
+    key: `OP_CURVE_SUSD_${asset2}_TO_${asset1}`,
     type: "OperationElement",
     instrument: "Curve",
     description: `Trade ${asset2} for ${asset1}`,
@@ -335,6 +336,7 @@ const addCurveSUSDOperations = (elements, asset1, asset2) => {
 
 const addOasisOperations = (elements, asset1, asset2) => {
   elements[`OP_OASIS_${asset1}_TO_${asset2}`] = {
+    key: `OP_OASIS_${asset1}_TO_${asset2}`,
     type: "OperationElement",
     instrument: "Oasis",
     description: `Trade ${asset1} for ${asset2}`,
@@ -349,12 +351,12 @@ const addOasisOperations = (elements, asset1, asset2) => {
         title: "Order Id",
         description: "Id of Oasis order",
         required: true,
-        data: 0,
-        isValid: validator.orderOasis,
+        data: "0",
       },
     ],
   };
   elements[`OP_OASIS_${asset2}_TO_${asset1}`] = {
+    key: `OP_OASIS_${asset2}_TO_${asset1}`,
     type: "OperationElement",
     instrument: "Oasis",
     description: `Trade ${asset2} for ${asset1}`,
@@ -369,8 +371,7 @@ const addOasisOperations = (elements, asset1, asset2) => {
         title: "Order Id",
         description: "Id of Oasis order",
         required: true,
-        data: 0,
-        isValid: validator.orderOasis,
+        data: "0",
       },
     ],
   };
@@ -378,6 +379,7 @@ const addOasisOperations = (elements, asset1, asset2) => {
 
 const addWrapOperations = (elements) => {
   elements[`OP_WRAPPER_ETH_TO_WETH`] = {
+    key: `OP_WRAPPER_ETH_TO_WETH`,
     type: "OperationElement",
     instrument: "WETH",
     description: `Wrap ETH into WETH`,
@@ -394,6 +396,7 @@ const addWrapOperations = (elements) => {
     ],
   };
   elements[`OP_WRAPPER_WETH_TO_ETH`] = {
+    key: `OP_WRAPPER_WETH_TO_ETH`,
     type: "OperationElement",
     instrument: "WETH",
     description: `Unwrap ETH into WETH`,
@@ -413,6 +416,7 @@ const addWrapOperations = (elements) => {
 
 const addSplitterElement = (elements, name) => {
   elements[`SPLITTER_${name}`] = {
+    key: `SPLITTER_${name}`,
     type: "SplitterElement",
     instrument: "Local",
     description: `Split ${name} in two`,
@@ -429,9 +433,8 @@ const addSplitterElement = (elements, name) => {
         title: "% of split",
         description: "Please enter a percentage to split. Default: 50%",
         required: false,
-        default: 50,
-        data: 50,
-        isValid: validator.nullOrPercentage,
+        default: "50",
+        data: "50",
       },
     ],
   };
@@ -439,6 +442,7 @@ const addSplitterElement = (elements, name) => {
 
 const addAddressElement = (elements) => {
   elements["ADDRESS"] = {
+    key: "ADDRESS",
     type: "AddressElement",
     instrument: "Local",
     description: "Ethereum address to receive assets",
@@ -467,7 +471,6 @@ const addAddressElement = (elements) => {
         description: "Please enter the destination address",
         required: true,
         data: "0x0000000000000000000000000000000000000000",
-        isValid: validator.address,
       },
     ],
   };
