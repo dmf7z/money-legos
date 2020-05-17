@@ -1,23 +1,18 @@
-import React, { useState, useContext, useEffect } from "react";
-import { ArcherElement } from "react-archer";
-import { arrowStyle } from "../../styles/graphStyles";
-import { StackContext } from "../../contexts/stack";
-import { isEmpty } from "lodash";
-import { ASSETS } from "../../constants";
+import React from "react";
+import { ASSETS_NAMES } from "../../constants";
 
 const OperationStack = React.forwardRef((props, ref) => {
-
-  const { id, outputs, inputs} = props
-  let selected = false
-  let assetIn = ASSETS[inputs[0]].toLowerCase()
-  let assetOut = ASSETS[outputs[0]].toLowerCase()
+console.log('props op: ', props)
+  const { id , outputs, inputs, isSelected} = props
+  let assetIn = ASSETS_NAMES[inputs[0]].toLowerCase()
+  let assetOut = ASSETS_NAMES[outputs[0]].toLowerCase()
 
   return (
     
-      <div ref={ref} onClick={() => console.log(props.id)}>
+      <div ref={ref} onClick={props.selectAction}>
         <div
           className={`stack stack--square box box--square ${
-            selected && "selection__box"
+            isSelected && "selection__box"
           }`}
         >
           <div className={`stack-color stack-color--${assetIn}`}>

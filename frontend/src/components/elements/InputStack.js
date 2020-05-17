@@ -1,14 +1,16 @@
 import React from "react";
-import { ASSETS } from "../../constants";
+import { ASSETS_NAMES } from "../../constants";
 
 const InputStack = React.forwardRef((props, ref) => {
   let selected = false;
-  let asset = ASSETS[props.outputs[0]].toUpperCase();
+  const { id , outputs, inputs, isSelected} = props
+
+  let asset = ASSETS_NAMES[outputs[0]].toUpperCase();
 
   return (
-    <div ref={ref}>
+    <div ref={ref}  onClick={props.selectAction}>
       <div
-        className={`stack stack--square box box--square ${selected &&
+        className={`stack stack--square box box--square ${isSelected &&
           "selection__box"}`}
       >
         <div className="stack-color__content">

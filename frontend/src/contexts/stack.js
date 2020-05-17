@@ -1,8 +1,9 @@
 import React, { useState, createContext, useEffect, useReducer } from "react";
-import { stackReducer } from "./stackReducer";
+import { uiReducer } from "./uiReducer";
 import { graphReducer } from "./graphReducer";
 import * as factory from 'library'
 // import elements from 'library'
+let initialUiStack = []
 
 // const factory = require('library');
 let startGraph = factory.createGraph();
@@ -27,18 +28,18 @@ const StackContext = createContext(null);
 const StackProvider = (props) => {
     const [showModal, setShowModal] = useState(false);
     const [showAvailable, setShowAvailable] = useState(false);
-    const [stack, dispatchStack] = useReducer(stackReducer, []);
+    const [uiStack, dispatchUi] = useReducer(uiReducer, initialUiStack);
     const [graph, dispatchGraph] = useReducer(graphReducer, startGraph);
     
     useEffect(() => {
-        // console.log('SELECTED ITEMS: ', stack)
+        console.log('SELECTED ITEMS: ', uiStack)
         console.log('TOTAL GRAPG: ', JSON.stringify(graph.elements))
-    }, [stack, graph]);
+    }, [uiStack, graph]);
 
   
     return (
       <StackContext.Provider
-        value={{dispatchStack, showModal, setShowModal, stack,graph,  dispatchGraph, showAvailable, setShowAvailable}
+        value={{uiStack, dispatchUi, showModal, setShowModal, graph,  dispatchGraph, showAvailable, setShowAvailable}
         }
       >
         {props.children}
