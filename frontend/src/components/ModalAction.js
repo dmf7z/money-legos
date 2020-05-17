@@ -32,17 +32,14 @@ export default function ModalAction() {
 
   console.log("HERE!!! ", uiStack);
 
-//   useEffect(() => {
-//     let ids = uiStack.map(el => el.id)
-//     setIdsSelected(ids)
-//     console.log('id selected ',ids)
-    
-// }, [uiStack]);
+  //   useEffect(() => {
+  //     let ids = uiStack.map(el => el.id)
+  //     setIdsSelected(ids)
+  //     console.log('id selected ',ids)
 
-
+  // }, [uiStack]);
 
   const closeModal = () => {
-    
     // setShowAvailable(true)
     dispatchUi({ type: "CLEAR_SELECTED" });
     setShowModal(false);
@@ -109,7 +106,6 @@ export default function ModalAction() {
 
               {/* definir inputs! en un UseEffects */}
               <OperationsOption ids={uiStack} closeModal={closeModal} />
-              
             </div>
           </div>
 
@@ -130,7 +126,6 @@ export default function ModalAction() {
     </div>
   );
 }
-
 
 const SmallElement = (props) => {
   const { id } = props;

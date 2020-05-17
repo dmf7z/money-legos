@@ -3,12 +3,12 @@ import { ASSETS_NAMES } from "../../constants";
 
 const InputStack = React.forwardRef((props, ref) => {
   let selected = false;
-  const { id , outputs, inputs, isSelected} = props
+  const { id, outputs, inputs, isSelected } = props;
 
   let asset = ASSETS_NAMES[outputs[0]].toUpperCase();
 
   return (
-    <div ref={ref}  onClick={props.selectAction}>
+    <div ref={ref} onClick={props.selectAction}>
       <div
         className={`stack stack--square box box--square ${isSelected &&
           "selection__box"}`}

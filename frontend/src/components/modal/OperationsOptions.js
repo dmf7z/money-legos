@@ -17,28 +17,23 @@ export function OperationsOption(props) {
   return (
     <div>
       {availableElements.map((element) => {
-          console.log(element)
+        console.log(element);
         if (element.type == "OperationElement") {
           return (
             <div
               onClick={() => handleAction(element)}
               className="modal__op-btn button is-fullwidth is-medium"
             >
-               
-              
-
               <div className="modal__op-desc">
-                {element.instrument} {element.description} 
+                {element.instrument} {element.description}
               </div>
-              <div className="modal__svg--small" >
-
-<SmallIcon
-inputs={element.inputs}
-outputs={element.outputs}
-type={element.type}
-/>
-
-</div>
+              <div className="modal__svg--small">
+                <SmallIcon
+                  inputs={element.inputs}
+                  outputs={element.outputs}
+                  type={element.type}
+                />
+              </div>
             </div>
           );
         }
