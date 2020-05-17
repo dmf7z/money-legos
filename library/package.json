@@ -1,7 +1,6 @@
 {
   "main": "src/index.js",
   "scripts": {
-    "build": "rm -rf lib/ && webpack --config webpack.dev.js && webpack --config webpack.prod.js",
     "test": "oz compile --optimizer on && mocha --timeout 100000 --exit --recursive tests/"
   },
   "dependencies": {

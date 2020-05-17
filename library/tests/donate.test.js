@@ -19,30 +19,18 @@ describe("Graph", function() {
 
     //Create element
     element = elements.INPUT_DAI;
-    result = graph.isElementReadyToCreate(element);
-    expect(result).to.be.true;
-    //Add element to graph
     let id1 = graph.addElement(element, 0, 0);
 
     //Create element
     element = elements.INPUT_WBTC;
-    result = graph.isElementReadyToCreate(element);
-    expect(result).to.be.true;
-    //Add element to graph
     let id2 = graph.addElement(element, 0, 1);
 
     //Create element
     element = elements.INPUT_USDC;
-    result = graph.isElementReadyToCreate(element);
-    expect(result).to.be.true;
-    //Add element to graph
     let id3 = graph.addElement(element, 0, 2);
 
     //Create element
     element = elements.INPUT_ETH;
-    result = graph.isElementReadyToCreate(element);
-    expect(result).to.be.true;
-    //Add element to graph
     let id4 = graph.addElement(element, 0, 3);
 
     //Check connection
@@ -53,33 +41,26 @@ describe("Graph", function() {
 
     //Create operation and connect them
     element = elements.OP_UNISWAP_WBTC_TO_ETH;
-    result = graph.isElementReadyToCreate(element);
-    expect(result).to.be.true;
-    //Add element to graph
     let id5 = graph.connectElements([[id2, 0]], element, 0, 1, 1);
 
     //Check connection
-     availableElements = graph.getAvailableElements([id3]);
+    availableElements = graph.getAvailableElements([id3]);
     expect(availableElements)
       .to.be.an("array")
       .that.includes(elements.OP_UNISWAP_USDC_TO_ETH);
 
+    //Create operation and connect them
     element = elements.OP_UNISWAP_USDC_TO_ETH;
-    result = graph.isElementReadyToCreate(element);
-    expect(result).to.be.true;
-    //Add element to graph
     let id6 = graph.connectElements([[id3, 0]], element, 0, 1, 2);
 
     //Check connection
-     availableElements = graph.getAvailableElements([id4, id5, id6]);
+    availableElements = graph.getAvailableElements([id4, id5, id6]);
     expect(availableElements)
       .to.be.an("array")
       .that.includes(elements.OP_UNISWAP_ETH_TO_DAI);
 
+    //Create operation and connect them
     element = elements.OP_UNISWAP_ETH_TO_DAI;
-    result = graph.isElementReadyToCreate(element);
-    expect(result).to.be.true;
-    //Add element to graph
     let id7 = graph.connectElements(
       [
         [id4, 0],
@@ -93,15 +74,13 @@ describe("Graph", function() {
     );
 
     //Check connection
-     availableElements = graph.getAvailableElements([id1, id7]);
+    availableElements = graph.getAvailableElements([id1, id7]);
     expect(availableElements)
       .to.be.an("array")
       .that.includes(elements.SPLITTER_DAI);
 
+    //Create operation and connect them
     element = elements.SPLITTER_DAI;
-    result = graph.isElementReadyToCreate(element);
-    expect(result).to.be.true;
-    //Add element to graph
     let id8 = graph.connectElements(
       [
         [id1, 0],
@@ -114,27 +93,34 @@ describe("Graph", function() {
     );
 
     //Check connection
-     availableElements = graph.getAvailableElements([id8]);
+    availableElements = graph.getAvailableElements([id8]);
     expect(availableElements)
       .to.be.an("array")
       .that.includes(elements.ADDRESS);
 
+    //Create operation and connect them
     element = elements.ADDRESS;
-    result = graph.isElementReadyToCreate(element);
-    expect(result).to.be.true;
-    //Add element to graph
     let id9 = graph.connectElements([[id8, 0]], element, 1, 4, 0);
 
+    //Create operation and connect them
     element = elements.ADDRESS;
-    result = graph.isElementReadyToCreate(element);
-    expect(result).to.be.true;
-    //Add element to graph
     let id10 = graph.connectElements([[id8, 1]], element, 1, 4, 0);
 
     console.log(JSON.stringify(graph.elements));
 
-    const address = await graph.deploy(web3);
+    //Set some default params!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+    //Deploy
+    const address = await graph.deploy(web3);
     console.log(address);
+
+    //Load Graph from address!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+    //Set execution params!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    //Execute
+    //result = await graph.isReadyToExecute(web3);
+    //expect(JSON.stringify(result)).to.equal('"ready"');
   });
 });
