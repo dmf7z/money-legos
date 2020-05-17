@@ -36,7 +36,8 @@ export const SmallIcon = (props) => {
           </svg>
         );
       case "OperationElement":
-        console.log(ASSETS_COLORS[props.outputs[0]]);
+        console.log(ASSETS_COLORS[props.inputs[0]]);
+        console.log(props.inputs[0]);
         return (
           <svg width={size} height={size} viewBox="0 0 64 63">
             <g
@@ -54,11 +55,11 @@ export const SmallIcon = (props) => {
                 <g id="InputElement" transform="translate(55.000000, 58.000000)">
                   <path
                     d="M0.5,31.5 L0.5,55 C0.5,59.1421356 3.85786438,62.5 8,62.5 L56,62.5 C60.1421356,62.5 63.5,59.1421356 63.5,55 L63.5,31.5 L0.5,31.5 Z"
-                    fill={ASSETS_COLORS[props.inputs[0]]}
+                    fill={ASSETS_COLORS[props.outputs[0]]}
                   ></path>
                   <path
                     d="M0.5,31.5 L63.5,31.5 L63.5,8 C63.5,3.85786438 60.1421356,0.5 56,0.5 L8,0.5 C3.85786438,0.5 0.5,3.85786438 0.5,8 L0.5,31.5 Z"
-                    fill={ASSETS_COLORS[props.outputs[0]]}
+                    fill={ASSETS_COLORS[props.inputs[0]]}
                   ></path>
                 </g>
               </g>

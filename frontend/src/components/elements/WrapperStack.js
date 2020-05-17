@@ -16,7 +16,7 @@ function WrapperStack(props) {
   useEffect(() => {
     for (const con of connections) {
       relationArray.push({
-        targetId: con,
+        targetId: con.id,
         targetAnchor: "top",
         sourceAnchor: "bottom",
         arrowThickness: 2,

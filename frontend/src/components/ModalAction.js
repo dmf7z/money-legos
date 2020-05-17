@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import Modal from "react-modal";
 import { StackContext } from "../contexts/stack";
 import { ASSETS_COLORS, ASSETS_NAMES } from "../constants/index";
 import { SmallIcon } from "./modal/SmallIcon";
+import { OperationsOption } from "./modal/OperationsOptions";
 
 export default function ModalAction() {
   const {
@@ -14,6 +15,7 @@ export default function ModalAction() {
     graph,
     setShowAvailable,
   } = useContext(StackContext);
+  const [idsSelected, setIdsSelected] = useState([]);
 
   const customStyles = {
     content: {
@@ -30,16 +32,21 @@ export default function ModalAction() {
 
   console.log("HERE!!! ", uiStack);
 
-  const handleClose = () => {
-    dispatchUi({ type: "CLEAR_SELECTED" });
+//   useEffect(() => {
+//     let ids = uiStack.map(el => el.id)
+//     setIdsSelected(ids)
+//     console.log('id selected ',ids)
+    
+// }, [uiStack]);
 
-    setShowModal(false);
-  };
 
-  const handleAction = () => {
+
+  const closeModal = () => {
+    
     // setShowAvailable(true)
-    // setShowModal(false);
-    dispatchGraph({ type: "ADD_GRAPH" });
+    dispatchUi({ type: "CLEAR_SELECTED" });
+    setShowModal(false);
+    // dispatchGraph({ type: "ADD_GRAPH" });
   };
 
   return (
@@ -96,61 +103,34 @@ export default function ModalAction() {
           </div>
           <div className="modal__content">
             <div>
-              <span class="tag is-info is-light is-small">
+              <span class="tag is-info is-light is-small is-fullwidth">
                 ! You choose an instrument + output
               </span>
 
               {/* definir inputs! en un UseEffects */}
-              <ActionOption action={() => handleAction()} />
-              <ActionOption action={() => handleAction()} />
-              <ActionOption action={() => handleAction()} />
-              <ActionOption action={() => handleAction()} />
-              <ActionOption action={() => handleAction()} />
+              <OperationsOption ids={uiStack} closeModal={closeModal} />
+              
             </div>
           </div>
 
           <button
-            onClick={handleClose}
+            onClick={() => closeModal}
             className="button is-warning is-fullwidth is-rounded"
           >
             OK!
           </button>
-          <div
+          {/* <div
             className="has-text-centered is-fullwidth has-text-info"
-            onClick={handleClose}
+            onClick={() => closeModal}
           >
             Cancel
-          </div>
+          </div> */}
         </div>
       </Modal>
     </div>
   );
 }
 
-function ActionOption(props) {
-  // let options = stack.map((st)=>{
-  //   console.log(st.type, st.output)
-  // if(st.type == 'InputElement' && st.output == 'wbtc'){
-  return (
-    <div
-      onClick={props.action}
-      className="modal__op-btn button is-fullwidth is-medium"
-    >
-      <SmallIcon
-        inputs={["0x6B175474E89094C44Da98b954EedeAC495271d0F"]}
-        outputs={["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"]}
-        type="OperationElement"
-      />
-
-      <div className="modal__op-desc"> Uniswap 🦄 WBTC / ETH</div>
-    </div>
-  );
-
-  // }
-
-  // })
-  // return options
-}
 
 const SmallElement = (props) => {
   const { id } = props;

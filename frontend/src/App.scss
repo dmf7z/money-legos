@@ -327,8 +327,11 @@ body {
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
-    height: 450px;
+    height: 290px;
     padding: 0px 20px;
+    margin-bottom: 10px;
+    overflow-y: scroll;
+
   }
   &__selected {
     display: flex;
@@ -360,10 +363,14 @@ body {
   }
   &__op-btn{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     margin: 5px 0px;
   }
   &__op-desc{
-    padding: 0px 15px;
+    padding: 0px 0px;
+  }
+  &__svg--small{
+    height: 30px;
+    width: 30px;
   }
 }
