@@ -1,5 +1,6 @@
 {
   "main": "src/index.js",
+  "version": "0.1.0",
   "scripts": {
     "build": "oz compile --optimizer on && cp build/contracts/Graph.json ./src/abi/",
     "test": "yarn build && mocha --timeout 100000 --exit --recursive tests/"
