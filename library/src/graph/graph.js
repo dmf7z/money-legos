@@ -1,16 +1,63 @@
 const ABICoder = require("web3-eth-abi");
 const BN = require("bn.js");
-const helper = require("../utils/helper");
 const ERC20ABI = require("../abi/erc20");
-const GraphData = require("../../build/contracts/Graph.json");
+const GraphData = require("../abi/Graph.json");
 const AllElements = require("../elements");
+const shortHash = require("short-hash");
 
 const ETHER = "0x0000000000000000000000000000000000000000";
 
+const addCreationData = (element, creationData) => {
+  for (const data of creationData) {
+    element.executionData[data.index].data = data.value;
+    const result = validateElementData(element.executionData[data.index]);
+    if (result !== "ok") {
+      throw result;
+    }
+  }
+};
+
+const validateElementData = (data) => {
+  if (data.type === "input") {
+    switch (data.dataType) {
+      case "uint256": {
+        const bn = new BN(data.data, 10);
+        if (data.min) {
+          if (bn.lt(new BN(data.min))) {
+            return `${data.title} has to be greater than ${data.min}`;
+          }
+        }
+        if (data.max) {
+          if (bn.gt(new BN(data.max))) {
+            return `${data.title} has to be lower than ${data.max}`;
+          }
+        }
+      }
+      case "uint8": {
+        //TODO
+      }
+      case "timestamp": {
+        //TODO
+      }
+      case "address": {
+        //TODO
+      }
+      case "0xOrder": {
+        //TODO
+      }
+      case "0xSignature": {
+        //TODO
+      }
+    }
+  }
+  return "ok";
+};
+
 class Graph {
-  constructor() {
-    this.address = null;
-    this.elements = [];
+  constructor(address, elements) {
+    this.nextElementId = 0;
+    this.address = address;
+    this.elements = elements;
   }
   //GETTERS
   getElementById(id) {
@@ -28,47 +75,27 @@ class Graph {
       return "Graph has not been deployed yet";
     }
     for (const data of element.executionData) {
-      console.log(data);
-      if (data.type === "input") {
-        switch(data.dataType) {
-          case "uint256": {
-
-          }
-          case "uint8": {
-            
-          }
-          case "timestamp": {
-            
-          }
-          case "address": {
-
-          }
-          case "0xOrder": {
-
-          }
-          case "0xSignature": {
-           // return `${dara.title} not valid`;
-            
-          }
-        }
+      const result = validateElementData(data);
+      if (result !== "ok") {
+        return result;
       }
-    }
-    if (
-      element.type == "InputElement" &&
-      element.executionData[0].data != ETHER
-    ) {
-      //Check enough allowance
-      const value = element.executionData[1].data;
-      const [account] = await web3.eth.getAccounts();
-      const erc20Contract = new web3.eth.Contract(
-        ERC20ABI,
-        element.executionData[0].data
-      );
-      const allowedBalance = await erc20Contract.methods
-        .allowance(account, this.address)
-        .call();
-      if (new BN(value).gt(new BN(allowedBalance))) {
-        return "Not enough allowance for the input value";
+      if (
+        element.type == "InputElement" &&
+        element.executionData[0].data != ETHER
+      ) {
+        //Check enough allowance
+        const value = element.executionData[1].data;
+        const [account] = await web3.eth.getAccounts();
+        const erc20Contract = new web3.eth.Contract(
+          ERC20ABI,
+          element.executionData[0].data
+        );
+        const allowedBalance = await erc20Contract.methods
+          .allowance(account, this.address)
+          .call();
+        if (new BN(value).gt(new BN(allowedBalance))) {
+          return "Not enough allowance for the input value";
+        }
       }
     }
     return "ready";
@@ -94,11 +121,13 @@ class Graph {
     return false;
   }
   //ADDITION, CONNECTION, REMOVAL
-  addElement(coreElement, x, y) {
+  addElement(coreElement, x, y, creationData = []) {
     const element = JSON.parse(JSON.stringify(coreElement));
     if (this.canBeRootElement(element)) {
-      element.id = helper.uuidv4();
+      addCreationData(element, creationData);
       element.index = [x, y];
+      element.id = this.nextElementId;
+      this.nextElementId++;
       this.elements.push(element);
       return element.id;
     }
@@ -107,14 +136,17 @@ class Graph {
   // setExecutionData(element, paramIndex, data) {
   //   if()
   // }
-  connectElements(parentItems, coreElement, elementInputIndex, x, y) {
+  connectElements(parentItems, coreElement, x, y, creationData = []) {
     const element = JSON.parse(JSON.stringify(coreElement));
-    element.id = helper.uuidv4();
+    addCreationData(element, creationData);
     element.index = [x, y];
+    element.id = this.nextElementId;
+    this.nextElementId++;
     //Check connections
     for (const parentItem of parentItems) {
       const parentId = parentItem[0];
       const parentOutputIndex = parentItem[1];
+      const elementInputIndex = parentItem[2];
       const parent = this.getElementById(parentId);
       if (
         !this.canConnectOutput(
@@ -131,6 +163,7 @@ class Graph {
     for (const parentItem of parentItems) {
       const parentId = parentItem[0];
       const parentOutputIndex = parentItem[1];
+      const elementInputIndex = parentItem[2];
       const parent = this.getElementById(parentId);
       parent.connections[parentOutputIndex] = {
         id: element.id,
@@ -179,20 +212,22 @@ class Graph {
         dataList.push(data.data);
       }
       const params = ABICoder.encodeParameters(typesList, dataList);
-      const elementOutputsIndexes = [];
-      const elementOuputsOutIndexes = [];
+      const outputsIndexes = [];
+      const outputsInputIndexes = [];
       for (const connection of element.connections) {
-        elementOutputsIndexes.push(this.getElementIndexById(connection.id));
-        elementOuputsOutIndexes.push(connection.index);
+        outputsIndexes.push(this.getElementIndexById(connection.id));
+        outputsInputIndexes.push(connection.index);
       }
       return {
+        hash: shortHash(element.key),
         addr: element.address,
         params,
-        elementOutputsIndexes,
-        elementOuputsOutIndexes,
+        outputsIndexes,
+        outputsInputIndexes,
+        x: element.index[0],
+        y: element.index[1],
       };
     });
-    console.log(JSON.stringify(elements));
     //Deploy contract
     const [admin] = await web3.eth.getAccounts();
     const graphContract = new web3.eth.Contract(GraphData.abi);
@@ -203,7 +238,7 @@ class Graph {
       })
       .send({
         from: admin,
-        gas: 3500000,
+        gas: 4000000,
       });
     this.address = graphInstance.options.address;
     return this.address;

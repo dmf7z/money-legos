@@ -5,10 +5,13 @@ contract GraphBase {
     address internal proxied;
 
     struct Element {
+        string hash;
         address addr;
         bytes params;
-        uint64[] elementOutputsIndexes;
-        uint64[] elementOuputsOutIndexes;
+        uint64[] outputsIndexes;
+        uint64[] outputsInputIndexes;
+        uint8 x;
+        uint8 y;
     }
 
     Element[] public elements;

@@ -17,10 +17,13 @@ contract Graph is GraphBase, OperationExecutor {
         for (uint256 i; i < _elements.length; i++) {
             elements.length++;
             elements[i] = Element({
+                hash: _elements[i].hash,
                 addr: _elements[i].addr,
                 params: _elements[i].params,
-                elementOutputsIndexes: _elements[i].elementOutputsIndexes,
-                elementOuputsOutIndexes: _elements[i].elementOuputsOutIndexes
+                outputsIndexes: _elements[i].outputsIndexes,
+                outputsInputIndexes: _elements[i].outputsInputIndexes,
+                x: _elements[i].x,
+                y: _elements[i].y
             });
         }
     }
@@ -60,19 +63,19 @@ contract Graph is GraphBase, OperationExecutor {
                     );
                 }
                 //Input element has one output
-                inputs[element.elementOutputsIndexes[0]][element
-                    .elementOuputsOutIndexes[0]]
+                inputs[element.outputsIndexes[0]][element
+                    .outputsInputIndexes[0]]
                     .add(amount);
             } else if (element.addr == address(2)) {
                 //SplitterElement
                 uint8 percentage = abi.decode(params, (uint8));
                 uint256 firstShare = inputs[i][0].mul(percentage).div(100);
                 //Spliiter element has one output
-                inputs[element.elementOutputsIndexes[0]][element
-                    .elementOuputsOutIndexes[0]]
+                inputs[element.outputsIndexes[0]][element
+                    .outputsInputIndexes[0]]
                     .add(firstShare);
-                inputs[element.elementOutputsIndexes[1]][element
-                    .elementOuputsOutIndexes[1]]
+                inputs[element.outputsIndexes[1]][element
+                    .outputsInputIndexes[1]]
                     .add(inputs[i][0])
                     .sub(firstShare);
             } else if (element.addr == address(3)) {
@@ -155,16 +158,16 @@ contract Graph is GraphBase, OperationExecutor {
                     element.params
                 );
                 //Redirect
-                for (
-                    uint8 j = 0;
-                    j < element.elementOutputsIndexes.length;
-                    j++
-                ) {
-                    inputs[element.elementOutputsIndexes[j]][element
-                        .elementOuputsOutIndexes[j]]
+                for (uint8 j = 0; j < element.outputsIndexes.length; j++) {
+                    inputs[element.outputsIndexes[j]][element
+                        .outputsInputIndexes[j]]
                         .add(outAmounts[j]);
                 }
             }
         }
+    }
+
+    function getElements() public view returns (GraphBase.Element[] memory) {
+        return elements;
     }
 }

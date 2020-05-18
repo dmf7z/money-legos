@@ -71,8 +71,8 @@ const addUniswapOperations = (elements, name) => {
         title: "Deadline",
         description: "Please enter the deadline for trade to expire in seconds",
         required: false,
-        default: 4745221884, //year 2120
-        data: 4745221884,
+        default: "4745221884", //year 2120
+        data: "4745221884",
       },
     ],
   };
@@ -116,8 +116,8 @@ const addUniswapOperations = (elements, name) => {
         title: "Deadline",
         description: "Please enter the deadline for trade to expire in seconds",
         required: false,
-        default: 4745221884, //year 2120
-        data: 4745221884,
+        default: "4745221884", //year 2120
+        data: "4745221884",
       },
     ],
   };
