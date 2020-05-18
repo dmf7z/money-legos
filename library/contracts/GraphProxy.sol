@@ -10,10 +10,13 @@ contract GraphProxy is GraphBase {
         for (uint256 i; i < _elements.length; i++) {
             elements.length++;
             elements[i] = Element({
+                hash: _elements[i].hash,
                 addr: _elements[i].addr,
                 params: _elements[i].params,
-                elementOutputsIndexes: _elements[i].elementOutputsIndexes,
-                elementOuputsOutIndexes: _elements[i].elementOuputsOutIndexes
+                outputsIndexes: _elements[i].outputsIndexes,
+                outputsInputIndexes: _elements[i].outputsInputIndexes,
+                x: _elements[i].x,
+                y: _elements[i].y
             });
         }
     }

@@ -1,6 +1,7 @@
 const chaiAsPromised = require("chai-as-promised");
 const chai = require("chai");
 const Web3 = require("web3");
+var md5 = require("md5");
 const factory = require("../src");
 const elements = require("../src/elements");
 
@@ -19,7 +20,12 @@ describe("Graph", function() {
 
     //Create element
     element = elements.INPUT_DAI;
-    let id1 = graph.addElement(element, 0, 0);
+    let id1 = graph.addElement(element, 0, 0, [
+      {
+        index: 1,
+        value: "1000000000000000000",
+      },
+    ]);
 
     //Create element
     element = elements.INPUT_WBTC;
@@ -27,7 +33,12 @@ describe("Graph", function() {
 
     //Create element
     element = elements.INPUT_USDC;
-    let id3 = graph.addElement(element, 0, 2);
+    let id3 = graph.addElement(element, 0, 2, [
+      {
+        index: 1,
+        value: "1000000000000000000",
+      },
+    ]);
 
     //Create element
     element = elements.INPUT_ETH;
@@ -41,7 +52,7 @@ describe("Graph", function() {
 
     //Create operation and connect them
     element = elements.OP_UNISWAP_WBTC_TO_ETH;
-    let id5 = graph.connectElements([[id2, 0]], element, 0, 1, 1);
+    let id5 = graph.connectElements([[id2, 0, 0]], element, 1, 1);
 
     //Check connection
     availableElements = graph.getAvailableElements([id3]);
@@ -51,7 +62,7 @@ describe("Graph", function() {
 
     //Create operation and connect them
     element = elements.OP_UNISWAP_USDC_TO_ETH;
-    let id6 = graph.connectElements([[id3, 0]], element, 0, 1, 2);
+    let id6 = graph.connectElements([[id3, 0, 0]], element, 1, 2);
 
     //Check connection
     availableElements = graph.getAvailableElements([id4, id5, id6]);
@@ -63,12 +74,11 @@ describe("Graph", function() {
     element = elements.OP_UNISWAP_ETH_TO_DAI;
     let id7 = graph.connectElements(
       [
-        [id4, 0],
-        [id5, 0],
-        [id6, 0],
+        [id4, 0, 0],
+        [id5, 0, 0],
+        [id6, 0, 0],
       ],
       element,
-      0,
       2,
       0
     );
@@ -83,13 +93,18 @@ describe("Graph", function() {
     element = elements.SPLITTER_DAI;
     let id8 = graph.connectElements(
       [
-        [id1, 0],
-        [id7, 0],
+        [id1, 0, 0],
+        [id7, 0, 0],
       ],
       element,
-      0,
       3,
-      0
+      0,
+      [
+        {
+          index: 0,
+          value: "30",
+        },
+      ]
     );
 
     //Check connection
@@ -100,22 +115,23 @@ describe("Graph", function() {
 
     //Create operation and connect them
     element = elements.ADDRESS;
-    let id9 = graph.connectElements([[id8, 0]], element, 1, 4, 0);
+    let id9 = graph.connectElements([[id8, 0, 1]], element, 4, 0);
 
     //Create operation and connect them
     element = elements.ADDRESS;
-    let id10 = graph.connectElements([[id8, 1]], element, 1, 4, 0);
-
-    console.log(JSON.stringify(graph.elements));
-
-    //Set some default params!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    let id10 = graph.connectElements([[id8, 1, 1]], element, 4, 0);
 
     //Deploy
     const address = await graph.deploy(web3);
     console.log(address);
 
-    //Load Graph from address!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //Load Graph from address
+    const loadedGraph = await factory.loadGraph(web3, address);
 
+    const hash1 = md5(JSON.stringify(graph.elements));
+    const hash2 = md5(JSON.stringify(loadedGraph.elements));
+
+    expect(hash1).to.equal(hash2);
 
     //Set execution params!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
