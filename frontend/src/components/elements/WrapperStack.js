@@ -41,12 +41,13 @@ function WrapperStack(props) {
     setShowModal(!isSelected);
   };
 
+
 //   useEffect(() => {
 //     let available = uiStack && uiStack.filter((obj) => obj == props.id);
 //     setIsSelected(!isEmpty(available));
 //   }, [uiStack]);
 
-  let asset = ASSETS_NAMES[outputs[0]].toUpperCase();
+  let asset = outputs && ASSETS_NAMES[outputs[0]].toUpperCase();
 
   //selected operation
   //   const { dispatchStack, setShowModal, stack } = useContext(StackContext);
@@ -65,7 +66,7 @@ function WrapperStack(props) {
   //     let available = stack.filter((obj) => obj.id == props.id);
   //     setSelected(!isEmpty(available));
   //   }, [stack]);
-  console.log('For ID: ', type, ASSETS_NAMES[props.outputs[0]], id, connections.length ,targetRelation.length, relationArray.length)
+//   console.log('For ID: ', type, ASSETS_NAMES[props.outputs[0]], id, connections.length ,targetRelation.length, relationArray.length)
   
   return (
     <ArcherElement id={id} relations={targetRelation}>

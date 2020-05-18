@@ -5,9 +5,9 @@ import { StackContext } from "../contexts/stack";
 import { columnStyle, gridWrapper } from "../styles/graphStyles";
 import RenderElement from "./elements/RenderElement";
 import { isEmpty } from "lodash";
-import { EMPTY_ELEMENT } from "../constants";
+import { EMPTY_ELEMENT, NEW_INIT_ELEMENT } from "../constants";
 
-const MAP_INDEX = [4, 4];
+const MAP_INDEX = [6, 6];
 
 function FactoryGraph(props) {
   const { graph, uiStack } = useContext(StackContext);
@@ -19,28 +19,17 @@ function FactoryGraph(props) {
 
   useEffect(() => {
     // let useMap = isEmpty(graph) ? props.graph : graph;
-    console.log('getting new Graph!')
-    console.log(graph)
+    console.log("getting new Graph!");
+    console.log(graph);
 
     let newMap = GenerateMap(graph);
 
     setgraphMap(newMap);
     setIsLoading(false);
-    // 
-
-    
+    //
   }, [graph, uiStack]);
 
-  const tryAs = () =>{
-    console.log('rrrr')
-    console.log(ref)
-    GenerateMap(graph)
-    ref.current.refreshScreen()
-  }
-
   return (
-    <>
-    <div><button onClick={tryAs }>RRRR</button></div>
     <ArcherContainer
       ref={ref}
       className={"test3"}
@@ -49,20 +38,19 @@ function FactoryGraph(props) {
     >
       {isLoading && <div>LOADING...</div>}
 
-      <div  style={gridWrapper}>
-      
-
+      <div style={gridWrapper}>
         {!isLoading &&
           graphMap.map((line) => {
             return (
               <div style={columnStyle}>
-                {line.map((element) => <RenderElement {...element} /> )}
+                {line.map((element) => (
+                  <RenderElement {...element} />
+                ))}
               </div>
             );
           })}
       </div>
     </ArcherContainer>
-    </>
   );
 }
 
@@ -70,8 +58,11 @@ export default FactoryGraph;
 
 function GenerateMap(graph) {
   console.log("starting map", graph);
-  if (isEmpty(graph.elements)){ return []}
+  if (isEmpty(graph.elements)) {
+    return [];
+  }
   let elementsMap = [];
+  let firstEmptyElement = true
   for (let i = 0; i < MAP_INDEX[1]; i++) {
     let line = [];
     for (let m = 0; m < MAP_INDEX[0]; m++) {
@@ -80,6 +71,13 @@ function GenerateMap(graph) {
       );
       let emptyWithPos = EMPTY_ELEMENT;
       emptyWithPos.index = [m, i];
+      // Check with is the first empty element, 
+      // to add NewInit element (future InputElement)
+      if (firstEmptyElement && graphElement.length === 0){
+        firstEmptyElement = false
+        emptyWithPos = NEW_INIT_ELEMENT;
+        emptyWithPos.index = [m, i];
+      }
       let squareElement =
         graphElement.length > 0 ? graphElement[0] : emptyWithPos;
 
