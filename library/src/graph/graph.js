@@ -1,8 +1,7 @@
 const ABICoder = require("web3-eth-abi");
 const BN = require("bn.js");
-const helper = require("../utils/helper");
 const ERC20ABI = require("../abi/erc20");
-const GraphData = require("../../build/contracts/Graph.json");
+const GraphData = require("../abi/Graph.json");
 const AllElements = require("../elements");
 const shortHash = require("short-hash");
 
