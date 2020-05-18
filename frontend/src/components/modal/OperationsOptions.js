@@ -3,34 +3,40 @@ import { ASSETS_COLORS, INSTRUMENT_DESCRIPTION } from "../../constants";
 import { StackContext } from "../../contexts/stack";
 import { SmallIcon } from "./SmallIcon";
 import { InstrumentDescription } from "./InstrumentDescription";
+import { isEmpty } from "lodash";
 
 export function OperationsOption(props) {
   const [opSelected, setOpSelected] = useState(null);
 
-  const { graph } = useContext(StackContext);
+  const { graph, dispatchGraph } = useContext(StackContext);
   const { ids } = props;
-  console.log("id selected ", ids);
+  // console.log("id selected ", ids);
 
   const handleInputsData = (el) => {
-    console.log("inputs data", el);
+    // console.log("inputs data", el);
     setOpSelected(el);
   };
 
   const handleAction = (el) => {
-    console.log("ACTION!!", el);
+    console.log("Do de add Action", el, ids);
+    let addElement = {
+      parent: ids,
+      element: el
+    }
+    dispatchGraph({ type: "ADD_OPERATION", addElement });
     props.closeModal();
+
   };
 
-  const availableElements = graph.getAvailableElements(ids);
+  const availableElements =  isEmpty(ids) ? [] : graph.getAvailableElements(ids);
   return (
     <div>
-      {Object.keys(availableElements).map((elementKey) => {
-        console.log('i',availableElements);
-        let element = availableElements[elementKey]
+      {availableElements.map(element => {
+        // console.log(element);
 
         if (element.type == "OperationElement") {
           const showElement = opSelected
-            ? opSelected.description == element.description
+            ? opSelected.key == element.key
               ? true
               : false
             : true;
@@ -38,6 +44,7 @@ export function OperationsOption(props) {
             return (
               <>
                 <div
+                key={element.id}
                   onClick={() => handleInputsData(element)}
                   className={`modal__op-btn button is-fullwidth is-medium ${opSelected && 'is-disabled'}`}
                 >
@@ -75,12 +82,12 @@ export function OperationsOption(props) {
                 )}
                 <div>
                   
-          <button
+          {opSelected && <button
             onClick={() => handleAction(element)}
             className="button is-warning is-fullwidth is-rounded"
           >
             OK!
-          </button>
+          </button>}
                 </div>
               </>
             );

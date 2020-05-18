@@ -6,7 +6,7 @@ import { isEmpty } from "lodash";
 import { ASSETS_NAMES } from "../../constants";
 
 function WrapperStack(props) {
-  const { connections, id, outputs } = props;
+  const { connections, id, outputs, type } = props;
   const [targetRelation, setTargetRelation] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
   const { dispatchUi, setShowModal, uiStack } = useContext(StackContext);
@@ -14,6 +14,7 @@ function WrapperStack(props) {
   let relationArray = [];
 
   useEffect(() => {
+      console.log('Connetion', id, connections)
     for (const con of connections) {
       relationArray.push({
         targetId: con.id,
@@ -22,10 +23,12 @@ function WrapperStack(props) {
         arrowThickness: 2,
         style: arrowStyle,
       });
+
     }
+    let available = uiStack && uiStack.filter((obj) => obj == props.id);
+    setIsSelected(!isEmpty(available));
     setTargetRelation(relationArray);
-    console.log(relationArray, id);
-  }, [connections]);
+  }, [uiStack, connections]);
 
   const handleSelect = () => {
       console.log('Wrapped click:', id)
@@ -38,12 +41,13 @@ function WrapperStack(props) {
     setShowModal(!isSelected);
   };
 
-  useEffect(() => {
-    let available = uiStack && uiStack.filter((obj) => obj == props.id);
-    setIsSelected(!isEmpty(available));
-  }, [uiStack]);
 
-  let asset = ASSETS_NAMES[outputs[0]].toUpperCase();
+//   useEffect(() => {
+//     let available = uiStack && uiStack.filter((obj) => obj == props.id);
+//     setIsSelected(!isEmpty(available));
+//   }, [uiStack]);
+
+  let asset = outputs && ASSETS_NAMES[outputs[0]].toUpperCase();
 
   //selected operation
   //   const { dispatchStack, setShowModal, stack } = useContext(StackContext);
@@ -62,7 +66,8 @@ function WrapperStack(props) {
   //     let available = stack.filter((obj) => obj.id == props.id);
   //     setSelected(!isEmpty(available));
   //   }, [stack]);
-
+//   console.log('For ID: ', type, ASSETS_NAMES[props.outputs[0]], id, connections.length ,targetRelation.length, relationArray.length)
+  
   return (
     <ArcherElement id={id} relations={targetRelation}>
       {React.cloneElement(props.children, { ...props, selectAction: handleSelect, isSelected: isSelected })}

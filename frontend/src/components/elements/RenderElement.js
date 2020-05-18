@@ -20,6 +20,8 @@ function RenderElement(props) {
       return <SplitterStack {...props} />;
     case "AddressElement":
       return <AddressStack {...props} />;
+    case "NewInitStack":
+      return <WrapperStack {...props} ><NewInitStack {...props} /></WrapperStack>
     case "EmptyElement":
       return <EmptyStack {...props} />;
   }

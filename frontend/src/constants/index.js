@@ -1,9 +1,20 @@
 export const EMPTY_ELEMENT = {
-    id: "emptyId",
+    id: "EmptyElement007",
     type: "EmptyElement",
     address: "",
     addreinput: "",
     output: "",
+    connections: [],
+    index: [],
+  };
+
+  export const NEW_INIT_ELEMENT = {
+    id: "NewInitStack",
+    type: "NewInitStack",
+    address: "",
+    addreinput: "",
+    inputs: [],
+    output: [],
     connections: [],
     index: [],
   };

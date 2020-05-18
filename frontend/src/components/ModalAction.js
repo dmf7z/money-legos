@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import Modal from "react-modal";
 import { StackContext } from "../contexts/stack";
-import { ASSETS_COLORS, ASSETS_NAMES } from "../constants/index";
+import { ASSETS_COLORS, ASSETS_NAMES, NEW_INIT_ELEMENT } from "../constants/index";
 import { SmallIcon } from "./modal/SmallIcon";
 import { OperationsOption } from "./modal/OperationsOptions";
+import { AssetsOptions } from "./modal/AssetsOptions";
 
 export default function ModalAction() {
   const {
@@ -16,6 +17,8 @@ export default function ModalAction() {
     setShowAvailable,
   } = useContext(StackContext);
   const [idsSelected, setIdsSelected] = useState([]);
+  const [isInitStack, setIsInitStack] = useState(false);
+  const [tab, setTab] = useState("operation");
 
   const customStyles = {
     content: {
@@ -30,19 +33,20 @@ export default function ModalAction() {
     },
   };
 
-  console.log("HERE!!! ", uiStack);
+  // console.log("HERE!!! ", uiStack);
 
-  //   useEffect(() => {
-  //     let ids = uiStack.map(el => el.id)
-  //     setIdsSelected(ids)
-  //     console.log('id selected ',ids)
+    useEffect(() => {
+    if(uiStack.includes('NewInitStack')){
+      setIsInitStack(true)
+    }
 
-  // }, [uiStack]);
+  }, [uiStack]);
 
   const closeModal = () => {
     // setShowAvailable(true)
     dispatchUi({ type: "CLEAR_SELECTED" });
     setShowModal(false);
+    setIsInitStack(false)
     // dispatchGraph({ type: "ADD_GRAPH" });
   };
 
@@ -56,23 +60,31 @@ export default function ModalAction() {
         //  onRequestClose={}
       >
         <div className="modal__box">
-          <div className="modal__selected">
+         <div className="modal__selected">
             <div className="modal__selected--options">
               <div className="modal__title">Stack Selected:</div>
-              <button
-                onClick={() => setShowModal(false)}
-                class="button is-primary is-small is-outlined"
-              >
-                + Add element
-              </button>
+              <div>
+                { ! isInitStack && <button
+                  onClick={() => setShowModal(false)}
+                  class="button is-primary is-small is-outlined"
+                >
+                  + Add element
+                </button>}
+                <button
+                  onClick={() => closeModal()}
+                  class="button is-small modal__close"
+                >
+                  <span class="icon is-small">X</span>
+                </button>
+              </div>
             </div>
             <div class="modal__select">
               {uiStack && uiStack.map((el) => <SmallElement id={el} />)}
             </div>
           </div>
-          <div class="tabs is-centered is-boxed">
+          { !isInitStack && <div class="tabs is-centered is-boxed">
             <ul>
-              <li class="is-active">
+              <li class={`${tab === 'operation' && 'is-active'}`} onClick={() => setTab('operation')}>
                 <a>
                   <span class="icon is-small">
                     <i class="fas fa-image" aria-hidden="true"></i>
@@ -80,7 +92,7 @@ export default function ModalAction() {
                   <span>📟 Operations</span>
                 </a>
               </li>
-              <li>
+              <li class={`${tab === 'splitter' && 'is-active'}`} onClick={() => setTab('splitter')}>
                 <a>
                   <span class="icon is-small">
                     <i class="fas fa-music" aria-hidden="true"></i>
@@ -88,7 +100,7 @@ export default function ModalAction() {
                   <span>⚡️ Splitter</span>
                 </a>
               </li>
-              <li>
+              <li class={`${tab === 'address' && 'is-active'}`} onClick={() => setTab('address')}>
                 <a>
                   <span class="icon is-small">
                     <i class="fas fa-film" aria-hidden="true"></i>
@@ -97,33 +109,47 @@ export default function ModalAction() {
                 </a>
               </li>
             </ul>
-          </div>
+          </div>}
+          { !isInitStack && 
+
           <div className="modal__content">
-            <div>
-            <div className="modal__options">
-              <span class="tag is-info is-light is-small is-fullwidth">
-                Here you can choose an instrument to trade / swap tokens!
-              </span>
-            </div>
-
-
-              {/* definir inputs! en un UseEffects */}
+          {tab === 'operation' && <div>
+              <div className="modal__options">
+                <span class="tag is-info is-light is-small is-fullwidth">
+                  Here you can choose an instrument to trade / swap tokens!
+                </span>
+              </div>
               <OperationsOption ids={uiStack} closeModal={closeModal} />
+            </div>}
+            {tab === 'splitter' && <div>
+              <div className="modal__options">
+                <span class="tag is-info is-light is-small is-fullwidth">
+                  Here you can choose one or many outputs to split in other elements
+                </span>
+              </div>
+            </div>}
+            {tab === 'address' && <div>
+              <div className="modal__options">
+                <span class="tag is-info is-light is-small is-fullwidth">
+                  Here you can select an address as an output.
+                </span>
+              </div>
+            </div>}
+          </div>
+          }
+           { isInitStack &&  <div className="modal__content">
+          <div>
+              <div className="modal__options">
+                <span class="tag is-info is-light is-small is-fullwidth">
+                  Please choose your asset to start the path
+                </span>
+              </div>
+              <AssetsOptions ids={uiStack} closeModal={closeModal} />
             </div>
-          </div>
-{/* 
-          <button
-            onClick={() => closeModal}
-            className="button is-warning is-fullwidth is-rounded"
-          >
-            OK!
-          </button> */}
-          <div
-            className="has-text-centered is-fullwidth has-text-info"
-            onClick={() => closeModal}
-          >
-            Cancel
-          </div>
+        
+           
+          </div>}
+     
         </div>
       </Modal>
     </div>
@@ -134,7 +160,7 @@ const SmallElement = (props) => {
   const { id } = props;
   const { graph } = useContext(StackContext);
 
-  let element = graph.getElementById(id);
+  let element = id === 'NewInitStack' ? NEW_INIT_ELEMENT : graph.getElementById(id);
 
   return (
     <div className="modal__select--item">
@@ -148,6 +174,8 @@ function SmallDescription(props) {
   console.log("small desc", props);
 
   switch (props.type) {
+    case "NewInitStack":
+      return `Choose Asset`;
     case "InputElement":
       return `Start with ${ASSETS_NAMES[props.outputs[0]]}`;
     case "OperationElement":

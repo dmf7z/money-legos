@@ -328,7 +328,7 @@ body {
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
-    height: 290px;
+    height: 350px;
     padding: 0px 20px;
     margin-bottom: 10px;
     overflow-y: scroll;
@@ -396,10 +396,14 @@ body {
     
   }
   &__op--desc {
-    font-size: 1rem;
-
+    font-size: 0.75rem;
     font-weight: 300;
+  }
+  &__close {
+    margin-left: 5px
 
-
+  }
+  &__asset-icon{
+    height: 20px;
   }
 }
