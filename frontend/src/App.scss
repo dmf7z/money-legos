@@ -363,6 +363,7 @@ body {
     color: #3d3d3d
   }
   &__op-btn{
+    width: 100%;
     display: flex;
     justify-content: space-between;
     margin: 5px 0px;
@@ -405,5 +406,8 @@ body {
   }
   &__asset-icon{
     height: 20px;
+  }
+  &__tab{
+    margin-bottom: 0.5rem !important;
   }
 }

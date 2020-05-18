@@ -29,14 +29,65 @@ export const graphReducer = (state, action) => {
         parent = state.getElementById(action.addElement.parent[0]);
         // console.log('PARENT MY FRIEND', action.addElement.parent[0])
   
-        element = factory.getElements()[action.addElement.element.key];
+        element = factory.getElements()[`SPLITTER_${action.addElement.asset}`];
         // console.log('element MY FRIEND', element)
         // console.log(1,state)
   
         //Add element to graph
-        state.connectElements([[parent.id, 0]], element, 0, parent.index[0], parent.index[1] + 1);
+        state.connectElements([[parent.id, 0, 0]], element, parent.index[0], parent.index[1] + 1);
         // console.log(2,state)
         return state
+
+        case "ADD_SPLITTER":
+          let maxX = 0
+          let maxY = 0
+          console.log('ADD_OPERATION MY FRIEND', action)
+          // parent = state.getElementById(action.addElement.parents[0]);
+          let arrayIds = []
+          for(const par of action.addElement.parents) {
+            parent = state.getElementById(par);
+          console.log('PARENT MY FRIEND', parent)
+            
+            if(parent.index[0] > maxX){
+              maxX = parent.index[0] 
+
+            }
+            if(parent.index[1] > maxY){
+              maxY = parent.index[1] 
+            }
+
+            arrayIds.push([par, 0 , 0])
+            
+            
+          }
+    
+          element = factory.getElements()[action.addElement.element.key];
+          console.log('element MY FRIEND', element)
+          console.log(1,state)
+          // let ids = action.addElement.parents.map(el => {return [el, 0, 0]})
+          console.log('ids: ',arrayIds)
+          console.log('element: ',element)
+          console.log(maxX,
+            maxY + 1,)
+            console.log('value:', action.addElement.value)
+    
+          //Add element to graph
+          
+          state.connectElements(
+            arrayIds,
+            element,
+            maxX,
+            maxY + 1,
+            [
+              {
+                index: 0,
+                value: action.addElement.value,
+              },
+            ]
+          );
+
+          console.log(2,state)
+          return state
 
     case "ADD_GRAPH":
       element = factory.getElements().INPUT_DAI;
