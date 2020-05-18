@@ -48,11 +48,11 @@ function SplitterStack(props) {
           <div className="stack-color__square stack-color__darken  round--right"></div>
           <img
             className="round--img"
-            src={require(`../../assets/icons/${props.asset}.svg`)}
+            // src={require(`../../assets/icons/${props.asset}.svg`)}
           ></img>
         </div>
         <div className="stack--round stack-color__content">
-          <div className="stack-color__name">SPLIT {props.asset} 50% / 50%</div>
+          <div className="stack-color__name">SPLIT  50% / 50%</div>
         </div>
       </div>
     </ArcherElement>

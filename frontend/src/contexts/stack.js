@@ -20,7 +20,7 @@ element = factory.getElements().INPUT_ETH;
 startGraph.addElement(element, 2, 0);
 
 element = factory.getElements().OP_UNISWAP_WBTC_TO_ETH;
-startGraph.connectElements([[id2, 0]], element, 0, 1, 1);
+startGraph.connectElements([[id2, 0, 0]], element, 1, 1);
 
 const StackContext = createContext(null);
 
