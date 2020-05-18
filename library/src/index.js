@@ -114,34 +114,6 @@ module.exports = {
         );
       }
     }
-
-    //Add elements
-
-    /*const elements = coreElements.map((coreElement) => {
-      
-     
-
-
-      const creationData = [];
-      for (let index = 0; index < element.executionData.length; index++) {
-        const executionData = element.executionData[index];
-        if(executionData.type !== "raw") {
-          
-
-
-        }
-      }
-      if(element.inputs.length === 0) {
-        graph.addElement(element, coreElement.x, coreElement.y, [{
-
-        }])
-      }
-      else {
-        ////
-      }
-    });
-    */
-
     return graph;
   },
 };

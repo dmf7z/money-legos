@@ -133,10 +133,29 @@ describe("Graph", function() {
 
     expect(hash1).to.equal(hash2);
 
-    //Set execution params!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //Set execution params
+    graph.setExecutionData(id2, 1, "1000000000000000000");
+    result = await graph.isElementReadyToExecute(web3, id2);
+    expect(result).to.equal("Not enough allowance for the input value");
+    //Add validation
+    await graph.allowInputElement(web3, id1);
+    await graph.allowInputElement(web3, id2);
+    await graph.allowInputElement(web3, id3);
+    await graph.allowInputElement(web3, id4);
+    result = await graph.isElementReadyToExecute(web3, id1);
+    expect(result).to.equal("ready");
+    result = await graph.isElementReadyToExecute(web3, id2);
+    expect(result).to.equal("ready");
+    result = await graph.isElementReadyToExecute(web3, id3);
+    expect(result).to.equal("ready");
+    result = await graph.isElementReadyToExecute(web3, id4);
+    expect(result).to.equal("ready");
 
     //Execute
-    //result = await graph.isReadyToExecute(web3);
-    //expect(JSON.stringify(result)).to.equal('"ready"');
+    result = await graph.isReadyToExecute(web3);
+    expect(result).to.be.true;
+
+    result = await graph.execute(web3);
+     console.log(result);
   });
 });
