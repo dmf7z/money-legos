@@ -5,6 +5,7 @@ import { ASSETS_COLORS, ASSETS_NAMES, NEW_INIT_ELEMENT } from "../constants/inde
 import { SmallIcon } from "./modal/SmallIcon";
 import { OperationsOption } from "./modal/OperationsOptions";
 import { AssetsOptions } from "./modal/AssetsOptions";
+import { SplittersOptions, SplittersOption } from "./modal/SplittersOption";
 
 export default function ModalAction() {
   const {
@@ -82,7 +83,7 @@ export default function ModalAction() {
               {uiStack && uiStack.map((el) => <SmallElement id={el} />)}
             </div>
           </div>
-          { !isInitStack && <div class="tabs is-centered is-boxed">
+          { !isInitStack && <div class="tabs is-centered is-boxed modal__tab">
             <ul>
               <li class={`${tab === 'operation' && 'is-active'}`} onClick={() => setTab('operation')}>
                 <a>
@@ -126,6 +127,7 @@ export default function ModalAction() {
                 <span class="tag is-info is-light is-small is-fullwidth">
                   Here you can choose one or many outputs to split in other elements
                 </span>
+                <SplittersOption ids={uiStack} closeModal={closeModal} />
               </div>
             </div>}
             {tab === 'address' && <div>
