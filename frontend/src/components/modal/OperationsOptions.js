@@ -36,7 +36,7 @@ export function OperationsOption(props) {
 
         if (element.type == "OperationElement") {
           const showElement = opSelected
-            ? opSelected.description == element.description
+            ? opSelected.key == element.key
               ? true
               : false
             : true;
@@ -44,7 +44,7 @@ export function OperationsOption(props) {
             return (
               <>
                 <div
-                key={element.key}
+                key={element.id}
                   onClick={() => handleInputsData(element)}
                   className={`modal__op-btn button is-fullwidth is-medium ${opSelected && 'is-disabled'}`}
                 >

@@ -11,19 +11,32 @@ export const graphReducer = (state, action) => {
       //   console.log("2 state ", state);
       return state;
 
-    case "ADD_OPERATION":
+    case "ADD_INPUT":
       console.log('ADD_OPERATION MY FRIEND', action)
-      parent = state.getElementById(action.addElement.parent[0]);
-      console.log('PARENT MY FRIEND', action.addElement.parent[0])
+      // console.log('PARENT MY FRIEND', action.addElement.parent[0])
 
-      element = factory.getElements()[action.addElement.element.key];
+      element = factory.getElements()[`INPUT_${action.addElement.asset}`];
       console.log('element MY FRIEND', element)
       console.log(1,state)
 
       //Add element to graph
-      state.connectElements([[parent.id, 0]], element, 0, parent.index[0], parent.index[1] + 1);
+      state.addElement(element, action.addElement.limit, 0)
       console.log(2,state)
       return state
+
+      case "ADD_OPERATION":
+        // console.log('ADD_OPERATION MY FRIEND', action)
+        parent = state.getElementById(action.addElement.parent[0]);
+        // console.log('PARENT MY FRIEND', action.addElement.parent[0])
+  
+        element = factory.getElements()[action.addElement.element.key];
+        // console.log('element MY FRIEND', element)
+        // console.log(1,state)
+  
+        //Add element to graph
+        state.connectElements([[parent.id, 0]], element, 0, parent.index[0], parent.index[1] + 1);
+        // console.log(2,state)
+        return state
 
     case "ADD_GRAPH":
       element = factory.getElements().INPUT_DAI;
