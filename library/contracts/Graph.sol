@@ -40,6 +40,7 @@ contract Graph is GraphBase, OperationExecutor {
      */
     function execute(bytes[] memory _paramsList, uint256 _maxElementInputs)
         public
+        payable
     {
         uint256[][] memory inputs = new uint256[][](elements.length);
         for (uint256 i; i < elements.length; i++) {

@@ -1,7 +1,8 @@
 {
   "main": "src/index.js",
   "scripts": {
-    "test": "oz compile --optimizer on && mocha --timeout 100000 --exit --recursive tests/"
+    "build": "oz compile --optimizer on && cp build/contracts/Graph.json ./src/abi/",
+    "test": "yarn build && mocha --timeout 100000 --exit --recursive tests/"
   },
   "dependencies": {
     "bn.js": "^5.1.1",

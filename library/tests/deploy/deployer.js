@@ -1,7 +1,7 @@
 const Web3 = require("web3");
 var web3 = new Web3(process.env.PROVIDER || "ws://localhost:8545");
 
-const contracts = require("../../common/contracts");
+const contracts = require("../../src/common/contracts");
 
 const OperationExecutor = require("../../build/contracts/OperationExecutor.json");
 const Op_WrapETH = require("../../build/contracts/Op_WrapETH.json");

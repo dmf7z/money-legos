@@ -275,8 +275,15 @@ class Graph {
   async execute(web3) {
     if (this.isReadyToExecute()) {
       let maxElementInputs = 0;
+      let ethValue = 0;
       const params = this.elements.map((element) => {
         maxElementInputs = Math.max(maxElementInputs, element.inputs.length);
+        if (
+          element.type == "InputElement" &&
+          element.executionData[0].data == ETHER
+        ) {
+          ethValue = element.executionData[1].data;
+        }
         const typesList = [];
         const dataList = [];
         for (const data of element.executionData) {
@@ -301,6 +308,7 @@ class Graph {
         .send({
           from: account,
           gas: 4000000,
+          value: ethValue,
         });
       return result;
     }

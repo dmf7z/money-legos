@@ -10,7 +10,7 @@ const expect = chai.expect;
 
 var web3 = new Web3(process.env.PROVIDER || "ws://localhost:8545");
 
-describe("Graph", function() {
+describe("Donate Graph", function() {
   it("Donate Graph", async function() {
     //Create graph
     const graph = factory.createGraph();
