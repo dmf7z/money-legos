@@ -34,18 +34,33 @@ const validateElementData = (data) => {
         }
       }
       case "uint8": {
+        if (data.data === null) {
+          return "Value is null";
+        }
         //TODO
       }
       case "timestamp": {
+        if (data.data === null) {
+          return "Value is null";
+        }
         //TODO
       }
       case "address": {
+        if (data.data === null) {
+          return "Value is null";
+        }
         //TODO
       }
       case "0xOrder": {
+        if (data.data === null) {
+          return "Value is null";
+        }
         //TODO
       }
       case "0xSignature": {
+        if (data.data === null) {
+          return "Value is null";
+        }
         //TODO
       }
     }
@@ -59,18 +74,23 @@ class Graph {
     this.address = address;
     this.elements = elements;
   }
-  //GETTERS
   getElementById(id) {
     return this.elements.find((element) => element.id == id);
   }
   getElementIndexById(id) {
     return this.elements.findIndex((element) => element.id == id);
   }
-  //VALIDATIONS
   canBeRootElement(element) {
     return element.inputs.length == 0;
   }
-  async isElementReadyToExecute(web3, element) {
+  setExecutionData(elementId, paramIndex, value) {
+    const element = this.getElementById(elementId);
+    if (element.executionData.length > paramIndex) {
+      element.executionData[paramIndex].data = value;
+    } else throw "Invalid param index";
+  }
+  async isElementReadyToExecute(web3, elementId) {
+    const element = this.getElementById(elementId);
     if (!this.address) {
       return "Graph has not been deployed yet";
     }
@@ -102,15 +122,12 @@ class Graph {
   }
   async isReadyToExecute(web3) {
     for (const element of this.elements) {
-      const result = await this.isElementReadyToExecute(web3, element);
+      const result = await this.isElementReadyToExecute(web3, element.id);
       if (result !== "ready") {
-        return {
-          elementId: element.id,
-          error: result,
-        };
+        return false;
       }
     }
-    return "ready";
+    return true;
   }
   canConnectOutput(parent, parentOutputIndex, element, elementInputIndex) {
     if (
@@ -120,7 +137,22 @@ class Graph {
     }
     return false;
   }
-  //ADDITION, CONNECTION, REMOVAL
+  async allowInputElement(web3, elementId) {
+    const element = this.getElementById(elementId);
+    if (element.executionData[0].data != ETHER) {
+      const [account] = await web3.eth.getAccounts();
+      const erc20Contract = new web3.eth.Contract(
+        ERC20ABI,
+        element.executionData[0].data
+      );
+      await erc20Contract.methods
+        .approve(this.address, element.executionData[1].data)
+        .send({
+          from: account,
+          gas: 1000000,
+        });
+    }
+  }
   addElement(coreElement, x, y, creationData = []) {
     const element = JSON.parse(JSON.stringify(coreElement));
     if (this.canBeRootElement(element)) {
@@ -133,9 +165,6 @@ class Graph {
     }
     throw "Cannot add a root element that receives assets";
   }
-  // setExecutionData(element, paramIndex, data) {
-  //   if()
-  // }
   connectElements(parentItems, coreElement, x, y, creationData = []) {
     const element = JSON.parse(JSON.stringify(coreElement));
     addCreationData(element, creationData);
@@ -229,7 +258,7 @@ class Graph {
       };
     });
     //Deploy contract
-    const [admin] = await web3.eth.getAccounts();
+    const [account] = await web3.eth.getAccounts();
     const graphContract = new web3.eth.Contract(GraphData.abi);
     const graphInstance = await graphContract
       .deploy({
@@ -237,14 +266,43 @@ class Graph {
         arguments: [elements],
       })
       .send({
-        from: admin,
+        from: account,
         gas: 4000000,
       });
     this.address = graphInstance.options.address;
     return this.address;
   }
-  async execute() {
-    if (this.isReadyToExecute() == "ready") {
+  async execute(web3) {
+    if (this.isReadyToExecute()) {
+      let maxElementInputs = 0;
+      const params = this.elements.map((element) => {
+        maxElementInputs = Math.max(maxElementInputs, element.inputs.length);
+        const typesList = [];
+        const dataList = [];
+        for (const data of element.executionData) {
+          typesList.push(
+            data.dataType == "0xOrder"
+              ? "bytes"
+              : data.dataType == "0xSignature"
+              ? "bytes"
+              : data.dataType == "timestamp"
+              ? "uint256"
+              : data.dataType
+          );
+          dataList.push(data.data);
+        }
+        return ABICoder.encodeParameters(typesList, dataList);
+      });
+      //Deploy contract
+      const [account] = await web3.eth.getAccounts();
+      const graphContract = new web3.eth.Contract(GraphData.abi, this.address);
+      const result = await graphContract.methods
+        .execute(params, maxElementInputs)
+        .send({
+          from: account,
+          gas: 4000000,
+        });
+      return result;
     }
     //TODO: ETH  needs to execute in value
   }
