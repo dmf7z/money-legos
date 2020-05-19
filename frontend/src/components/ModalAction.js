@@ -6,6 +6,8 @@ import { SmallIcon } from "./modal/SmallIcon";
 import { OperationsOption } from "./modal/OperationsOptions";
 import { AssetsOptions } from "./modal/AssetsOptions";
 import { SplittersOptions, SplittersOption } from "./modal/SplittersOption";
+import {isElementComplete} from '../utils'
+import { isEmpty } from "lodash";
 
 export default function ModalAction() {
   const {
@@ -19,6 +21,7 @@ export default function ModalAction() {
   } = useContext(StackContext);
   const [idsSelected, setIdsSelected] = useState([]);
   const [isInitStack, setIsInitStack] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
   const [tab, setTab] = useState("operation");
 
   const customStyles = {
@@ -41,7 +44,12 @@ export default function ModalAction() {
       setIsInitStack(true)
     }
 
+    !isEmpty(uiStack) && setIsComplete(isElementComplete(graph.getElementById(uiStack)))
+
+
+
   }, [uiStack]);
+
 
   const closeModal = () => {
     // setShowAvailable(true)
@@ -83,7 +91,7 @@ export default function ModalAction() {
               {uiStack && uiStack.map((el) => <SmallElement id={el} />)}
             </div>
           </div>
-          { !isInitStack && <div class="tabs is-centered is-boxed modal__tab">
+          { !isInitStack && !isComplete && <div class="tabs is-centered is-boxed modal__tab">
             <ul>
               <li class={`${tab === 'operation' && 'is-active'}`} onClick={() => setTab('operation')}>
                 <a>
@@ -111,10 +119,10 @@ export default function ModalAction() {
               </li>
             </ul>
           </div>}
-          { !isInitStack && 
+          { !isInitStack && !isComplete &&
 
           <div className="modal__content">
-          {tab === 'operation' && <div>
+          {tab === 'operation' && !isComplete && <div>
               <div className="modal__options">
                 <span class="tag is-info is-light is-small is-fullwidth">
                   Here you can choose an instrument to trade / swap tokens!
@@ -130,7 +138,7 @@ export default function ModalAction() {
                 <SplittersOption ids={uiStack} closeModal={closeModal} />
               </div>
             </div>}
-            {tab === 'address' && <div>
+            {tab === 'address' && !isComplete && <div>
               <div className="modal__options">
                 <span class="tag is-info is-light is-small is-fullwidth">
                   Here you can select an address as an output.
@@ -148,10 +156,7 @@ export default function ModalAction() {
               </div>
               <AssetsOptions ids={uiStack} closeModal={closeModal} />
             </div>
-        
-           
           </div>}
-     
         </div>
       </Modal>
     </div>
@@ -184,5 +189,7 @@ function SmallDescription(props) {
       return `${props.instrument}: ${ASSETS_NAMES[props.inputs[0]]} / ${
         ASSETS_NAMES[props.outputs[0]]
       }`;
+    case "SplitterElement":
+      return `${props.description}`;
   }
 }

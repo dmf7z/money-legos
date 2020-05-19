@@ -11,7 +11,7 @@ const InputStack = React.forwardRef((props, ref) => {
   return (
     <div ref={ref} onClick={props.selectAction}>
       <div
-        className={`stack stack--square box box--square ${isSelected &&
+        className={`stack__common stack stack--square box box--square ${isSelected &&
           "selection__box"}`}
       >
         <div className="stack-color__content">

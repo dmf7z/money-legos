@@ -11,7 +11,7 @@ const NewInitStack = React.forwardRef((props, ref) => {
   }
 
   return (
-    <div ref={ref} onClick={handleClickInit} className="stack--new stack--square box box--square">
+    <div ref={ref} onClick={handleClickInit} className="stack__common stack--new stack--square box box--square">
       START WITH NEW ASSET
     </div>
   );

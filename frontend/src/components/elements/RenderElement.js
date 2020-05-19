@@ -17,7 +17,8 @@ function RenderElement(props) {
     case "OperationElement":
       return <WrapperStack {...props} ><OperationStack {...props} /></WrapperStack>;
     case "SplitterElement":
-      return <SplitterStack {...props} />;
+    return <WrapperStack {...props} ><SplitterStack {...props} /></WrapperStack>
+
     case "AddressElement":
       return <AddressStack {...props} />;
     case "NewInitStack":
