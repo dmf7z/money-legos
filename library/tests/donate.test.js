@@ -3,7 +3,8 @@ const chai = require("chai");
 const Web3 = require("web3");
 var md5 = require("md5");
 const factory = require("../src");
-const elements = require("../src/elements");
+const Elements = require("../src/elements");
+const Deployer = require("./deploy/deployer");
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -11,9 +12,15 @@ const expect = chai.expect;
 var web3 = new Web3(process.env.PROVIDER || "ws://localhost:8545");
 
 describe("Donate Graph", function() {
+  let contracts;
+  let elements;
+  before(async function() {
+    contracts = await Deployer.deploy();
+    elements = Elements(contracts);
+  });
   it("Donate Graph", async function() {
     //Create graph
-    const graph = factory.createGraph();
+    const graph = factory.createGraph(elements);
 
     //Create input elements
     let result, element;
@@ -126,7 +133,7 @@ describe("Donate Graph", function() {
     console.log(address);
 
     //Load Graph from address
-    const loadedGraph = await factory.loadGraph(web3, address);
+    const loadedGraph = await factory.loadGraph(web3, address, elements);
 
     const hash1 = md5(JSON.stringify(graph.elements));
     const hash2 = md5(JSON.stringify(loadedGraph.elements));
@@ -156,6 +163,6 @@ describe("Donate Graph", function() {
     expect(result).to.be.true;
 
     result = await graph.execute(web3);
-     console.log(result);
+    console.log(result);
   });
 });

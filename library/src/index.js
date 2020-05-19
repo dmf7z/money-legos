@@ -2,12 +2,13 @@ const ABICoder = require("web3-eth-abi");
 const shortHash = require("short-hash");
 const Graph = require("./graph/graph");
 const Elements = require("./elements");
-const GraphABI = require("./abi/graph");
+const GraphABI = require("./abi/Graph.json").abi;
 
-const findElementByHash = (hash) => {
-  for (key in Elements) {
+
+const findElementByHash = (elements, hash) => {
+  for (key in elements) {
     if (shortHash(key) === hash) {
-      return Elements[key];
+      return elements[key];
     }
   }
 };
@@ -19,7 +20,8 @@ const getIndexOfParentsOutput = (coreElements, indexChild, inputIndexChild) => {
     for (let index2 = 0; index2 < coreElement.outputsIndexes.length; index2++) {
       if (
         parseInt(coreElement.outputsIndexes[index2]) === parseInt(indexChild) &&
-        parseInt(coreElement.outputsInputIndexes[index2]) === parseInt(inputIndexChild)
+        parseInt(coreElement.outputsInputIndexes[index2]) ===
+          parseInt(inputIndexChild)
       ) {
         parents.push({
           index: index,
@@ -32,23 +34,23 @@ const getIndexOfParentsOutput = (coreElements, indexChild, inputIndexChild) => {
 };
 
 module.exports = {
-  getElements: () => {
-    return Elements;
+  getElements: (contracts) => {
+    return Elements(contracts);
   },
-  createGraph: () => {
-    return new Graph(null, []);
+  createGraph: (elements) => {
+    return new Graph(null, [], elements);
   },
-  loadGraph: async (web3, address) => {
+  loadGraph: async (web3, address, elements = Elements()) => {
     const graphContract = new web3.eth.Contract(GraphABI, address);
     const coreElements = await graphContract.methods.getElements().call();
 
     //Create graph
-    const graph = new Graph(address, []);
+    const graph = new Graph(address, [], (elements = Elements()));
 
     //Decode coreElements params
     for (let index = 0; index < coreElements.length; index++) {
       const coreElement = coreElements[index];
-      const element = findElementByHash(coreElement.hash);
+      const element = findElementByHash(elements, coreElement.hash);
       const typesList = [];
       const inputIndexes = [];
       for (let i = 0; i < element.executionData.length; i++) {
