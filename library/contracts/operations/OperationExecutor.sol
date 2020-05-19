@@ -26,7 +26,7 @@ contract OperationExecutor {
         address _operation,
         uint256[] memory _inAmounts,
         bytes memory _params
-    ) public returns (uint256[] memory) {
+    ) public returns (uint256[] memory outAmounts) {
         bytes memory data = abi.encodeWithSelector(
             bytes4(keccak256("operate(uint256[],bytes)")),
             _inAmounts,
@@ -36,7 +36,7 @@ contract OperationExecutor {
             data
         );
         require(success, string(returnedData));
-        return abi.decode(returnedData, (uint256[]));
+        outAmounts = abi.decode(returnedData, (uint256[]));
     }
 
     /**

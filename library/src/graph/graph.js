@@ -2,7 +2,6 @@ const ABICoder = require("web3-eth-abi");
 const BN = require("bn.js");
 const ERC20ABI = require("../abi/erc20");
 const GraphData = require("../abi/Graph.json");
-const AllElements = require("../elements");
 const shortHash = require("short-hash");
 
 const ETHER = "0x0000000000000000000000000000000000000000";
@@ -69,10 +68,11 @@ const validateElementData = (data) => {
 };
 
 class Graph {
-  constructor(address, elements) {
+  constructor(address, elements, allElements) {
     this.nextElementId = 0;
     this.address = address;
     this.elements = elements;
+    this.allElements = allElements;
   }
   getElementById(id) {
     return this.elements.find((element) => element.id == id);
@@ -212,8 +212,8 @@ class Graph {
     }
     const assets = Array.from(assetsSet);
     const availableElements = [];
-    for (const key in AllElements) {
-      const element = AllElements[key];
+    for (const key in this.allElements) {
+      const element = this.allElements[key];
       for (const input of element.inputs) {
         if (assets.indexOf(input) >= 0) {
           availableElements.push(element);
@@ -275,14 +275,14 @@ class Graph {
   async execute(web3) {
     if (this.isReadyToExecute()) {
       let maxElementInputs = 0;
-      let ethValue = 0;
+      let ethValue = new BN(0);
       const params = this.elements.map((element) => {
         maxElementInputs = Math.max(maxElementInputs, element.inputs.length);
         if (
           element.type == "InputElement" &&
           element.executionData[0].data == ETHER
         ) {
-          ethValue = element.executionData[1].data;
+          ethValue = ethValue.add(new BN(element.executionData[1].data));
         }
         const typesList = [];
         const dataList = [];
@@ -298,8 +298,10 @@ class Graph {
           );
           dataList.push(data.data);
         }
+
         return ABICoder.encodeParameters(typesList, dataList);
       });
+
       //Deploy contract
       const [account] = await web3.eth.getAccounts();
       const graphContract = new web3.eth.Contract(GraphData.abi, this.address);

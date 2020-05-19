@@ -16,6 +16,7 @@ contract Op_Uniswap {
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
         public
+        payable
         returns (uint256[] memory outAmounts)
     {
         //Get params
