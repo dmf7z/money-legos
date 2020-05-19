@@ -1,0 +1,10 @@
+<svg width="64px" height="63px" viewBox="0 0 64 63" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+        <g id="Artboard" transform="translate(-220.000000, -367.000000)" stroke="#D7D8D8">
+            <g id="SplitterElement" transform="translate(220.000000, 367.000000)">
+                <path d="M0.5,31.5 L0.5,55 C0.5,59.1421356 3.85786438,62.5 8,62.5 L56,62.5 C60.1421356,62.5 63.5,59.1421356 63.5,55 L63.5,31.5 L0.5,31.5 Z" id="Rectangle" fill="#000000" fillRule="nonzero"></path>
+                <path d="M0.503887893,31.5 L63.4961121,31.5 C63.2289794,14.3336123 49.2299963,0.5 32,0.5 C14.7700037,0.5 0.771020616,14.3336123 0.503887893,31.5 Z" id="Rectangle" fill="#BBBBB0"></path>
+            </g>
+        </g>
+    </g>
+</svg>
