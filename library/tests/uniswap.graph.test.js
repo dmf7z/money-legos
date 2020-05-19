@@ -43,7 +43,6 @@ describe("Uniswap Graph", function() {
 
     //Deploy
     const address = await graph.deploy(web3);
-    console.log(address);
 
     //Load Graph from address
     const loadedGraph = await factory.loadGraph(web3, address);
@@ -72,15 +71,10 @@ describe("Uniswap Graph", function() {
     result = await graph.isReadyToExecute(web3);
     expect(result).to.be.true;
 
-    result = await graph.execute(web3);
-    console.log(result);
+    const txHash = await graph.execute(web3);
+    console.log(txHash);
 
-    const receipt = await web3.eth.getTransactionReceipt(
-      result.transactionHash
-    );
-    console.log(receipt);
-
-     daiBalance = await daiContract.methods.balanceOf(toAddress).call();
-     expect(new BN(daiBalance).gt(new BN(1))).to.equal(true);
+    daiBalance = await daiContract.methods.balanceOf(toAddress).call();
+    expect(new BN(daiBalance).gt(new BN(1))).to.equal(true);
   });
 });

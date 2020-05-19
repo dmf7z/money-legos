@@ -257,6 +257,7 @@ class Graph {
         y: element.index[1],
       };
     });
+    console.log(elements)
     //Deploy contract
     const [account] = await web3.eth.getAccounts();
     const graphContract = new web3.eth.Contract(GraphData.abi);
@@ -273,7 +274,7 @@ class Graph {
     return this.address;
   }
   async execute(web3) {
-    if (this.isReadyToExecute()) {
+    if (this.isReadyToExecute(web3)) {
       let maxElementInputs = 0;
       let ethValue = new BN(0);
       const params = this.elements.map((element) => {
@@ -299,6 +300,7 @@ class Graph {
           dataList.push(data.data);
         }
 
+        console.log(typesList, dataList);
         return ABICoder.encodeParameters(typesList, dataList);
       });
 
@@ -312,9 +314,10 @@ class Graph {
           gas: 4000000,
           value: ethValue,
         });
-      return result;
+      return result.transactionHash;
+    } else {
+      throw "Not ready to execute";
     }
-    //TODO: ETH  needs to execute in value
   }
 }
 

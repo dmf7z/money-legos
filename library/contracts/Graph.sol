@@ -54,7 +54,7 @@ contract Graph is GraphBase {
                     params,
                     (address, uint256)
                 );
-                if (asset != address(0)) {
+                if (asset != address(0) && amount > 0) {
                     //No transferFrom for ethers
                     IERC20(asset).transferFrom(
                         msg.sender,
@@ -82,8 +82,8 @@ contract Graph is GraphBase {
                 );
                 addAmountToInput(
                     inputs,
-                    element.outputsIndexes[0],
-                    element.outputsInputIndexes[0],
+                    element.outputsIndexes[1],
+                    element.outputsInputIndexes[1],
                     inputs[i][0].sub(firstShare)
                 );
             } else if (element.addr == address(3)) {
