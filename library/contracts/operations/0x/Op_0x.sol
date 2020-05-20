@@ -40,6 +40,7 @@ contract Op_0x {
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
         public
+        payable
         returns (uint256[] memory outAmounts)
     {
         (
@@ -51,11 +52,12 @@ contract Op_0x {
             0x95E6F48254609A6ee006F7D493c8e5fB97094ceF,
             _inAmounts[0]
         );
+
         IExchange.FillResults memory results = IExchange(
             0x61935CbDd02287B511119DDb11Aeb42F1593b7Ef
         )
             .fillOrder
-            .value(tx.gasprice * 150000)(order, _inAmounts[0], signature);
+            .value(_inAmounts[1])(order, _inAmounts[0], signature); //fee: tx.gasprice * 150000
 
         //Returns out assets amounts
         outAmounts = new uint256[](1);

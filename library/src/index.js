@@ -4,7 +4,6 @@ const Graph = require("./graph/graph");
 const Elements = require("./elements");
 const GraphABI = require("./abi/Graph.json").abi;
 
-
 const findElementByHash = (elements, hash) => {
   for (key in elements) {
     if (shortHash(key) === hash) {
@@ -37,15 +36,16 @@ module.exports = {
   getElements: (contracts) => {
     return Elements(contracts);
   },
-  createGraph: (elements) => {
-    return new Graph(null, [], elements);
+  createGraph: (contracts) => {
+    return new Graph(null, [], contracts);
   },
-  loadGraph: async (web3, address, elements = Elements()) => {
+  loadGraph: async (web3, address, contracts) => {
+    const elements = Elements(contracts);
     const graphContract = new web3.eth.Contract(GraphABI, address);
     const coreElements = await graphContract.methods.getElements().call();
 
     //Create graph
-    const graph = new Graph(address, [], (elements = Elements()));
+    const graph = new Graph(address, [], contracts);
 
     //Decode coreElements params
     for (let index = 0; index < coreElements.length; index++) {

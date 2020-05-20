@@ -45,7 +45,7 @@ describe("Uniswap Graph", function() {
     const address = await graph.deploy(web3);
 
     //Load Graph from address
-    const loadedGraph = await factory.loadGraph(web3, address);
+    const loadedGraph = await factory.loadGraph(web3, address, contracts);
 
     const hash1 = md5(JSON.stringify(graph.elements));
     const hash2 = md5(JSON.stringify(loadedGraph.elements));

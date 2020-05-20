@@ -120,6 +120,8 @@ describe("Operation 0x", function() {
       ? "1000000000000000000"
       : order.fillableTakerAssetAmount.toString(10);
 
+    const fee0x = (await web3.eth.getGasPrice()) * 150000;
+
     await executorContract.methods
       .executeOperations([
         {
@@ -129,7 +131,7 @@ describe("Operation 0x", function() {
         },
         {
           addr: contracts.OPERATIONS.OP_0X, //WETH To DAI
-          inAmounts: [amount],
+          inAmounts: [amount, fee0x],
           params: paramsOp2,
         },
       ])

@@ -163,7 +163,7 @@ contract Graph is GraphBase {
                 uint256[] memory outAmounts = executeOperation(
                     element.addr,
                     inputs[i],
-                    element.params
+                    params
                 );
                 //Redirect
                 for (uint8 j = 0; j < element.outputsIndexes.length; j++) {
@@ -176,6 +176,7 @@ contract Graph is GraphBase {
                 }
             }
         }
+        //TODO: send all remains to sender
     }
 
     /**

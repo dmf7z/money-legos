@@ -17,7 +17,7 @@ describe("Donate Graph", function() {
   let contracts;
   let elements;
   before(async function() {
-    contracts = await Deployer.deploy();
+    contracts = await Deployer.deploy(true, true, true); //Buy dai, wbtc and usdc
     elements = Elements(contracts);
   });
   it("Donate Graph", async function() {
@@ -36,7 +36,7 @@ describe("Donate Graph", function() {
     expect(new BN(wbtcBalance).gt(new BN(1))).to.equal(true);
 
     //Create graph
-    const graph = factory.createGraph(elements);
+    const graph = factory.createGraph(contracts);
 
     //Create input elements
     let result, element;
@@ -74,9 +74,9 @@ describe("Donate Graph", function() {
 
     //Check connection
     let availableElements = graph.getAvailableElements([id2]);
-    expect(availableElements)
+    expect(availableElements.map(element => element.key))
       .to.be.an("array")
-      .that.includes(elements.OP_UNISWAP_WBTC_TO_ETH);
+      .that.includes(elements.OP_UNISWAP_WBTC_TO_ETH.key);
 
     //Create operation and connect them
     element = elements.OP_UNISWAP_WBTC_TO_ETH;
@@ -84,9 +84,9 @@ describe("Donate Graph", function() {
 
     //Check connection
     availableElements = graph.getAvailableElements([id3]);
-    expect(availableElements)
+    expect(availableElements.map(element => element.key))
       .to.be.an("array")
-      .that.includes(elements.OP_UNISWAP_USDC_TO_ETH);
+      .that.includes(elements.OP_UNISWAP_USDC_TO_ETH.key);
 
     //Create operation and connect them
     element = elements.OP_UNISWAP_USDC_TO_ETH;
@@ -94,9 +94,9 @@ describe("Donate Graph", function() {
 
     //Check connection
     availableElements = graph.getAvailableElements([id4, id5, id6]);
-    expect(availableElements)
+    expect(availableElements.map(element => element.key))
       .to.be.an("array")
-      .that.includes(elements.OP_UNISWAP_ETH_TO_DAI);
+      .that.includes(elements.OP_UNISWAP_ETH_TO_DAI.key);
 
     //Create operation and connect them
     element = elements.OP_UNISWAP_ETH_TO_DAI;
@@ -113,9 +113,9 @@ describe("Donate Graph", function() {
 
     //Check connection
     availableElements = graph.getAvailableElements([id1, id7]);
-    expect(availableElements)
+    expect(availableElements.map(element => element.key))
       .to.be.an("array")
-      .that.includes(elements.SPLITTER_DAI);
+      .that.includes(elements.SPLITTER_DAI.key);
 
     //Create operation and connect them
     element = elements.SPLITTER_DAI;
@@ -137,9 +137,9 @@ describe("Donate Graph", function() {
 
     //Check connection
     availableElements = graph.getAvailableElements([id8]);
-    expect(availableElements)
+    expect(availableElements.map(element => element.key))
       .to.be.an("array")
-      .that.includes(elements.ADDRESS);
+      .that.includes(elements.ADDRESS.key);
 
     //Create operation and connect them
     element = elements.ADDRESS;
@@ -154,7 +154,7 @@ describe("Donate Graph", function() {
     console.log(address);
 
     //Load Graph from address
-    const loadedGraph = await factory.loadGraph(web3, address, elements);
+    const loadedGraph = await factory.loadGraph(web3, address, contracts);
 
     const hash1 = md5(JSON.stringify(graph.elements));
     const hash2 = md5(JSON.stringify(loadedGraph.elements));
@@ -212,7 +212,5 @@ describe("Donate Graph", function() {
     daiBalance = await daiContract.methods.balanceOf(toAddress2).call();
     console.log(daiBalance.toString(10));
     expect(new BN(daiBalance).gt(new BN(1))).to.equal(true);
-
-    
   });
 });

@@ -3,6 +3,8 @@ const BN = require("bn.js");
 const ERC20ABI = require("../abi/erc20");
 const GraphData = require("../abi/Graph.json");
 const shortHash = require("short-hash");
+const Elements = require("../elements");
+const Op0xABI = require("../abi/op_0x");
 
 const ETHER = "0x0000000000000000000000000000000000000000";
 
@@ -68,11 +70,12 @@ const validateElementData = (data) => {
 };
 
 class Graph {
-  constructor(address, elements, allElements) {
+  constructor(address, elements, contracts) {
     this.nextElementId = 0;
     this.address = address;
     this.elements = elements;
-    this.allElements = allElements;
+    this.contracts = contracts;
+    this.allElements = Elements(contracts);
   }
   getElementById(id) {
     return this.elements.find((element) => element.id == id);
@@ -232,14 +235,13 @@ class Graph {
         typesList.push(
           data.dataType == "0xOrder"
             ? "bytes"
-            : data.dataType == "0xSignature"
-            ? "bytes"
             : data.dataType == "timestamp"
             ? "uint256"
             : data.dataType
         );
         dataList.push(data.data);
       }
+      console.log(typesList, dataList);
       const params = ABICoder.encodeParameters(typesList, dataList);
       const outputsIndexes = [];
       const outputsInputIndexes = [];
@@ -257,7 +259,7 @@ class Graph {
         y: element.index[1],
       };
     });
-    console.log(elements)
+    console.log(elements);
     //Deploy contract
     const [account] = await web3.eth.getAccounts();
     const graphContract = new web3.eth.Contract(GraphData.abi);
@@ -277,7 +279,8 @@ class Graph {
     if (this.isReadyToExecute(web3)) {
       let maxElementInputs = 0;
       let ethValue = new BN(0);
-      const params = this.elements.map((element) => {
+      const allParams = [];
+      for (const element of this.elements) {
         maxElementInputs = Math.max(maxElementInputs, element.inputs.length);
         if (
           element.type == "InputElement" &&
@@ -285,35 +288,67 @@ class Graph {
         ) {
           ethValue = ethValue.add(new BN(element.executionData[1].data));
         }
-        const typesList = [];
-        const dataList = [];
-        for (const data of element.executionData) {
-          typesList.push(
-            data.dataType == "0xOrder"
-              ? "bytes"
-              : data.dataType == "0xSignature"
-              ? "bytes"
-              : data.dataType == "timestamp"
-              ? "uint256"
-              : data.dataType
+        if (element.key.startsWith("OP_0x")) {
+          const op0xContract = new web3.eth.Contract(
+            Op0xABI,
+            this.contracts.OPERATIONS.OP_0X
           );
-          dataList.push(data.data);
+          const order = element.executionData[0].data;
+          const orderParam = {
+            makerAddress: order.signedOrder.makerAddress,
+            takerAddress: order.signedOrder.takerAddress,
+            feeRecipientAddress: order.signedOrder.feeRecipientAddress,
+            senderAddress: order.signedOrder.senderAddress,
+            makerAssetAmount: order.signedOrder.makerAssetAmount.toString(10),
+            takerAssetAmount: order.signedOrder.takerAssetAmount.toString(10),
+            makerFee: order.signedOrder.makerFee.toString(10),
+            takerFee: order.signedOrder.takerFee.toString(10),
+            expirationTimeSeconds: order.signedOrder.expirationTimeSeconds.toString(
+              10
+            ),
+            salt: order.signedOrder.salt.toString(10),
+            makerAssetData: order.signedOrder.makerAssetData,
+            takerAssetData: order.signedOrder.takerAssetData,
+            makerFeeAssetData: order.signedOrder.makerFeeAssetData,
+            takerFeeAssetData: order.signedOrder.takerFeeAssetData,
+          };
+          const params = await op0xContract.methods
+            .encodeParams(
+              orderParam,
+              order.signedOrder.signature,
+              element.executionData[1].data
+            )
+            .call();
+          allParams.push(params);
+        } else {
+          const typesList = [];
+          const dataList = [];
+          for (const data of element.executionData) {
+            typesList.push(
+              data.dataType == "0xOrder"
+                ? "bytes"
+                : data.dataType == "timestamp"
+                ? "uint256"
+                : data.dataType
+            );
+            dataList.push(data.data);
+          }
+          console.log(typesList, dataList);
+          allParams.push(ABICoder.encodeParameters(typesList, dataList));
         }
-
-        console.log(typesList, dataList);
-        return ABICoder.encodeParameters(typesList, dataList);
-      });
+      }
 
       //Deploy contract
       const [account] = await web3.eth.getAccounts();
       const graphContract = new web3.eth.Contract(GraphData.abi, this.address);
       const result = await graphContract.methods
-        .execute(params, maxElementInputs)
+        .execute(allParams, maxElementInputs)
         .send({
           from: account,
           gas: 4000000,
           value: ethValue,
         });
+
       return result.transactionHash;
     } else {
       throw "Not ready to execute";

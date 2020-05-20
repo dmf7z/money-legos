@@ -18,7 +18,7 @@ describe("Operation Curve", function() {
     contracts = await Deployer.deploy();
   });
 
-  it("Trade DAI for SUSD", async function() {
+  it("Trade DAI for USDC", async function() {
     const accounts = await web3.eth.getAccounts();
 
     const executorContract = new web3.eth.Contract(
@@ -26,7 +26,7 @@ describe("Operation Curve", function() {
       contracts.OPERATION_EXECUTOR
     );
     const daiContract = new web3.eth.Contract(ERC20ABI, contracts.ASSETS.DAI);
-    const susdContract = new web3.eth.Contract(ERC20ABI, contracts.ASSETS.SUSD);
+    const usdcContract = new web3.eth.Contract(ERC20ABI, contracts.ASSETS.USDC);
 
     await web3.eth.sendTransaction({
       from: accounts[0],
@@ -81,7 +81,7 @@ describe("Operation Curve", function() {
         contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.address,
         contracts.ASSETS.DAI,
         contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf("DAI"),
-        contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf("SUSD"),
+        contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf("USDC"),
         "1",
       ]
     );
@@ -97,9 +97,9 @@ describe("Operation Curve", function() {
       .call();
     expect(daiBalance.toString(10)).to.equal("0");
 
-    susdBalance = await susdContract.methods
+    usdcBalance = await usdcContract.methods
       .balanceOf(contracts.OPERATION_EXECUTOR)
       .call();
-    expect(new BN(susdBalance).gt(new BN(1))).to.equal(true);
+    expect(new BN(usdcBalance).gt(new BN(1))).to.equal(true);
   });
 });

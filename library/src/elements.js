@@ -132,7 +132,7 @@ module.exports = (contracts = mainnetContracts) => {
       instrument: "0x",
       description: `Trade ${asset1} for ${asset2}`,
       address: contracts.OPERATIONS.OP_0X,
-      inputs: [contracts.ASSETS[asset1]],
+      inputs: [contracts.ASSETS[asset1], contracts.ASSETS.ETH],
       outputs: [contracts.ASSETS[asset2]],
       connections: [],
       executionData: [
@@ -142,20 +142,12 @@ module.exports = (contracts = mainnetContracts) => {
           title: "Order",
           description: "0x order to execute",
           required: true,
-          data: "0x0",
-        },
-        {
-          type: "input",
-          dataType: "0xSignature",
-          title: "Signature",
-          description: "0x order signature to execute",
-          required: true,
-          data: "0x0",
+          data: "0x00",
         },
         {
           type: "raw",
           dataType: "address",
-          data: [contracts.ASSETS[asset1]],
+          data: contracts.ASSETS[asset1],
         },
       ],
     };
@@ -165,7 +157,7 @@ module.exports = (contracts = mainnetContracts) => {
       instrument: "0x",
       description: `Trade ${asset2} for ${asset1}`,
       address: contracts.OPERATIONS.OP_0X,
-      inputs: [contracts.ASSETS[asset2]],
+      inputs: [contracts.ASSETS[asset2], contracts.ASSETS.ETH],
       outputs: [contracts.ASSETS[asset1]],
       connections: [],
       executionData: [
@@ -175,20 +167,12 @@ module.exports = (contracts = mainnetContracts) => {
           title: "Order",
           description: "0x order to execute",
           required: true,
-          data: "0x0",
-        },
-        {
-          type: "input",
-          dataType: "0xSignature",
-          title: "Signature",
-          description: "0x order signature to execute",
-          required: true,
-          data: "0x0",
+          data: "0x00",
         },
         {
           type: "raw",
           dataType: "address",
-          data: [contracts.ASSETS[asset2]],
+          data: contracts.ASSETS[asset2],
         },
       ],
     };
@@ -208,17 +192,17 @@ module.exports = (contracts = mainnetContracts) => {
         {
           type: "raw",
           dataType: "address",
-          data: [contracts.ASSETS[cAsset]],
+          data: contracts.ASSETS[cAsset],
         },
         {
           type: "raw",
           dataType: "address",
-          data: [contracts.ASSETS[asset]],
+          data: contracts.ASSETS[asset],
         },
         {
           type: "raw",
           dataType: "bool",
-          data: [true],
+          data: true,
         },
       ],
     };
@@ -235,17 +219,17 @@ module.exports = (contracts = mainnetContracts) => {
         {
           type: "raw",
           dataType: "address",
-          data: [contracts.ASSETS[cAsset]],
+          data: contracts.ASSETS[cAsset],
         },
         {
           type: "raw",
           dataType: "address",
-          data: [contracts.ASSETS[asset]],
+          data: contracts.ASSETS[asset],
         },
         {
           type: "raw",
           dataType: "bool",
-          data: [false],
+          data: false,
         },
       ],
     };
@@ -275,21 +259,21 @@ module.exports = (contracts = mainnetContracts) => {
         {
           type: "raw",
           dataType: "uint128",
-          data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf(
-            asset1
-          ),
+          data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes
+            .indexOf(asset1)
+            .toString(),
         },
         {
           type: "raw",
           dataType: "uint128",
-          data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf(
-            asset2
-          ),
+          data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes
+            .indexOf(asset2)
+            .toString(),
         },
         {
           type: "raw",
           dataType: "uint256",
-          data: ["1"],
+          data: "1",
         },
       ],
     };
@@ -316,21 +300,21 @@ module.exports = (contracts = mainnetContracts) => {
         {
           type: "raw",
           dataType: "uint128",
-          data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf(
-            asset2
-          ),
+          data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes
+            .indexOf(asset2)
+            .toString(),
         },
         {
           type: "raw",
           dataType: "uint128",
-          data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes.indexOf(
-            asset1
-          ),
+          data: contracts.CURVE.CURVE_POOL_DAI_USDC_USDT_SUSD.indexes
+            .indexOf(asset1)
+            .toString(),
         },
         {
           type: "raw",
           dataType: "uint256",
-          data: ["1"],
+          data: "1",
         },
       ],
     };
@@ -393,7 +377,7 @@ module.exports = (contracts = mainnetContracts) => {
         {
           type: "raw",
           dataType: "bool",
-          data: [true],
+          data: true,
         },
       ],
     };
@@ -410,7 +394,7 @@ module.exports = (contracts = mainnetContracts) => {
         {
           type: "raw",
           dataType: "bool",
-          data: [false],
+          data: false,
         },
       ],
     };

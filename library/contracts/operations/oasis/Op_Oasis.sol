@@ -20,6 +20,7 @@ contract Op_Oasis {
      */
     function operate(uint256[] memory _inAmounts, bytes memory _params)
         public
+        payable
         returns (uint256[] memory outAmounts)
     {
         uint256 offerId = abi.decode(_params, (uint256));

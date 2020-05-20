@@ -13,7 +13,7 @@ const Op_Oasis = require("../../build/contracts/Op_Oasis.json");
 const Uniswap = require("../../build/contracts/IUniswap.json");
 
 module.exports = {
-  deploy: async () => {
+  deploy: async (buyDAI = false, buyWBTC = false, buyUSDC = false) => {
     const [admin] = await web3.eth.getAccounts();
 
     const operationExecutorContract = new web3.eth.Contract(
@@ -107,37 +107,43 @@ module.exports = {
     //Buy DAI to admin
     const secondsToToday = new Date().getTime() / 1000;
     deadline = Math.floor(secondsToToday + 300); // 5 minutes from now
-    const uniswapDAI = new web3.eth.Contract(
-      Uniswap.abi,
-      contracts.UNISWAP.UNISWAP_EXCHANGE_DAI_ETH
-    );
-    await uniswapDAI.methods.ethToTokenSwapInput("1", deadline).send({
-      from: admin,
-      gas: 1500000,
-      value: "1000000000000000000",
-    });
-    console.log("Bought DAI for admin");
-    const uniswapWBTC = new web3.eth.Contract(
-      Uniswap.abi,
-      contracts.UNISWAP.UNISWAP_EXCHANGE_WBTC_ETH
-    );
-    await uniswapWBTC.methods.ethToTokenSwapInput("1", deadline).send({
-      from: admin,
-      gas: 1500000,
-      value: "1000000000000000000",
-    });
-    console.log("Bought WBTC for admin");
-    const uniswapUSDC = new web3.eth.Contract(
-      Uniswap.abi,
-      contracts.UNISWAP.UNISWAP_EXCHANGE_USDC_ETH
-    );
-    await uniswapUSDC.methods.ethToTokenSwapInput("1", deadline).send({
-      from: admin,
-      gas: 1500000,
-      value: "1000000000000000000",
-    });
-    console.log("Bought USDC for admin");
 
+    if (buyDAI) {
+      const uniswapDAI = new web3.eth.Contract(
+        Uniswap.abi,
+        contracts.UNISWAP.UNISWAP_EXCHANGE_DAI_ETH
+      );
+      await uniswapDAI.methods.ethToTokenSwapInput("1", deadline).send({
+        from: admin,
+        gas: 1500000,
+        value: "1000000000000000000",
+      });
+      console.log("Bought DAI for admin");
+    }
+    if (buyWBTC) {
+      const uniswapWBTC = new web3.eth.Contract(
+        Uniswap.abi,
+        contracts.UNISWAP.UNISWAP_EXCHANGE_WBTC_ETH
+      );
+      await uniswapWBTC.methods.ethToTokenSwapInput("1", deadline).send({
+        from: admin,
+        gas: 1500000,
+        value: "1000000000000000000",
+      });
+      console.log("Bought WBTC for admin");
+    }
+    if (buyUSDC) {
+      const uniswapUSDC = new web3.eth.Contract(
+        Uniswap.abi,
+        contracts.UNISWAP.UNISWAP_EXCHANGE_USDC_ETH
+      );
+      await uniswapUSDC.methods.ethToTokenSwapInput("1", deadline).send({
+        from: admin,
+        gas: 1500000,
+        value: "1000000000000000000",
+      });
+      console.log("Bought USDC for admin");
+    }
     return contracts;
   },
 };
