@@ -134,6 +134,7 @@ module.exports = (contracts = mainnetContracts) => {
       address: contracts.OPERATIONS.OP_0X,
       inputs: [contracts.ASSETS[asset1], contracts.ASSETS.ETH],
       outputs: [contracts.ASSETS[asset2]],
+      exactInputMatch: true,
       connections: [],
       executionData: [
         {
@@ -159,6 +160,7 @@ module.exports = (contracts = mainnetContracts) => {
       address: contracts.OPERATIONS.OP_0X,
       inputs: [contracts.ASSETS[asset2], contracts.ASSETS.ETH],
       outputs: [contracts.ASSETS[asset1]],
+      exactInputMatch: true,
       connections: [],
       executionData: [
         {

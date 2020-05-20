@@ -217,7 +217,10 @@ class Graph {
     const availableElements = [];
     for (const key in this.allElements) {
       const element = this.allElements[key];
-      if (assets.every((input) => element.inputs.includes(input))) {
+      if (
+        assets.every((input) => element.inputs.includes(input)) &&
+        (!element.exactInputMatch || element.inputs.length == assets.length)
+      ) {
         availableElements.push(element);
       }
     }
