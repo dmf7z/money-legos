@@ -18,7 +18,7 @@ export default function IdenticonAddress(props) {
   return (
     <div className="identicon__box" >
       <div className="identicon__img" ref={ref}> </div>
-      <div className="identicon__address" > {props.address ? (props.long ? props.address : shortenAddress(props.address)) : "No Wallet"} </div>
+      <div className="identicon__address" > {props.address ? (props.long ? props.address : shortenAddress(props.address)) : "No Wallet selected"} </div>
     </div>
   );
 }

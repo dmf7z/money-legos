@@ -14,7 +14,7 @@ function WrapperStack(props) {
   let relationArray = [];
 
   useEffect(() => {
-      console.log('Connetion', id, connections)
+      // console.log('Connetion', id, connections)
     for (const con of connections) {
       relationArray.push({
         targetId: con.id,
@@ -47,7 +47,7 @@ function WrapperStack(props) {
 //     setIsSelected(!isEmpty(available));
 //   }, [uiStack]);
 
-  let asset = outputs && ASSETS_NAMES[outputs[0]].toUpperCase();
+  // let asset = outputs && ASSETS_NAMES[outputs[0]].toUpperCase();
 
   //selected operation
   //   const { dispatchStack, setShowModal, stack } = useContext(StackContext);

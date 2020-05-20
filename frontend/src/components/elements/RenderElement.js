@@ -8,21 +8,39 @@ import SplitterStack from "./SplitterStack";
 import AddressStack from "./AddressStack";
 import WrapperStack from "./WrapperStack";
 
-
-
 function RenderElement(props) {
   switch (props.type) {
     case "InputElement":
-      return <WrapperStack {...props} ><InputStack {...props} /></WrapperStack> ;
+      return (
+        <WrapperStack {...props}>
+          <InputStack {...props} />
+        </WrapperStack>
+      );
     case "OperationElement":
-      return <WrapperStack {...props} ><OperationStack {...props} /></WrapperStack>;
+      return (
+        <WrapperStack {...props}>
+          <OperationStack {...props} />
+        </WrapperStack>
+      );
     case "SplitterElement":
-    return <WrapperStack {...props} ><SplitterStack {...props} /></WrapperStack>
+      return (
+        <WrapperStack {...props}>
+          <SplitterStack {...props} />
+        </WrapperStack>
+      );
 
     case "AddressElement":
-      return <AddressStack {...props} />;
+      return (
+        <WrapperStack {...props}>
+          <AddressStack {...props} />
+        </WrapperStack>
+      );
     case "NewInitStack":
-      return <WrapperStack {...props} ><NewInitStack {...props} /></WrapperStack>
+      return (
+        <WrapperStack {...props}>
+          <NewInitStack {...props} />
+        </WrapperStack>
+      );
     case "EmptyElement":
       return <EmptyStack {...props} />;
   }
