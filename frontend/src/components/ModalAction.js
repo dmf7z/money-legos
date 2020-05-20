@@ -42,7 +42,15 @@ export default function ModalAction() {
     },
   };
 
-  let checker = arr => arr.every(v => isElementComplete(graph.getElementById(v)) == true);
+  const getGraphElement = (id) => {
+    if (id == 'NewInitStack'){
+      return NEW_INIT_ELEMENT
+    } else{
+      return graph.getElementById(id)
+    }
+  }
+
+  let checker = arr => arr.every(v => isElementComplete(getGraphElement(v)) == true);
 
   useEffect(() => {
     if (uiStack.includes("NewInitStack")) {

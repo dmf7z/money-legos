@@ -54,4 +54,5 @@ export const ELEMENTS_MAX_OPERATIONS = {
   'OperationElement': 1,
   'NewInitStack': 1,
   'InputElement': 1,
+  'EmptyElement': 1
 };

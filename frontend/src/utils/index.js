@@ -14,7 +14,7 @@ export function adjustColor(color, amount) {
 }
 
 export function isElementComplete(element) {
-  // console.log('isElementComplete ',element.connections,ELEMENTS_MAX_OPERATIONS[element.type])
+  console.log('isElementComplete ',element.connections,ELEMENTS_MAX_OPERATIONS[element.type])
     let result = element.connections.length >= ELEMENTS_MAX_OPERATIONS[element.type]
   // console.log('isElementComplete ',result)
    return result
