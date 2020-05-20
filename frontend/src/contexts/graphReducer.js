@@ -47,8 +47,8 @@ export const graphReducer = (state, action) => {
 
 
         if(parent.type == 'SplitterElement' && parent.connections.length == 1){
-          console.log('PARENT IS A WONDER SplitterElement')
-          console.log(parent.connections.length)
+          // console.log('PARENT IS A WONDER SplitterElement')
+          // console.log(parent.connections.length)
           elementPort = parent.connections.length
           maxX = action.addElement.limit
           console.log('maxXXXX', maxX)
@@ -131,9 +131,11 @@ export const graphReducer = (state, action) => {
    
         console.log("ADD_ADDRESS MY FRIEND", action);
         // parent = state.getElementById(action.addElement.parents[0]);
+        element = factory.getElements()[action.addElement.element.key];
+
         for (const par of action.addElement.parents) {
           parent = state.getElementById(par);
-          console.log("PARENT MY FRIEND", parent);
+          // console.log("PARENT MY FRIEND", parent);
   
           if (parent.index[0] > maxX) {
             maxX = parent.index[0];
@@ -141,14 +143,19 @@ export const graphReducer = (state, action) => {
           if (parent.index[1] > maxY) {
             maxY = parent.index[1];
           }
-  
-          arrayIds.push([par, 0, 0]);
+          // [par, 0, 0]
+          // par, 0 : salida del padre FIXME!
+          // segundo cero entrada
+          const asset = parent.outputs[0];
+          const inputIndex = element.inputs.indexOf(asset)
+          console.log("asset: ", asset);
+          console.log("inputIndex: ", inputIndex);
+
+          arrayIds.push([par, 0, inputIndex]);
         }
   
-        element = factory.getElements()[action.addElement.element.key];
         console.log("element MY FRIEND", element);
         console.log(1, state);
-        // let ids = action.addElement.parents.map(el => {return [el, 0, 0]})
         console.log("ids: ", arrayIds);
         console.log("element: ", element);
         console.log(maxX, maxY + 1);

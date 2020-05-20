@@ -28,7 +28,7 @@ export function AddressOption(props) {
       value: 50
     }
 
-    dispatchGraph({ type: "ADD_SPLITTER", addElement });
+    dispatchGraph({ type: "ADD_ADDRESS", addElement });
     props.closeModal();
 
   };

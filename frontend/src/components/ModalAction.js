@@ -227,5 +227,7 @@ function SmallDescription(props) {
       }`;
     case "SplitterElement":
       return `${props.description}`;
+      case "AddressElement":
+        return `${props.description}`;
   }
 }
