@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useContext } from "react";
 import { ASSETS_COLORS } from "../../constants";
 
 export const InstrumentDescription = (props) => {
-  console.log("Instrument ", props);
+  // console.log("Instrument ", props);
   switch (props.instrument) {
     case "Uniswap":
       return <span className="modal__op--title">Uniswap 🦄</span>;

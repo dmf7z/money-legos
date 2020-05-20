@@ -216,12 +216,12 @@ body {
 .stack__common{
   &:hover::before {
     transform: scale(1.4);
-    box-shadow: 0 0 25px #ffdd57;
+    box-shadow: 0 0 25px #fff;
   }
   &:hover {
-    color: #ffee10;
-    box-shadow: 0 0 15px #ffdd57;
-    text-shadow: 0 0 15px #ffdd57;
+    color: #fff;
+    box-shadow: 0 0 15px #fff;
+    text-shadow: 0 0 15px #fff;
     cursor: pointer;
   }
 

@@ -10,25 +10,35 @@ export function OperationsOption(props) {
 
   const { graph, dispatchGraph } = useContext(StackContext);
   const { ids } = props;
-  // console.log("id selected ", ids);
+  console.log("id selected ", ids);
 
   const handleInputsData = (el) => {
     // console.log("inputs data", el);
     setOpSelected(el);
   };
 
+    const dispatchAction = (addElement) => {
+      console.log(addElement)
+    
+
+  }
+
+
   const handleAction = (el) => {
     console.log("Do de add Action", el, ids);
+
     let addElement = {
       parent: ids,
       element: el
     }
+
     dispatchGraph({ type: "ADD_OPERATION", addElement });
     props.closeModal();
 
   };
 
   const availableElements =  isEmpty(ids) ? [] : graph.getAvailableElements(ids);
+  
   return (
     <div>
       {availableElements.map(element => {
@@ -44,7 +54,7 @@ export function OperationsOption(props) {
             return (
               <>
                 <div
-                key={element.id}
+                key={`${element.instrument}-${element.id}`}
                   onClick={() => handleInputsData(element)}
                   className={`modal__op-btn button is-fullwidth is-medium ${opSelected && 'is-disabled'}`}
                 >

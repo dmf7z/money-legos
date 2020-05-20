@@ -12,9 +12,9 @@ export const SmallIcon = (props) => {
           <g
             id="Page-2"
             stroke="none"
-            stroke-width="1"
+            strokeWidth="1"
             fill="none"
-            fill-rule="evenodd"
+            fillRule="evenodd"
           >
             <g
               id="Artboard"

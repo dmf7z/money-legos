@@ -46,8 +46,6 @@ export default function ModalAction() {
 
     !isEmpty(uiStack) && setIsComplete(isElementComplete(graph.getElementById(uiStack)))
 
-
-
   }, [uiStack]);
 
 
@@ -88,7 +86,7 @@ export default function ModalAction() {
               </div>
             </div>
             <div class="modal__select">
-              {uiStack && uiStack.map((el) => <SmallElement id={el} />)}
+              {uiStack && uiStack.map((el) => <SmallElement key={el.id} id={el} />)}
             </div>
           </div>
           { !isInitStack && !isComplete && <div class="tabs is-centered is-boxed modal__tab">
@@ -170,7 +168,7 @@ const SmallElement = (props) => {
   let element = id === 'NewInitStack' ? NEW_INIT_ELEMENT : graph.getElementById(id);
 
   return (
-    <div className="modal__select--item">
+    <div key={id} className="modal__select--item">
       <SmallIcon {...element} selected={true} />
       <SmallDescription {...element} />
     </div>

@@ -29,7 +29,7 @@ const SplitterStack = React.forwardRef((props, ref) => {
     <div
       ref={ref}
       onClick={handleClickInit}
-      className={`stack__common  stack--square box box--square ${isSelected &&
+      className={`stack__common stack--square box box--square ${isSelected &&
         "selection__box"}`}
     >
       <div className={`stack-color `}>

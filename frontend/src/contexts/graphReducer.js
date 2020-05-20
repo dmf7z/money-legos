@@ -12,15 +12,15 @@ export const graphReducer = (state, action) => {
       return state;
 
     case "ADD_INPUT":
-      console.log("ADD_OPERATION MY FRIEND", action);
+      // console.log("ADD_INPUT MY FRIEND", action);
       // console.log('PARENT MY FRIEND', action.addElement.parent[0])
 
       element = factory.getElements()[`INPUT_${action.addElement.asset}`];
-      console.log("element MY FRIEND", element);
+      // console.log("element MY FRIEND", element);
       console.log(1, state);
 
       //Add element to graph
-      state.addElement(element, action.addElement.limit, 0);
+      // state.addElement(element, action.addElement.limit, 0);
       console.log(2, state);
       return state;
 
@@ -28,10 +28,14 @@ export const graphReducer = (state, action) => {
       // console.log('ADD_OPERATION MY FRIEND', action)
       parent = state.getElementById(action.addElement.parent[0]);
       // console.log('PARENT MY FRIEND', action.addElement.parent[0])
+      // console.log('PARENT MY FRIEND', parent)
+      // console.log('PARENT MY FRIEND', parent.index)
+      // console.log('PARENT MY FRIEND', parent)
 
-      element = factory.getElements()[`SPLITTER_${action.addElement.asset}`];
+      element = factory.getElements()[action.addElement.element.key];
+
       // console.log('element MY FRIEND', element)
-      // console.log(1,state)
+      console.log(1,state)
 
       //Add element to graph
       state.connectElements(
@@ -40,13 +44,13 @@ export const graphReducer = (state, action) => {
         parent.index[0],
         parent.index[1] + 1
       );
-      // console.log(2,state)
+      console.log(2,state)
       return state;
 
     case "ADD_SPLITTER":
       let maxX = 0;
       let maxY = 0;
-      console.log("ADD_OPERATION MY FRIEND", action);
+      console.log("ADD_SPLITTER MY FRIEND", action);
       // parent = state.getElementById(action.addElement.parents[0]);
       let arrayIds = [];
       for (const par of action.addElement.parents) {
@@ -73,6 +77,8 @@ export const graphReducer = (state, action) => {
       console.log("value:", action.addElement.value);
 
       //Add element to graph
+      console.log(111, state);
+
 
       state.connectElements(arrayIds, element, maxX, maxY + 1, [
         {
@@ -81,7 +87,7 @@ export const graphReducer = (state, action) => {
         },
       ]);
 
-      console.log(2, state);
+      console.log(222, state);
       return state;
 
     case "ADD_GRAPH":
