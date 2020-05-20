@@ -217,11 +217,8 @@ class Graph {
     const availableElements = [];
     for (const key in this.allElements) {
       const element = this.allElements[key];
-      for (const input of element.inputs) {
-        if (assets.indexOf(input) >= 0) {
-          availableElements.push(element);
-          break;
-        }
+      if (assets.every((input) => element.inputs.includes(input))) {
+        availableElements.push(element);
       }
     }
     return availableElements;
