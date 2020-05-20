@@ -1,13 +1,18 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import Modal from "react-modal";
 import { StackContext } from "../contexts/stack";
-import { ASSETS_COLORS, ASSETS_NAMES, NEW_INIT_ELEMENT } from "../constants/index";
+import {
+  ASSETS_COLORS,
+  ASSETS_NAMES,
+  NEW_INIT_ELEMENT,
+} from "../constants/index";
 import { SmallIcon } from "./modal/SmallIcon";
 import { OperationsOption } from "./modal/OperationsOptions";
 import { AssetsOptions } from "./modal/AssetsOptions";
 import { SplittersOptions, SplittersOption } from "./modal/SplittersOption";
-import {isElementComplete} from '../utils'
+import { isElementComplete } from "../utils";
 import { isEmpty } from "lodash";
+import { AddressOption } from "./modal/AddressOption";
 
 export default function ModalAction() {
   const {
@@ -37,24 +42,25 @@ export default function ModalAction() {
     },
   };
 
-  // console.log("HERE!!! ", uiStack);
+  let checker = arr => arr.every(v => isElementComplete(graph.getElementById(v)) == true);
 
-    useEffect(() => {
-    if(uiStack.includes('NewInitStack')){
-      setIsInitStack(true)
+  useEffect(() => {
+    if (uiStack.includes("NewInitStack")) {
+      setIsInitStack(true);
     }
 
-    !isEmpty(uiStack) && setIsComplete(isElementComplete(graph.getElementById(uiStack)))
-
+    console.log(checker(uiStack))
+    !isEmpty(uiStack) && setIsComplete(checker(uiStack))
+    
+    // !isEmpty(uiStack) &&
+    //   setIsComplete(isElementComplete(graph.getElementById(uiStack)));
   }, [uiStack]);
-
 
   const closeModal = () => {
     // setShowAvailable(true)
     dispatchUi({ type: "CLEAR_SELECTED" });
     setShowModal(false);
-    setIsInitStack(false)
-    // dispatchGraph({ type: "ADD_GRAPH" });
+    setIsInitStack(false);
   };
 
   return (
@@ -67,16 +73,18 @@ export default function ModalAction() {
         //  onRequestClose={}
       >
         <div className="modal__box">
-         <div className="modal__selected">
+          <div className="modal__selected">
             <div className="modal__selected--options">
               <div className="modal__title">Stack Selected:</div>
               <div>
-                { ! isInitStack && <button
-                  onClick={() => setShowModal(false)}
-                  class="button is-primary is-small is-outlined"
-                >
-                  + Add element
-                </button>}
+                {!isInitStack && (
+                  <button
+                    onClick={() => setShowModal(false)}
+                    class="button is-primary is-small is-outlined"
+                  >
+                    + Add element
+                  </button>
+                )}
                 <button
                   onClick={() => closeModal()}
                   class="button is-small modal__close"
@@ -86,75 +94,96 @@ export default function ModalAction() {
               </div>
             </div>
             <div class="modal__select">
-              {uiStack && uiStack.map((el) => <SmallElement key={el.id} id={el} />)}
+              {uiStack &&
+                uiStack.map((el) => <SmallElement key={el.id} id={el} />)}
             </div>
           </div>
-          { !isInitStack && !isComplete && <div class="tabs is-centered is-boxed modal__tab">
-            <ul>
-              <li class={`${tab === 'operation' && 'is-active'}`} onClick={() => setTab('operation')}>
-                <a>
-                  <span class="icon is-small">
-                    <i class="fas fa-image" aria-hidden="true"></i>
-                  </span>
-                  <span>📟 Operations</span>
-                </a>
-              </li>
-              <li class={`${tab === 'splitter' && 'is-active'}`} onClick={() => setTab('splitter')}>
-                <a>
-                  <span class="icon is-small">
-                    <i class="fas fa-music" aria-hidden="true"></i>
-                  </span>
-                  <span>⚡️ Splitter</span>
-                </a>
-              </li>
-              <li class={`${tab === 'address' && 'is-active'}`} onClick={() => setTab('address')}>
-                <a>
-                  <span class="icon is-small">
-                    <i class="fas fa-film" aria-hidden="true"></i>
-                  </span>
-                  <span>📇 Address</span>
-                </a>
-              </li>
-            </ul>
-          </div>}
-          { !isInitStack && !isComplete &&
-
-          <div className="modal__content">
-          {tab === 'operation' && !isComplete && <div>
-              <div className="modal__options">
-                <span class="tag is-info is-light is-small is-fullwidth">
-                  Here you can choose an instrument to trade / swap tokens!
-                </span>
-              </div>
-              <OperationsOption ids={uiStack} closeModal={closeModal} />
-            </div>}
-            {tab === 'splitter' && <div>
-              <div className="modal__options">
-                <span class="tag is-info is-light is-small is-fullwidth">
-                  Here you can choose one or many outputs to split in other elements
-                </span>
-                <SplittersOption ids={uiStack} closeModal={closeModal} />
-              </div>
-            </div>}
-            {tab === 'address' && !isComplete && <div>
-              <div className="modal__options">
-                <span class="tag is-info is-light is-small is-fullwidth">
-                  Here you can select an address as an output.
-                </span>
-              </div>
-            </div>}
-          </div>
-          }
-           { isInitStack &&  <div className="modal__content">
-          <div>
-              <div className="modal__options">
-                <span class="tag is-info is-light is-small is-fullwidth">
-                  Please choose your asset to start the path
-                </span>
-              </div>
-              <AssetsOptions ids={uiStack} closeModal={closeModal} />
+          {!isInitStack && !isComplete && (
+            <div class="tabs is-centered is-boxed modal__tab">
+              <ul>
+                <li
+                  class={`${tab === "operation" && "is-active"}`}
+                  onClick={() => setTab("operation")}
+                >
+                  <a>
+                    <span class="icon is-small">
+                      <i class="fas fa-image" aria-hidden="true"></i>
+                    </span>
+                    <span>📟 Operations</span>
+                  </a>
+                </li>
+                <li
+                  class={`${tab === "splitter" && "is-active"}`}
+                  onClick={() => setTab("splitter")}
+                >
+                  <a>
+                    <span class="icon is-small">
+                      <i class="fas fa-music" aria-hidden="true"></i>
+                    </span>
+                    <span>⚡️ Splitter</span>
+                  </a>
+                </li>
+                <li
+                  class={`${tab === "address" && "is-active"}`}
+                  onClick={() => setTab("address")}
+                >
+                  <a>
+                    <span class="icon is-small">
+                      <i class="fas fa-film" aria-hidden="true"></i>
+                    </span>
+                    <span>📇 Address</span>
+                  </a>
+                </li>
+              </ul>
             </div>
-          </div>}
+          )}
+          {!isInitStack && !isComplete && (
+            <div className="modal__content">
+              {tab === "operation" && !isComplete && (
+                <div>
+                  <div className="modal__options">
+                    <span class="tag is-info is-light is-small is-fullwidth">
+                      Here you can choose an instrument to trade / swap tokens!
+                    </span>
+                  </div>
+                  <OperationsOption ids={uiStack} closeModal={closeModal} />
+                </div>
+              )}
+              {tab === "splitter" && (
+                <div>
+                  <div className="modal__options">
+                    <span class="tag is-info is-light is-small is-fullwidth">
+                      Here you can choose one or many outputs to split in other
+                      elements
+                    </span>
+                    <SplittersOption ids={uiStack} closeModal={closeModal} />
+                  </div>
+                </div>
+              )}
+              {tab === "address" && !isComplete && (
+                <div>
+                  <div className="modal__options">
+                    <span class="tag is-info is-light is-small is-fullwidth">
+                      Here you can select an address as an output.
+                    </span>
+                    <AddressOption ids={uiStack} closeModal={closeModal} />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          {isInitStack && (
+            <div className="modal__content">
+              <div>
+                <div className="modal__options">
+                  <span class="tag is-info is-light is-small is-fullwidth">
+                    Please choose your asset to start the path
+                  </span>
+                </div>
+                <AssetsOptions ids={uiStack} closeModal={closeModal} />
+              </div>
+            </div>
+          )}
         </div>
       </Modal>
     </div>
@@ -165,7 +194,8 @@ const SmallElement = (props) => {
   const { id } = props;
   const { graph } = useContext(StackContext);
 
-  let element = id === 'NewInitStack' ? NEW_INIT_ELEMENT : graph.getElementById(id);
+  let element =
+    id === "NewInitStack" ? NEW_INIT_ELEMENT : graph.getElementById(id);
 
   return (
     <div key={id} className="modal__select--item">

@@ -8,7 +8,7 @@ import { isEmpty } from "lodash";
 export function OperationsOption(props) {
   const [opSelected, setOpSelected] = useState(null);
 
-  const { graph, dispatchGraph } = useContext(StackContext);
+  const { graph, dispatchGraph, limitColumn } = useContext(StackContext);
   const { ids } = props;
   console.log("id selected ", ids);
 
@@ -28,8 +28,9 @@ export function OperationsOption(props) {
     console.log("Do de add Action", el, ids);
 
     let addElement = {
-      parent: ids,
-      element: el
+      parents: ids,
+      element: el,
+      limit: limitColumn
     }
 
     dispatchGraph({ type: "ADD_OPERATION", addElement });

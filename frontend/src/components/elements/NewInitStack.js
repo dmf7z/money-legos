@@ -1,12 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { StackContext } from "../../contexts/stack";
 
 const NewInitStack = React.forwardRef((props, ref) => {
   const { setLimitColumn } = useContext(StackContext);
 
+  useEffect(() => {
+    setLimitColumn(props.index[0])
+
+    }, []);
+
   const handleClickInit = () => {
     props.selectAction()
-    setLimitColumn(props.index[0])
 
   }
 

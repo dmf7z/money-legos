@@ -4,6 +4,11 @@ export const graphReducer = (state, action) => {
   console.log("graphReducer action ", action);
   let element;
   let parent;
+  let maxX = 0;
+  let maxY = 0;
+  let arrayIds = [];
+  let elementPort = 0
+
   //   console.log("1 state ", state);
   switch (action.type) {
     case "ADD_STACK":
@@ -26,33 +31,66 @@ export const graphReducer = (state, action) => {
 
     case "ADD_OPERATION":
       // console.log('ADD_OPERATION MY FRIEND', action)
-      parent = state.getElementById(action.addElement.parent[0]);
-      // console.log('PARENT MY FRIEND', action.addElement.parent[0])
-      // console.log('PARENT MY FRIEND', parent)
-      // console.log('PARENT MY FRIEND', parent.index)
-      // console.log('PARENT MY FRIEND', parent)
-
+      // parent = state.getElementById(action.addElement.parent[0]);
       element = factory.getElements()[action.addElement.element.key];
 
-      // console.log('element MY FRIEND', element)
+      for (const par of action.addElement.parents) {
+        parent = state.getElementById(par);
+        console.log("PARENT MY FRIEND", parent);
+
+        if (parent.index[0] > maxX) {
+          maxX = parent.index[0];
+        }
+        if (parent.index[1] > maxY) {
+          maxY = parent.index[1] + 1;
+        }
+
+
+        if(parent.type == 'SplitterElement' && parent.connections.length == 1){
+          console.log('PARENT IS A WONDER SplitterElement')
+          console.log(parent.connections.length)
+          elementPort = parent.connections.length
+          maxX = action.addElement.limit
+          console.log('maxXXXX', maxX)
+  
+        }
+
+    
+        arrayIds.push([par, elementPort, 0]);
+
+
+      }
+
       console.log(1,state)
 
       //Add element to graph
       state.connectElements(
-        [[parent.id, 0, 0]],
+        arrayIds,
         element,
-        parent.index[0],
-        parent.index[1] + 1
+        maxX,
+        maxY
       );
       console.log(2,state)
+
+      // console.log('PARENT MY FRIEND', action.addElement.parent[0])
+      // console.log('PARENT MY FRIEND', parent)
+      // console.log('PARENT MY FRIEND', parent.index)
+      // console.log('PARENT MY FRIEND', parent)
+      // maxX = parent.index[0]
+      // maxY = parent.index[1] + 1
+      // console.log('PARENT MY FRIEND', )
+      //Only for the second element of splitter
+      
+
+
+      // console.log('element MY FRIEND', element)
+    
       return state;
 
     case "ADD_SPLITTER":
-      let maxX = 0;
-      let maxY = 0;
+      
       console.log("ADD_SPLITTER MY FRIEND", action);
       // parent = state.getElementById(action.addElement.parents[0]);
-      let arrayIds = [];
       for (const par of action.addElement.parents) {
         parent = state.getElementById(par);
         console.log("PARENT MY FRIEND", parent);
@@ -64,7 +102,7 @@ export const graphReducer = (state, action) => {
           maxY = parent.index[1];
         }
 
-        arrayIds.push([par, 0, 0]);
+        arrayIds.push([par, elementPort, 0]);
       }
 
       element = factory.getElements()[action.addElement.element.key];
@@ -89,6 +127,46 @@ export const graphReducer = (state, action) => {
 
       console.log(222, state);
       return state;
+      case "ADD_ADDRESS":
+   
+        console.log("ADD_ADDRESS MY FRIEND", action);
+        // parent = state.getElementById(action.addElement.parents[0]);
+        for (const par of action.addElement.parents) {
+          parent = state.getElementById(par);
+          console.log("PARENT MY FRIEND", parent);
+  
+          if (parent.index[0] > maxX) {
+            maxX = parent.index[0];
+          }
+          if (parent.index[1] > maxY) {
+            maxY = parent.index[1];
+          }
+  
+          arrayIds.push([par, 0, 0]);
+        }
+  
+        element = factory.getElements()[action.addElement.element.key];
+        console.log("element MY FRIEND", element);
+        console.log(1, state);
+        // let ids = action.addElement.parents.map(el => {return [el, 0, 0]})
+        console.log("ids: ", arrayIds);
+        console.log("element: ", element);
+        console.log(maxX, maxY + 1);
+        console.log("value:", action.addElement.value);
+  
+        //Add element to graph
+        console.log(111, state);
+  
+  
+        state.connectElements(arrayIds, element, maxX, maxY + 1, [
+          {
+            index: 0,
+            value: action.addElement.value,
+          },
+        ]);
+  
+        console.log(222, state);
+        return state;
 
     case "ADD_GRAPH":
       element = factory.getElements().INPUT_DAI;

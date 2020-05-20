@@ -38,6 +38,7 @@ export function SplittersOption(props) {
     let filterElements = elementsOfInteres.filter(el => el.type === "SplitterElement")
     setAvailableElements(filterElements)
     setOpCount(filterElements.length)
+    console.log(elementsOfInteres)
 
   }, []);
 
@@ -51,7 +52,7 @@ export function SplittersOption(props) {
       
       }
       {availableElements.map(element => {
-        console.log(availableElements.length);
+        console.log(availableElements);
 
         if (element.type == "SplitterElement") {
           const showElement = opSelected
