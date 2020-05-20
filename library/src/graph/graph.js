@@ -108,16 +108,18 @@ class Graph {
       ) {
         //Check enough allowance
         const value = element.executionData[1].data;
-        const [account] = await web3.eth.getAccounts();
-        const erc20Contract = new web3.eth.Contract(
-          ERC20ABI,
-          element.executionData[0].data
-        );
-        const allowedBalance = await erc20Contract.methods
-          .allowance(account, this.address)
-          .call();
-        if (new BN(value).gt(new BN(allowedBalance))) {
-          return "Not enough allowance for the input value";
+        if (new BN(value).gt(new BN(0))) {
+          const [account] = await web3.eth.getAccounts();
+          const erc20Contract = new web3.eth.Contract(
+            ERC20ABI,
+            element.executionData[0].data
+          );
+          const allowedBalance = await erc20Contract.methods
+            .allowance(account, this.address)
+            .call();
+          if (new BN(value).gt(new BN(allowedBalance))) {
+            return "Not enough allowance for the input value";
+          }
         }
       }
     }
