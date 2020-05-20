@@ -42,40 +42,33 @@ export const graphReducer = (state, action) => {
           maxX = parent.index[0];
         }
         if (parent.index[1] > maxY) {
-          maxY = parent.index[1] + 1;
+          maxY = parent.index[1] ;
         }
 
-
         if(parent.type == 'SplitterElement' && parent.connections.length == 1){
-          // console.log('PARENT IS A WONDER SplitterElement')
-          // console.log(parent.connections.length)
           elementPort = parent.connections.length
           maxX = action.addElement.limit
-          console.log('maxXXXX', maxX)
-  
+          console.log('New Max ', maxX)
         }
 
     
         arrayIds.push([par, elementPort, 0]);
-
-
+        console.log('PARENT MY FRIEND', parent)
+        console.log('arrayIds ', arrayIds);
+        console.log('x, y ', maxX, maxY);
       }
 
       console.log(1,state)
-
       //Add element to graph
       state.connectElements(
         arrayIds,
         element,
         maxX,
-        maxY
+        maxY + 1
       );
       console.log(2,state)
 
-      // console.log('PARENT MY FRIEND', action.addElement.parent[0])
-      // console.log('PARENT MY FRIEND', parent)
-      // console.log('PARENT MY FRIEND', parent.index)
-      // console.log('PARENT MY FRIEND', parent)
+      console.log('PARENT MY FRIEND', parent)
       // maxX = parent.index[0]
       // maxY = parent.index[1] + 1
       // console.log('PARENT MY FRIEND', )
@@ -143,6 +136,12 @@ export const graphReducer = (state, action) => {
           if (parent.index[1] > maxY) {
             maxY = parent.index[1];
           }
+
+          if(parent.type == 'SplitterElement' && parent.connections.length == 1){
+            elementPort = parent.connections.length
+            maxX = action.addElement.limit
+            console.log('New Max ', maxX)
+          }
           // [par, 0, 0]
           // par, 0 : salida del padre FIXME!
           // segundo cero entrada
@@ -151,7 +150,7 @@ export const graphReducer = (state, action) => {
           console.log("asset: ", asset);
           console.log("inputIndex: ", inputIndex);
 
-          arrayIds.push([par, 0, inputIndex]);
+          arrayIds.push([par, elementPort, inputIndex]);
         }
   
         console.log("element MY FRIEND", element);
@@ -162,7 +161,7 @@ export const graphReducer = (state, action) => {
         console.log("value:", action.addElement.value);
   
         //Add element to graph
-        console.log(111, state);
+        console.log(111111, state);
   
   
         state.connectElements(arrayIds, element, maxX, maxY + 1, [
@@ -172,7 +171,7 @@ export const graphReducer = (state, action) => {
           },
         ]);
   
-        console.log(222, state);
+        console.log(2222222, state);
         return state;
 
     case "ADD_GRAPH":

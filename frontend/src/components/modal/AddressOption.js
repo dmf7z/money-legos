@@ -10,7 +10,7 @@ export function AddressOption(props) {
   const [opSelected, setOpSelected] = useState(null);
   const [opCount, setOpCount] = useState(0);
   const [availableElements, setAvailableElements ] = useState([])
-  const { graph, dispatchGraph } = useContext(StackContext);
+  const { graph, dispatchGraph, limitColumn } = useContext(StackContext);
   const { ids } = props;
   // console.log("id selected ", ids);
 
@@ -25,7 +25,8 @@ export function AddressOption(props) {
     let addElement = {
       parents: ids,
       element: el,
-      value: 50
+      value: 50,
+      limit: limitColumn
     }
 
     dispatchGraph({ type: "ADD_ADDRESS", addElement });
