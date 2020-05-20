@@ -3,6 +3,7 @@ const shortHash = require("short-hash");
 const Graph = require("./graph/graph");
 const Elements = require("./elements");
 const GraphABI = require("./abi/Graph.json").abi;
+const mainnetContracts = require("./common/contracts");
 
 const findElementByHash = (elements, hash) => {
   for (key in elements) {
@@ -33,13 +34,13 @@ const getIndexOfParentsOutput = (coreElements, indexChild, inputIndexChild) => {
 };
 
 module.exports = {
-  getElements: (contracts) => {
+  getElements: (contracts = mainnetContracts) => {
     return Elements(contracts);
   },
-  createGraph: (contracts) => {
+  createGraph: (contracts = mainnetContracts) => {
     return new Graph(null, [], contracts);
   },
-  loadGraph: async (web3, address, contracts) => {
+  loadGraph: async (web3, address, contracts = mainnetContracts) => {
     const elements = Elements(contracts);
     const graphContract = new web3.eth.Contract(GraphABI, address);
     const coreElements = await graphContract.methods.getElements().call();
