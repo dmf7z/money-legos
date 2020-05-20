@@ -1,36 +1,32 @@
 import React from "react";
-import { ArcherElement } from "react-archer";
-import { arrowStyle } from "../../styles/graphStyles";
 import IdenticonAddress from "../IdenticonAddress";
+import { ASSETS_NAMES } from "../../constants";
 
-function AddressStack(props) {
+const AddressStack = React.forwardRef((props, ref) => {
+  const { id, outputs, inputs, isSelected } = props;
+  console.log(props)
+  let assetIn = ASSETS_NAMES[inputs[0]];
+  const handleClickInit = () => {
+    props.selectAction();
+  };
+
+
   return (
-    <ArcherElement
-      id={props.id}
-      className="box"
-      relations={
-        props.target && [
-          {
-            targetId: props.target,
-            targetAnchor: "top",
-            sourceAnchor: "bottom",
-            arrowThickness: 2,
-            style: arrowStyle,
-          },
-        ]
-      }
-    >
-      <div className=" stack--square box box--square">
+   
+      <div 
+      ref={ref}
+      onClick={handleClickInit}
+      
+      className=" stack--square box box--square">
     
         <div className="stack stack-color__content">
           <div className="stack-color__address">
           <div>Address</div>
-            <IdenticonAddress address={props.address} />
+            <IdenticonAddress address={ASSETS_NAMES[assetIn]} />
           </div>
         </div>
       </div>
-    </ArcherElement>
   );
-}
+})
 
 export default AddressStack;
