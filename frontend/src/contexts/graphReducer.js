@@ -25,7 +25,7 @@ export const graphReducer = (state, action) => {
       console.log(1, state);
 
       //Add element to graph
-      // state.addElement(element, action.addElement.limit, 0);
+      state.addElement(element, action.addElement.limit, 0);
       console.log(2, state);
       return state;
 
