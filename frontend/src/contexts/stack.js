@@ -34,7 +34,8 @@ const StackProvider = (props) => {
   useEffect(() => {
     console.log("SELECTED ITEMS: ", uiStack);
     console.log("TOTAL GRAPG: ", JSON.stringify(graph.elements));
-  }, [uiStack, graph]);
+    console.log("TOTAL GRAPG: ",limitColumn)
+  }, [uiStack, graph, limitColumn]);
 
   async function deployGraph(web3){
     const address = await graph.deploy(web3) 

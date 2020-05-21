@@ -76,7 +76,7 @@ function GenerateMap(graph, limitColumn) {
       emptyWithPos.index = [m, i];
       // Check with is the first empty element, 
       // to add NewInit element (future InputElement)
-      if (firstEmptyElement && graphElement.length === 0 ){
+      if (  firstEmptyElement && graphElement.length === 0 ){
         firstEmptyElement = false
         emptyWithPos = NEW_INIT_ELEMENT;
         emptyWithPos.index = [m, i];
@@ -88,23 +88,23 @@ function GenerateMap(graph, limitColumn) {
         console.log(`element [${m}][${i}] = ${squareElement.type} ${squareElement.key} `);
 
       line[m] = squareElement;
-      if(graphElement.length > 0 && m >= limitCol && i > 0){
-      console.log(`IF element [${m}][${i}] = ${squareElement} ES MAYOR o igual que el init`);
-      console.log(elementsMap[0][m])
-      // if(elementsMap[0][m].type ){
+      // if(graphElement.length > 0 && m >= limitCol && i > 0){
+      // console.log(`IF element [${m}][${i}] = ${squareElement} ES MAYOR o igual que el init`);
+      // console.log(elementsMap[0][m])
+      // // if(elementsMap[0][m].type ){
+
+      // // }
+      // // emptyWithPos.index = [m, 0];
+      // // elementsMap[0][m]= emptyWithPos
+      // console.log(emptyWithPos)
+      // console.log(elementsMap[0][m])
+
+      // emptyWithPos = NEW_INIT_ELEMENT;
+      // emptyWithPos.index = [m+1, 0];
+      // elementsMap[0][m+1]= emptyWithPos
+      // limitCol = m+1
 
       // }
-      // emptyWithPos.index = [m, 0];
-      // elementsMap[0][m]= emptyWithPos
-      console.log(emptyWithPos)
-      console.log(elementsMap[0][m])
-
-      emptyWithPos = NEW_INIT_ELEMENT;
-      emptyWithPos.index = [m+1, 0];
-      elementsMap[0][m+1]= emptyWithPos
-      limitCol = m+1
-
-      }
     }
     elementsMap[i] = line;
     console.log("LINE! ", i);

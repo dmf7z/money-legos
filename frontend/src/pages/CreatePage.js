@@ -27,7 +27,7 @@ function CreatePage() {
     console.log("checkingForWeb3", account);
   }, []);
 
-  const { deployGraph } = useContext(StackContext);
+  const { deployGraph, limitColumn } = useContext(StackContext);
 
   const requestAccess = () => {
     console.log("click");
@@ -58,7 +58,7 @@ function CreatePage() {
                 onClick={() => doTheDeploy()}
                 class="button is-warning is-outlined"
               >
-                Deploy Graph
+                Deploy Graph {limitColumn}
               </button>
             ) : (
               <button

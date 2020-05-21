@@ -9,6 +9,7 @@ export const graphReducer = (state, action) => {
   let arrayIds = [];
   let elementPort = 0;
 
+
   switch (action.type) {
     case "ADD_INPUT":
       element = factory.getElements()[`INPUT_${action.addElement.asset}`];

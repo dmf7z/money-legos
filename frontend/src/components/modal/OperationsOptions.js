@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { ASSETS_COLORS, INSTRUMENT_DESCRIPTION } from "../../constants";
+import { ASSETS_COLORS, INSTRUMENT_DESCRIPTION, ELEMENTS_OFFSET_MAP } from "../../constants";
 import { StackContext } from "../../contexts/stack";
 import { SmallIcon } from "./SmallIcon";
 import { InstrumentDescription } from "./InstrumentDescription";
@@ -8,7 +8,7 @@ import ElementForm from "../ElementForm";
 
 export function OperationsOption(props) {
   const [opSelected, setOpSelected] = useState(null);
-  const { graph, dispatchGraph, limitColumn } = useContext(StackContext);
+  const { graph, dispatchGraph, limitColumn, setLimitColumn } = useContext(StackContext);
   const { ids } = props;
   console.log("id selected ", ids);
 
@@ -26,9 +26,15 @@ export function OperationsOption(props) {
     //   element: el,
     //   limit: limitColumn,
     // };
+    let parent = graph.getElementById(addElement.parents)
+  
+
 
     dispatchGraph({ type: "ADD_OPERATION", addElement });
     props.closeModal();
+    parent.connections.length > 0 && setLimitColumn(parent.index[0]+ELEMENTS_OFFSET_MAP[parent.type]);
+    console.log('SETTING NEW BORDER LIMIT', parent.connections.length , parent.index[0],limitColumn, parent.index[0]+ELEMENTS_OFFSET_MAP[parent.type])
+
   };
 
   const availableElements = isEmpty(ids) ? [] : graph.getAvailableElements(ids);
