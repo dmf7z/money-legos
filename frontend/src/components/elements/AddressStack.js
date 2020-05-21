@@ -5,7 +5,7 @@ import { ASSETS_NAMES } from "../../constants";
 const AddressStack = React.forwardRef((props, ref) => {
   const { id, outputs, inputs, isSelected } = props;
   console.log(props);
-  let assetIn = ASSETS_NAMES[inputs[0]];
+  let address = props.executionData[0] ? props.executionData[0].data : ""
   const handleClickInit = () => {
     props.selectAction();
   };
@@ -19,7 +19,7 @@ const AddressStack = React.forwardRef((props, ref) => {
       <div className=" stack stack-color__content">
         <div className="stack-color__address">
           <div>Address</div>
-          <IdenticonAddress address={ASSETS_NAMES[assetIn]} />
+          <IdenticonAddress address={address} />
         </div>
       </div>
     </div>

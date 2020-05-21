@@ -4,45 +4,38 @@ import { StackContext } from "../../contexts/stack";
 import { SmallIcon } from "./SmallIcon";
 import { InstrumentDescription } from "./InstrumentDescription";
 import { isEmpty } from "lodash";
+import ElementForm from "../ElementForm";
 
 export function OperationsOption(props) {
   const [opSelected, setOpSelected] = useState(null);
-
   const { graph, dispatchGraph, limitColumn } = useContext(StackContext);
   const { ids } = props;
   console.log("id selected ", ids);
+
 
   const handleInputsData = (el) => {
     // console.log("inputs data", el);
     setOpSelected(el);
   };
 
-    const dispatchAction = (addElement) => {
-      console.log(addElement)
-    
+  const handleAction = (addElement) => {
+    console.log("Do de add Action", addElement);
 
-  }
-
-
-  const handleAction = (el) => {
-    console.log("Do de add Action", el, ids);
-
-    let addElement = {
-      parents: ids,
-      element: el,
-      limit: limitColumn
-    }
+    // let addElement = {
+    //   parents: ids,
+    //   element: el,
+    //   limit: limitColumn,
+    // };
 
     dispatchGraph({ type: "ADD_OPERATION", addElement });
     props.closeModal();
-
   };
 
-  const availableElements =  isEmpty(ids) ? [] : graph.getAvailableElements(ids);
-  
+  const availableElements = isEmpty(ids) ? [] : graph.getAvailableElements(ids);
+
   return (
     <div>
-      {availableElements.map(element => {
+      {availableElements.map((element) => {
         // console.log(element);
 
         if (element.type == "OperationElement") {
@@ -55,12 +48,16 @@ export function OperationsOption(props) {
             return (
               <>
                 <div
-                key={`${element.instrument}-${element.id}`}
+                  key={`${element.instrument}-${element.id}`}
                   onClick={() => handleInputsData(element)}
-                  className={`modal__op-btn button is-fullwidth is-medium ${opSelected && 'is-disabled'}`}
+                  className={`modal__op-btn button is-fullwidth is-medium ${opSelected &&
+                    "is-disabled"}`}
                 >
                   <div className="modal__op-desc">
-                    <InstrumentDescription instrument={element.instrument} /> <span className="modal__op--desc">{element.description}</span> 
+                    <InstrumentDescription instrument={element.instrument} />{" "}
+                    <span className="modal__op--desc">
+                      {element.description}
+                    </span>
                   </div>
                   <div className="modal__svg--small">
                     <SmallIcon
@@ -70,36 +67,9 @@ export function OperationsOption(props) {
                     />
                   </div>
                 </div>
-                {opSelected && (
-                  <div>
-                    {element.executionData.map((input) => {
-                      if (input.type == "input") {
-                        return (
-                          <div class="field">
-                            <label class="label">{input.title}</label>
-                            <div class="control">
-                              <input
-                                class="input is-info"
-                                type="text"
-                                placeholder={input.default}
-                              />
-                            </div>
-                            <p class="help">{input.description}</p>
-                          </div>
-                        );
-                      }
-                    })}
-                  </div>
-                )}
-                <div>
-                  
-          {opSelected && <button
-            onClick={() => handleAction(element)}
-            className="button is-warning is-fullwidth is-rounded"
-          >
-            OK!
-          </button>}
-                </div>
+
+                {opSelected && <ElementForm  element={element} parents={ids} limitColumn={limitColumn} action={handleAction} /> }
+
               </>
             );
           }

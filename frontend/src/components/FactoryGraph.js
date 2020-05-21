@@ -10,7 +10,7 @@ import { EMPTY_ELEMENT, NEW_INIT_ELEMENT } from "../constants";
 const MAP_INDEX = [6, 6];
 
 function FactoryGraph(props) {
-  const { graph, uiStack } = useContext(StackContext);
+  const { graph, uiStack, limitColumn } = useContext(StackContext);
 
   const [isLoading, setIsLoading] = useState(true);
   const [graphMap, setgraphMap] = useState([{}]);
@@ -19,10 +19,10 @@ function FactoryGraph(props) {
 
   useEffect(() => {
     // let useMap = isEmpty(graph) ? props.graph : graph;
-    console.log("getting new Graph!");
-    console.log(graph);
+    // console.log("getting new Graph!");
+    // console.log(graph);
 
-    let newMap = GenerateMap(graph);
+    let newMap = GenerateMap(graph, limitColumn);
 
     setgraphMap(newMap);
     setIsLoading(false);
@@ -56,13 +56,16 @@ function FactoryGraph(props) {
 
 export default FactoryGraph;
 
-function GenerateMap(graph) {
+function GenerateMap(graph, limitColumn) {
+  let limitCol = limitColumn
+
   console.log("starting map", graph);
   if (isEmpty(graph.elements)) {
     return [];
   }
   let elementsMap = [];
   let firstEmptyElement = true
+  
   for (let i = 0; i < MAP_INDEX[1]; i++) {
     let line = [];
     for (let m = 0; m < MAP_INDEX[0]; m++) {
@@ -73,16 +76,35 @@ function GenerateMap(graph) {
       emptyWithPos.index = [m, i];
       // Check with is the first empty element, 
       // to add NewInit element (future InputElement)
-      if (firstEmptyElement && graphElement.length === 0){
+      if (firstEmptyElement && graphElement.length === 0 ){
         firstEmptyElement = false
         emptyWithPos = NEW_INIT_ELEMENT;
         emptyWithPos.index = [m, i];
+        console.log('Setting Init at: ', [m, i])
+        limitCol = m
       }
       let squareElement =
         graphElement.length > 0 ? graphElement[0] : emptyWithPos;
+        console.log(`element [${m}][${i}] = ${squareElement.type} ${squareElement.key} `);
 
       line[m] = squareElement;
-      // console.log(`element [${m}][${i}] = ${squareElement}`);
+      if(graphElement.length > 0 && m >= limitCol && i > 0){
+      console.log(`IF element [${m}][${i}] = ${squareElement} ES MAYOR o igual que el init`);
+      console.log(elementsMap[0][m])
+      // if(elementsMap[0][m].type ){
+
+      // }
+      // emptyWithPos.index = [m, 0];
+      // elementsMap[0][m]= emptyWithPos
+      console.log(emptyWithPos)
+      console.log(elementsMap[0][m])
+
+      emptyWithPos = NEW_INIT_ELEMENT;
+      emptyWithPos.index = [m+1, 0];
+      elementsMap[0][m+1]= emptyWithPos
+      limitCol = m+1
+
+      }
     }
     elementsMap[i] = line;
     console.log("LINE! ", i);
