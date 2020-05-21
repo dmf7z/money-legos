@@ -4,7 +4,6 @@ const Web3 = require("web3");
 const BN = require("bn.js");
 const ABICoder = require("web3-eth-abi");
 const Deployer = require("../deploy/deployer");
-const OpOasisABI = require("../abi/oasis_matching_market");
 const ExecutorABI = require("../abi/executor");
 const ERC20ABI = require("../abi/erc20");
 
@@ -13,7 +12,7 @@ const expect = chai.expect;
 
 var web3 = new Web3(process.env.PROVIDER || "ws://localhost:8545");
 
-describe("Operation Oasis", function() {
+describe("Operation UniswapV2 1", function() {
   let contracts;
   before(async function() {
     contracts = await Deployer.deploy();
@@ -25,10 +24,6 @@ describe("Operation Oasis", function() {
     const executorContract = new web3.eth.Contract(
       ExecutorABI,
       contracts.OPERATION_EXECUTOR
-    );
-    const oasisContract = new web3.eth.Contract(
-      OpOasisABI,
-      contracts.OASIS.OASIS_MATCHING_MARKET
     );
     const daiContract = new web3.eth.Contract(ERC20ABI, contracts.ASSETS.DAI);
     const wethContract = new web3.eth.Contract(ERC20ABI, contracts.ASSETS.WETH);
@@ -69,18 +64,18 @@ describe("Operation Oasis", function() {
       .call();
     expect(daiBalance.toString(10)).to.equal("0");
 
-    const offerId = await oasisContract.methods
-      .getBestOffer(contracts.ASSETS.DAI, contracts.ASSETS.WETH)
-      .call();
-
-    //const result = await oasisContract.methods.getOffer(offerId).call();
-    //console.log(result);
-
-    //Trade in Uniswap WETH for DAI
-    params = ABICoder.encodeParameter("uint256", offerId);
+    //Trade in Uniswap V2 WETH for DAI
+    params = ABICoder.encodeParameters(
+      ["address", "address", "address"],
+      [
+        contracts.UNISWAPV2.UNISWAP_EXCHANGE_DAI_WETH,
+        contracts.ASSETS.WETH,
+        contracts.ASSETS.DAI,
+      ]
+    );
     await executorContract.methods
       .executeOperation(
-        contracts.OPERATIONS.OP_OASIS,
+        contracts.OPERATIONS.OP_UNISWAP_V2,
         ["1000000000000000000"],
         params
       )
@@ -97,6 +92,7 @@ describe("Operation Oasis", function() {
     daiBalance = await daiContract.methods
       .balanceOf(contracts.OPERATION_EXECUTOR)
       .call();
+    console.log(daiBalance.toString(10))
     expect(new BN(daiBalance).gt(new BN(1))).to.equal(true);
   });
 });

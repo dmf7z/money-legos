@@ -108,16 +108,18 @@ class Graph {
       ) {
         //Check enough allowance
         const value = element.executionData[1].data;
-        const [account] = await web3.eth.getAccounts();
-        const erc20Contract = new web3.eth.Contract(
-          ERC20ABI,
-          element.executionData[0].data
-        );
-        const allowedBalance = await erc20Contract.methods
-          .allowance(account, this.address)
-          .call();
-        if (new BN(value).gt(new BN(allowedBalance))) {
-          return "Not enough allowance for the input value";
+        if (new BN(value).gt(new BN(0))) {
+          const [account] = await web3.eth.getAccounts();
+          const erc20Contract = new web3.eth.Contract(
+            ERC20ABI,
+            element.executionData[0].data
+          );
+          const allowedBalance = await erc20Contract.methods
+            .allowance(account, this.address)
+            .call();
+          if (new BN(value).gt(new BN(allowedBalance))) {
+            return "Not enough allowance for the input value";
+          }
         }
       }
     }
@@ -217,11 +219,11 @@ class Graph {
     const availableElements = [];
     for (const key in this.allElements) {
       const element = this.allElements[key];
-      for (const input of element.inputs) {
-        if (assets.indexOf(input) >= 0) {
-          availableElements.push(element);
-          break;
-        }
+      if (
+        assets.every((input) => element.inputs.includes(input)) &&
+        (!element.exactInputMatch || element.inputs.length == assets.length)
+      ) {
+        availableElements.push(element);
       }
     }
     return availableElements;
