@@ -8,6 +8,7 @@ const Op_WrapETH = require("../../build/contracts/Op_WrapETH.json");
 const Op_0x = require("../../build/contracts/Op_0x.json");
 const Op_Compound = require("../../build/contracts/Op_Compound.json");
 const Op_Uniswap = require("../../build/contracts/Op_Uniswap.json");
+const Op_Uniswap_V2 = require("../../build/contracts/Op_Uniswap_V2.json");
 const Op_Curve = require("../../build/contracts/Op_Curve.json");
 const Op_Oasis = require("../../build/contracts/Op_Oasis.json");
 const Uniswap = require("../../build/contracts/IUniswap.json");
@@ -77,6 +78,18 @@ module.exports = {
         gas: 1500000,
       });
     contracts.OPERATIONS.OP_UNISWAP = uniswapInstance.options.address;
+
+    const uniswapContractV2 = new web3.eth.Contract(Op_Uniswap_V2.abi);
+    const uniswapInstanceV2 = await uniswapContractV2
+      .deploy({
+        data: Op_Uniswap_V2.bytecode,
+        arguments: [],
+      })
+      .send({
+        from: admin,
+        gas: 1500000,
+      });
+    contracts.OPERATIONS.OP_UNISWAP_V2 = uniswapInstanceV2.options.address;
 
     const curveContract = new web3.eth.Contract(Op_Curve.abi);
     const curveInstance = await curveContract

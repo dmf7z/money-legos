@@ -41,9 +41,9 @@ contract Op_Uniswap_V2 {
 
         uint256 amountInWithFee = _inAmounts[0].mul(997);
         outAmounts = new uint256[](1);
-        outAmounts[0] =
-            amountInWithFee.mul(reserveOut) /
-            reserveIn.mul(1000).add(amountInWithFee);
+        outAmounts[0] = amountInWithFee.mul(reserveOut).div(
+            reserveIn.mul(1000).add(amountInWithFee)
+        );
 
         if (outAmounts[0] > 0) {
             IERC20(asset1).transfer(pair, _inAmounts[0]);

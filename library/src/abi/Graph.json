@@ -2806,7 +2806,7 @@
                                         "name": "abi",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 2188,
+                                        "referencedDeclaration": 2372,
                                         "src": "3347:3:3",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_magic_abi",
@@ -6610,7 +6610,7 @@
                                       "name": "abi",
                                       "nodeType": "Identifier",
                                       "overloadedDeclarations": [],
-                                      "referencedDeclaration": 2188,
+                                      "referencedDeclaration": 2372,
                                       "src": "2627:3:3",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_magic_abi",
@@ -7531,7 +7531,7 @@
                                     "name": "abi",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 2188,
+                                    "referencedDeclaration": 2372,
                                     "src": "1852:3:3",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_magic_abi",
@@ -7748,7 +7748,7 @@
                                             "name": "msg",
                                             "nodeType": "Identifier",
                                             "overloadedDeclarations": [],
-                                            "referencedDeclaration": 2201,
+                                            "referencedDeclaration": 2385,
                                             "src": "2128:3:3",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_magic_message",
@@ -7778,7 +7778,7 @@
                                               "name": "this",
                                               "nodeType": "Identifier",
                                               "overloadedDeclarations": [],
-                                              "referencedDeclaration": 2223,
+                                              "referencedDeclaration": 2407,
                                               "src": "2172:4:3",
                                               "typeDescriptions": {
                                                 "typeIdentifier": "t_contract$_Graph_$1012",
@@ -8460,7 +8460,7 @@
                               "name": "keccak256",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2195,
+                              "referencedDeclaration": 2379,
                               "src": "7328:9:3",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
@@ -8564,7 +8564,7 @@
                         "name": "abi",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2188,
+                        "referencedDeclaration": 2372,
                         "src": "7285:3:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_abi",
@@ -8814,10 +8814,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2204,
-                        2205
+                        2388,
+                        2389
                       ],
-                      "referencedDeclaration": 2205,
+                      "referencedDeclaration": 2389,
                       "src": "7536:7:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -8946,7 +8946,7 @@
                           "name": "abi",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2188,
+                          "referencedDeclaration": 2372,
                           "src": "7597:3:3",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_abi",

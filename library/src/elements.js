@@ -125,6 +125,63 @@ module.exports = (contracts = mainnetContracts) => {
     };
   };
 
+  const addUniswapV2Operations = (elements, asset1, asset2) => {
+    elements[`OP_UNISWAP_V2_${asset1}_TO_${asset2}`] = {
+      key: `OP_UNISWAP_V2_${asset1}_TO_${asset2}`,
+      type: "OperationElement",
+      instrument: "Uniswap V2",
+      description: `Trade ${asset1} for ${asset2}`,
+      address: contracts.OPERATIONS.OP_UNISWAP_V2,
+      inputs: [contracts.ASSETS[asset1]],
+      outputs: [contracts.ASSETS[asset2]],
+      connections: [],
+      executionData: [
+        {
+          type: "raw",
+          dataType: "address",
+          data: contracts.UNISWAPV2[`UNISWAP_EXCHANGE_${asset1}_${asset2}`],
+        },
+        {
+          type: "raw",
+          dataType: "address",
+          data: contracts.ASSETS[asset1],
+        },
+        {
+          type: "raw",
+          dataType: "address",
+          data: contracts.ASSETS[asset2],
+        },
+      ],
+    };
+    elements[`OP_UNISWAP_V2_${asset2}_TO_${asset1}`] = {
+      key: `OP_UNISWAP_V2_${asset2}_TO_${asset1}`,
+      type: "OperationElement",
+      instrument: "Uniswap V2",
+      description: `Trade ${asset2} for ${asset1}`,
+      address: contracts.OPERATIONS.OP_UNISWAP_V2,
+      inputs: [contracts.ASSETS[asset2]],
+      outputs: [contracts.ASSETS[asset1]],
+      connections: [],
+      executionData: [
+        {
+          type: "raw",
+          dataType: "address",
+          data: contracts.UNISWAPV2[`UNISWAP_EXCHANGE_${asset1}_${asset2}`],
+        },
+        {
+          type: "raw",
+          dataType: "address",
+          data: contracts.ASSETS[asset2],
+        },
+        {
+          type: "raw",
+          dataType: "address",
+          data: contracts.ASSETS[asset1],
+        },
+      ],
+    };
+  };
+
   const add0xOperations = (elements, asset1, asset2) => {
     elements[`OP_0x_${asset1}_TO_${asset2}`] = {
       key: `OP_0x_${asset1}_TO_${asset2}`,
@@ -475,6 +532,11 @@ module.exports = (contracts = mainnetContracts) => {
   addUniswapOperations(elements, "WBTC");
   addUniswapOperations(elements, "USDC");
   addUniswapOperations(elements, "DAI");
+
+  //Add Uniswap operations
+  addUniswapV2Operations(elements, "WBTC", "WETH");
+  addUniswapV2Operations(elements, "USDC", "WETH");
+  addUniswapV2Operations(elements, "DAI", "WETH");
 
   //Add 0x operations
   add0xOperations(elements, "WBTC", "WETH");
