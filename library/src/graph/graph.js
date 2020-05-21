@@ -126,6 +126,7 @@ class Graph {
     return "ready";
   }
   async isReadyToExecute(web3) {
+    //TODO: Validate if it has flashuniswapIn then it must have out
     for (const element of this.elements) {
       const result = await this.isElementReadyToExecute(web3, element.id);
       if (result !== "ready") {

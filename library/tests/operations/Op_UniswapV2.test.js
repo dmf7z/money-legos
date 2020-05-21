@@ -12,7 +12,7 @@ const expect = chai.expect;
 
 var web3 = new Web3(process.env.PROVIDER || "ws://localhost:8545");
 
-describe("Operation UniswapV2 1", function() {
+describe("Operation UniswapV2", function() {
   let contracts;
   before(async function() {
     contracts = await Deployer.deploy();

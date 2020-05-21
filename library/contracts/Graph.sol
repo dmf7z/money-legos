@@ -5,6 +5,7 @@ import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol";
 import "./GraphBase.sol";
+import "./operations/uniswapv2/IPair.sol";
 
 
 contract Graph is GraphBase {
@@ -33,7 +34,7 @@ contract Graph is GraphBase {
     function() external payable {}
 
     /**
-     * Execute many operations.
+     * Execute .
      * @param _paramsList params for each element to execute
      * @param _maxElementInputs max inputs an element has
      */
@@ -42,9 +43,57 @@ contract Graph is GraphBase {
         payable
     {
         uint256[][] memory inputs = new uint256[][](elements.length);
+        bool hasFlashSwap = false;
+        uint256 flashSwapInIndex;
+        uint256 flashSwapOutIndex;
         for (uint256 i; i < elements.length; i++) {
+            if (elements[i].addr == address(4)) {
+                //FlashSwap (only one allowed)
+                hasFlashSwap = true;
+                flashSwapInIndex = i;
+            } else if (elements[i].addr == address(5)) {
+                flashSwapOutIndex = i;
+            }
             inputs[i] = new uint256[](_maxElementInputs);
         }
+        if (hasFlashSwap) {
+            //Execute element with flash swap
+            bytes memory data = abi.encodeWithSelector(
+                bytes4(keccak256("executeElements(bytes[],uint256[][])")),
+                _paramsList,
+                inputs
+            );
+            (address pair, uint256 index, uint256 amount) = abi.decode(
+                _paramsList[flashSwapInIndex],
+                (address, uint256, uint256)
+            );
+            IPair(pair).swap(
+                index == 0 ? amount : 0,
+                index == 0 ? 0 : amount,
+                address(this),
+                data
+            );
+
+            address asset = abi.decode(
+                _paramsList[flashSwapOutIndex],
+                (address)
+            );
+            IERC20(asset).transfer(pair, inputs[flashSwapOutIndex][0]);
+        } else {
+            //Execute elements
+            executeElements(_paramsList, inputs);
+        }
+    }
+
+    /**
+     * Execute .
+     * @param _paramsList params for each element to execute
+     * @param _inputs inputs for each element
+     */
+    function executeElements(
+        bytes[] memory _paramsList,
+        uint256[][] memory _inputs
+    ) public {
         for (uint8 i = 0; i < _paramsList.length; i++) {
             GraphBase.Element memory element = elements[i];
             bytes memory params = _paramsList[i];
@@ -64,7 +113,7 @@ contract Graph is GraphBase {
                 }
                 //Input element has one output
                 addAmountToInput(
-                    inputs,
+                    _inputs,
                     element.outputsIndexes[0],
                     element.outputsInputIndexes[0],
                     amount
@@ -72,103 +121,103 @@ contract Graph is GraphBase {
             } else if (element.addr == address(2)) {
                 //SplitterElement
                 uint8 percentage = abi.decode(params, (uint8));
-                uint256 firstShare = inputs[i][0].mul(percentage).div(100);
+                uint256 firstShare = _inputs[i][0].mul(percentage).div(100);
                 //Spliiter element has one output
                 addAmountToInput(
-                    inputs,
+                    _inputs,
                     element.outputsIndexes[0],
                     element.outputsInputIndexes[0],
                     firstShare
                 );
                 addAmountToInput(
-                    inputs,
+                    _inputs,
                     element.outputsIndexes[1],
                     element.outputsInputIndexes[1],
-                    inputs[i][0].sub(firstShare)
+                    _inputs[i][0].sub(firstShare)
                 );
             } else if (element.addr == address(3)) {
                 //AddressElement
                 address payable addr = abi.decode(params, (address));
-                if (inputs[i][0] > 0) {
+                if (_inputs[i][0] > 0) {
                     //ETH
-                    Address.sendValue(addr, inputs[i][0]);
-                } else if (inputs[i][1] > 0) {
+                    Address.sendValue(addr, _inputs[i][0]);
+                } else if (_inputs[i][1] > 0) {
                     //DAI
                     IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F).transfer(
                         addr,
-                        inputs[i][1]
+                        _inputs[i][1]
                     );
-                } else if (inputs[i][2] > 0) {
+                } else if (_inputs[i][2] > 0) {
                     // WETH
                     IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2).transfer(
                         addr,
-                        inputs[i][2]
+                        _inputs[i][2]
                     );
-                } else if (inputs[i][3] > 0) {
+                } else if (_inputs[i][3] > 0) {
                     //USDC
                     IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48).transfer(
                         addr,
-                        inputs[i][3]
+                        _inputs[i][3]
                     );
-                } else if (inputs[i][4] > 0) {
+                } else if (_inputs[i][4] > 0) {
                     //USDT
                     IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7).transfer(
                         addr,
-                        inputs[i][4]
+                        _inputs[i][4]
                     );
-                } else if (inputs[i][5] > 0) {
+                } else if (_inputs[i][5] > 0) {
                     //SUSD
                     IERC20(0x57Ab1ec28D129707052df4dF418D58a2D46d5f51).transfer(
                         addr,
-                        inputs[i][5]
+                        _inputs[i][5]
                     );
-                } else if (inputs[i][6] > 0) {
+                } else if (_inputs[i][6] > 0) {
                     //WBTC
                     IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599).transfer(
                         addr,
-                        inputs[i][6]
+                        _inputs[i][6]
                     );
-                } else if (inputs[i][7] > 0) {
+                } else if (_inputs[i][7] > 0) {
                     //REP
                     IERC20(0x1985365e9f78359a9B6AD760e32412f4a445E862).transfer(
                         addr,
-                        inputs[i][7]
+                        _inputs[i][7]
                     );
-                } else if (inputs[i][8] > 0) {
+                } else if (_inputs[i][8] > 0) {
                     //CDAI
                     IERC20(0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643).transfer(
                         addr,
-                        inputs[i][8]
+                        _inputs[i][8]
                     );
-                } else if (inputs[i][9] > 0) {
+                } else if (_inputs[i][9] > 0) {
                     //CUSDC
                     IERC20(0x39AA39c021dfbaE8faC545936693aC917d5E7563).transfer(
                         addr,
-                        inputs[i][9]
+                        _inputs[i][9]
                     );
-                } else if (inputs[i][10] > 0) {
+                } else if (_inputs[i][10] > 0) {
                     //CWBTC
                     IERC20(0xC11b1268C1A384e55C48c2391d8d480264A3A7F4).transfer(
                         addr,
-                        inputs[i][10]
+                        _inputs[i][10]
                     );
-                } else if (inputs[i][11] > 0) {
+                } else if (_inputs[i][11] > 0) {
                     //CETH
                     IERC20(0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5).transfer(
                         addr,
-                        inputs[i][11]
+                        _inputs[i][11]
                     );
                 }
             } else {
                 uint256[] memory outAmounts = executeOperation(
                     element.addr,
-                    inputs[i],
+                    _inputs[i],
                     params
                 );
                 //Redirect
                 for (uint8 j = 0; j < element.outputsIndexes.length; j++) {
                     addAmountToInput(
-                        inputs,
+                        _inputs,
                         element.outputsIndexes[j],
                         element.outputsInputIndexes[j],
                         outAmounts[j]

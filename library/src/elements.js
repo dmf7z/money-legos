@@ -30,6 +30,60 @@ module.exports = (contracts = mainnetContracts) => {
     };
   };
 
+  const addFlashSwapIn = (elements, name, pairName, index) => {
+    elements[`FLASH_SWAP_IN_${name}`] = {
+      key: `FLASH_SWAP_IN_${name}`,
+      type: "FlashSwapIn",
+      instrument: "Uniswap",
+      description: "Input the amount to borrow",
+      address: "0x0000000000000000000000000000000000000004",
+      inputs: [],
+      outputs: [contracts.ASSETS[name]],
+      connections: [],
+      executionData: [
+        {
+          type: "raw",
+          dataType: "address",
+          data: contracts.UNISWAPV2[pairName],
+        },
+        {
+          type: "raw",
+          dataType: "uint256",
+          data: index,
+        },
+        {
+          type: "input",
+          dataType: "uint256",
+          title: `Amount of ${name}`,
+          description: `Please enter the amount of ${name} to borrow`,
+          required: true,
+          data: "0",
+          min: "0",
+        },
+      ],
+    };
+  };
+
+  const addFlashSwapOut = (elements, name) => {
+    elements[`FLASH_SWAP_OUT_${name}`] = {
+      key: `FLASH_SWAP_OUT_${name}`,
+      type: "FlashSwapIn",
+      instrument: "Uniswap",
+      description: "Input the amount to borrow",
+      address: "0x0000000000000000000000000000000000000005",
+      inputs: [contracts.ASSETS[name]],
+      outputs: [],
+      connections: [],
+      executionData: [
+        {
+          type: "raw",
+          dataType: "address",
+          data: contracts.ASSETS[name],
+        },
+      ],
+    };
+  };
+
   const addUniswapOperations = (elements, name) => {
     elements[`OP_UNISWAP_${name}_TO_ETH`] = {
       key: `OP_UNISWAP_${name}_TO_ETH`,
@@ -578,6 +632,16 @@ module.exports = (contracts = mainnetContracts) => {
 
   //Add address
   addAddressElement(elements);
+
+  //Add flashswap In and out
+  addFlashSwapIn(elements, "DAI", "UNISWAP_EXCHANGE_DAI_WETH", 0);
+  addFlashSwapOut(elements, "DAI", "UNISWAP_EXCHANGE_DAI_WETH");
+  addFlashSwapIn(elements, "USDC", "UNISWAP_EXCHANGE_USDC_WETH", 0);
+  addFlashSwapOut(elements, "USDC", "UNISWAP_EXCHANGE_USDC_WETH");
+  addFlashSwapIn(elements, "WBTC", "UNISWAP_EXCHANGE_WBTC_WETH", 0);
+  addFlashSwapOut(elements, "WBTC", "UNISWAP_EXCHANGE_WBTC_WETH");
+  addFlashSwapIn(elements, "WETH", "UNISWAP_EXCHANGE_DAI_WETH", 1);
+  addFlashSwapOut(elements, "WETH", "UNISWAP_EXCHANGE_DAI_WETH");
 
   return elements;
 };
