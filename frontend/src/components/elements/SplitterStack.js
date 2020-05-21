@@ -16,10 +16,6 @@ const DEMO = {
 const SplitterStack = React.forwardRef((props, ref) => {
   const { id, outputs, inputs, isSelected } = props;
   let assetIn = ASSETS_NAMES[inputs[0]];
-  let assetOut = ASSETS_NAMES[outputs[0]];
-
-
-  console.log("SPLIT", props);
 
   const handleClickInit = () => {
     props.selectAction();

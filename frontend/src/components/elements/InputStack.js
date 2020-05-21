@@ -9,7 +9,7 @@ const InputStack = React.forwardRef((props, ref) => {
   let asset = ASSETS_NAMES[outputs[0]];
 
   return (
-    <div ref={ref} onClick={props.selectAction}>
+    <div  className="stack__common" ref={ref} onClick={props.selectAction}>
       <div
         className={`stack__common stack stack--square box box--square ${isSelected &&
           "selection__box"}`}

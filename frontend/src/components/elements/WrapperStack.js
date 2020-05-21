@@ -3,13 +3,13 @@ import { arrowStyle } from "../../styles/graphStyles";
 import { ArcherElement } from "react-archer";
 import { StackContext } from "../../contexts/stack";
 import { isEmpty } from "lodash";
-import { ASSETS_NAMES } from "../../constants";
+import { ELEMENTS_OFFSET_MAP } from "../../constants";
 
 function WrapperStack(props) {
   const { connections, id, outputs, type } = props;
   const [targetRelation, setTargetRelation] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
-  const { dispatchUi, setShowModal, uiStack } = useContext(StackContext);
+  const { dispatchUi, setShowModal, uiStack, setLimitColumn, limitColumn } = useContext(StackContext);
 
   let relationArray = [];
 
@@ -29,6 +29,10 @@ function WrapperStack(props) {
     setIsSelected(!isEmpty(available));
     setTargetRelation(relationArray);
   }, [uiStack, connections]);
+
+
+
+  
 
   const handleSelect = () => {
       console.log('Wrapped click:', id)

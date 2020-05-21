@@ -5,12 +5,13 @@ import { SmallIcon } from "./SmallIcon";
 import { InstrumentDescription } from "./InstrumentDescription";
 import { isEmpty } from "lodash";
 import { AssetIcon } from "./AssetIcon";
+import ElementForm from "../ElementForm";
 
 export function SplittersOption(props) {
   const [opSelected, setOpSelected] = useState(null);
   const [opCount, setOpCount] = useState(0);
   const [availableElements, setAvailableElements ] = useState([])
-  const { graph, dispatchGraph } = useContext(StackContext);
+  const { graph, dispatchGraph, limitColumn } = useContext(StackContext);
   const { ids } = props;
   // console.log("id selected ", ids);
 
@@ -19,19 +20,32 @@ export function SplittersOption(props) {
     setOpSelected(el);
   };
 
-  const handleAction = (el) => {
-    console.log("Do de add Action", el, ids);
+  const handleAction = (addElement) => {
+    console.log("Do de add Action", addElement);
 
-    let addElement = {
-      parents: ids,
-      element: el,
-      value: 50
-    }
+    // let addElement = {
+    //   parents: ids,
+    //   element: el,
+    //   limit: limitColumn,
+    // };
 
-    dispatchGraph({ type: "ADD_SPLITTER", addElement });
+    dispatchGraph({ type: "ADD_OPERATION", addElement });
     props.closeModal();
-
   };
+
+  // const handleAction = (el) => {
+  //   console.log("Do de add Action", el, ids);
+
+  //   let addElement = {
+  //     parents: ids,
+  //     element: el,
+  //     value: 50
+  //   }
+
+  //   dispatchGraph({ type: "ADD_SPLITTER", addElement });
+  //   props.closeModal();
+
+  // };
 
   useEffect(() => {
   let elementsOfInteres =  isEmpty(ids) ? [] : graph.getAvailableElements(ids);
@@ -43,11 +57,11 @@ export function SplittersOption(props) {
   }, []);
 
   return (
-    <div className="modal__options">
+    <div className="">
       {/* {isEmpty(availableElements) && availableElements.length > 0 && <div>Are you sure you selected 2 elements with the same output?</div>} */}
       {opCount == 1 && 
       <span class="tag is-info is-light is-small is-fullwidth">
-      You know you can select mor than 1 element to split?
+      You know you can add more than 1 element from the splitter?
     </span>
       
       }
@@ -78,36 +92,9 @@ export function SplittersOption(props) {
                     />
                   </div>
                 </div>
-                {opSelected && (
-                  <div>
-                    {element.executionData.map((input) => {
-                      if (input.type == "input") {
-                        return (
-                          <div class="field">
-                            <label class="label">{input.title}</label>
-                            <div class="control">
-                              <input
-                                class="input is-info"
-                                type="text"
-                                placeholder={input.default}
-                              />
-                            </div>
-                            <p class="help">{input.description}</p>
-                          </div>
-                        );
-                      }
-                    })}
-                  </div>
-                )}
-                <div>
-                  
-          {opSelected && <button
-            onClick={() => handleAction(element)}
-            className="button is-warning is-fullwidth is-rounded"
-          >
-            OK!
-          </button>}
-                </div>
+                {opSelected && <ElementForm  element={element} parents={ids} limitColumn={limitColumn} action={handleAction} /> }
+             
+          
               </>
             );
           }

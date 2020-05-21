@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
+import "./App.scss";
 import * as serviceWorker from "./serviceWorker";
 import { StackProvider } from './contexts/stack'
+import AppRouter from "./routes/AppRouter";
 
 ReactDOM.render(
   <React.StrictMode>
     <StackProvider>
-      <App />
+      <AppRouter />
     </StackProvider>
   </React.StrictMode>,
   document.getElementById("root")

@@ -161,5 +161,36 @@ export const SmallIcon = (props) => {
           </g>
         </svg>
       );
+    case "AddressElement":
+      // console.log(ASSETS_COLORS[props.inputs[0]]);
+      // console.log(props.inputs[0]);
+      return (
+        <svg
+          width={size}
+          viewBox="0 0 64 32"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+        >
+          <g
+            id="Page-1"
+            stroke="none"
+            strokeWidth="1"
+            fill="none"
+            fillRule="evenodd"
+          >
+            <rect
+              id="Rectangle"
+              stroke="#D7D8D8"
+              fill="#FFFFFF"
+              x="0.5"
+              y="0.5"
+              width="63"
+              height="31"
+              rx="5"
+            ></rect>
+          </g>
+        </svg>
+      );
   }
 };

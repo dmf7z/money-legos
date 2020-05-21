@@ -9,9 +9,9 @@ const OperationStack = React.forwardRef((props, ref) => {
   let assetOut = ASSETS_NAMES[outputs[0]]
 
   return (
-    <div  ref={ref} onClick={props.selectAction}>
+    <div className="stack__common" ref={ref} onClick={props.selectAction}>
       <div
-        className={`stack__common stack stack--square box box--square ${isSelected &&
+        className={` stack stack--square box box--square ${isSelected &&
           "selection__box"}`}
       >
         <div style={{backgroundColor: adjustColor(ASSETS_COLORS[inputs[0]], 30)}}  className={`stack-color stack-color--${assetIn}`}>

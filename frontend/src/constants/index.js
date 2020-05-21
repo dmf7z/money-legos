@@ -56,3 +56,11 @@ export const ELEMENTS_MAX_OPERATIONS = {
   'InputElement': 1,
   'EmptyElement': 1
 };
+
+export const ELEMENTS_OFFSET_MAP = {
+  'SplitterElement': 1,
+  'OperationElement': 1,
+  'NewInitStack': 0,
+  'InputElement': 1,
+  'EmptyElement': 1
+};
