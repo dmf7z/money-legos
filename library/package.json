@@ -3,7 +3,8 @@
   "version": "0.1.2",
   "scripts": {
     "build": "oz compile --optimizer on && cp build/contracts/Graph.json ./src/abi/",
-    "test": "yarn build && mocha --timeout 100000 --exit --recursive tests/"
+    "test": "yarn build && mocha --timeout 100000 --exit --recursive tests/",
+    "deploy": "yarn build && node scripts/deploy.js"
   },
   "dependencies": {
     "bn.js": "^5.1.1",
