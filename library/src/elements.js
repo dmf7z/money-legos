@@ -67,7 +67,7 @@ module.exports = (contracts = mainnetContracts) => {
   const addFlashSwapOut = (elements, name, pairName) => {
     elements[`FLASH_SWAP_OUT_${name}`] = {
       key: `FLASH_SWAP_OUT_${name}`,
-      type: "FlashSwapIn",
+      type: "FlashSwapOut",
       instrument: "Uniswap",
       description: "Input the amount to borrow",
       address: "0x0000000000000000000000000000000000000005",

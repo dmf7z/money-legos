@@ -50,6 +50,10 @@ describe("Flash swap Graph", function() {
     element = elements.OP_WRAPPER_ETH_TO_WETH;
     let id2 = graph.connectElements([[id1, 0, 0]], element, 0, 2);
 
+    //No flashswapout, not ready to deploy
+    result = await graph.isReadyToDeploy();
+    expect(result).to.be.false;
+
     element = elements.FLASH_SWAP_OUT_WETH;
     let id3 = graph.connectElements(
       [
@@ -60,6 +64,10 @@ describe("Flash swap Graph", function() {
       0,
       3
     );
+
+    //Has flashswapout, ready to deploy
+    result = await graph.isReadyToDeploy();
+    expect(result).to.be.true;
 
     //Deploy
     const address = await graph.deploy(web3);
