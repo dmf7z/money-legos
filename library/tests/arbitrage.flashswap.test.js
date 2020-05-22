@@ -2,7 +2,7 @@ const chaiAsPromised = require("chai-as-promised");
 const chai = require("chai");
 const Web3 = require("web3");
 const BN = require("bn.js");
-var md5 = require("md5")
+var md5 = require("md5");
 const fetch = require("node-fetch");
 const factory = require("../src");
 const Elements = require("../src/elements");
@@ -46,12 +46,15 @@ const getNotExpiringOrder = async (asset1, asset2) => {
   return order;
 };
 
-describe("Arbitrage Graph with Inputs", function() {
+describe("Arbitrage Graph with Flashswaps", function() {
   let contracts;
   let elements;
   let order;
   before(async function() {
-    order = await getNotExpiringOrder(mainContracts.ASSETS.DAI, mainContracts.ASSETS.WETH); //get order first, so it does not expire
+    order = await getNotExpiringOrder(
+      mainContracts.ASSETS.DAI,
+      mainContracts.ASSETS.WETH
+    ); //get order first, so it does not expire
     contracts = await Deployer.deploy();
     elements = Elements(contracts);
   });
@@ -66,6 +69,17 @@ describe("Arbitrage Graph with Inputs", function() {
     //Create input elements
     let result, element;
 
+    const amountFlashSwap = new BN("997000000");
+    const returnFlashSwap = new BN("1000000000");
+
+    element = elements.FLASH_SWAP_IN_WETH;
+    let id00 = graph.addElement(element, 0, 0, [
+      {
+        index: 2,
+        value: amountFlashSwap.toString(10),
+      },
+    ]);
+
     element = elements.INPUT_ETH;
     let id0 = graph.addElement(element, 1, 0, [
       {
@@ -78,6 +92,7 @@ describe("Arbitrage Graph with Inputs", function() {
     element = elements.INPUT_ETH;
     let id1 = graph.addElement(element, 0, 0);
 
+    //Wrap ETH
     element = elements.OP_WRAPPER_ETH_TO_WETH;
     let id2 = graph.connectElements([[id1, 0, 0]], element, 0, 1);
 
@@ -89,7 +104,7 @@ describe("Arbitrage Graph with Inputs", function() {
 
     //Splitter
     element = elements.SPLITTER_WETH;
-    let id3 = graph.connectElements([[id2, 0, 0]], element, 0, 2, [
+    let id3 = graph.connectElements([[id00, 0, 0],[id2, 0, 0]], element, 0, 2, [
       {
         index: 0,
         value: "50",
@@ -128,9 +143,37 @@ describe("Arbitrage Graph with Inputs", function() {
     element = elements.OP_UNISWAP_USDC_TO_ETH;
     let id7 = graph.connectElements([[id6, 0, 0]], element, 1, 6);
 
+    //Wrap ETH
+    element = elements.OP_WRAPPER_ETH_TO_WETH;
+    let id8 = graph.connectElements([[id7, 0, 0]], element, 0, 1);
+
+     //Fixed Splitter
+     element = elements.SPLITTER_FIXED_WETH;
+     let id9 = graph.connectElements([[id8, 0, 0]], element, 0, 2, [
+       {
+         index: 0,
+         value: returnFlashSwap.toString(10),
+       },
+     ]);
+
+    //FlashSwap out
+    element = elements.FLASH_SWAP_OUT_WETH;
+    let id10 = graph.connectElements(
+      [
+        [id9, 0, 0],
+      ],
+      element,
+      0,
+      3
+    );
+
+    //Unwap WETH
+    element = elements.OP_WRAPPER_WETH_TO_ETH;
+    let id11 = graph.connectElements([[id9, 1, 0]], element, 0, 1);
+
     //Create operation and connect them
     element = elements.ADDRESS;
-    let id8 = graph.connectElements([[id7, 0, 0]], element, 1, 7);
+    let id12 = graph.connectElements([[id11, 0, 0]], element, 1, 7);
 
     //Deploy
     const address = await graph.deploy(web3);
@@ -168,8 +211,8 @@ describe("Arbitrage Graph with Inputs", function() {
     graph.setExecutionData(id5, 0, order);
 
     //Set execution params for address
-    graph.setExecutionData(id8, 0, account);
-    result = await graph.isElementReadyToExecute(web3, id8);
+    graph.setExecutionData(id12, 0, account);
+    result = await graph.isElementReadyToExecute(web3, id12);
     expect(result).to.equal("ready");
 
     //Execute

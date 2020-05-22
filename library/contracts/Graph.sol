@@ -138,6 +138,22 @@ contract Graph is GraphBase {
                     element.outputsInputIndexes[1],
                     _inputs[i][0].sub(firstShare)
                 );
+            } else if (element.addr == address(6)) {
+                //SplitterElementFixed
+                uint256 firstShare = abi.decode(params, (uint256));
+                //Spliiter element has one output
+                addAmountToInput(
+                    _inputs,
+                    element.outputsIndexes[0],
+                    element.outputsInputIndexes[0],
+                    firstShare
+                );
+                addAmountToInput(
+                    _inputs,
+                    element.outputsIndexes[1],
+                    element.outputsInputIndexes[1],
+                    _inputs[i][0].sub(firstShare)
+                );
             } else if (element.addr == address(3)) {
                 //AddressElement
                 address payable addr = abi.decode(params, (address));

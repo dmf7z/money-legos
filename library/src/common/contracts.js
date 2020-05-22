@@ -38,7 +38,7 @@ module.exports = {
   CURVE: {
     CURVE_POOL_DAI_USDC_USDT_SUSD: {
       address: "0xA5407eAE9Ba41422680e2e00537571bcC53efBfD",
-      indexes: [Array],
+      indexes: ["DAI", "USDC", "USDT", "SUSD"],
     },
   },
   OASIS: {

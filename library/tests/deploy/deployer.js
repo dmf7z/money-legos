@@ -12,6 +12,8 @@ const Op_Uniswap_V2 = require("../../build/contracts/Op_Uniswap_V2.json");
 const Op_Curve = require("../../build/contracts/Op_Curve.json");
 const Op_Oasis = require("../../build/contracts/Op_Oasis.json");
 const Uniswap = require("../../build/contracts/IUniswap.json");
+const GraphFactory = require("../../build/contracts/GraphFactory.json");
+const Graph = require("../../build/contracts/Graph.json");
 
 module.exports = {
   deploy: async (buyDAI = false, buyWBTC = false, buyUSDC = false) => {
@@ -114,8 +116,20 @@ module.exports = {
         gas: 1500000,
       });
     contracts.OPERATIONS.OP_OASIS = oasisInstance.options.address;
+    
+    const factoryContract = new web3.eth.Contract(GraphFactory.abi);
+    const factoryInstance = await factoryContract
+      .deploy({
+        data: GraphFactory.bytecode,
+        arguments: [],
+      })
+      .send({
+        from: admin,
+        gas: 4500000,
+      });
+    contracts.FACTORY = factoryInstance.options.address;
 
-    console.log(contracts);
+    console.log(JSON.stringify(contracts));
 
     //Buy DAI to admin
     const secondsToToday = new Date().getTime() / 1000;

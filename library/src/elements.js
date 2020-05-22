@@ -523,7 +523,7 @@ module.exports = (contracts = mainnetContracts) => {
       key: `SPLITTER_${name}`,
       type: "SplitterElement",
       instrument: "Local",
-      description: `Split ${name} in two`,
+      description: `Split ${name} in two by percentage`,
       address: "0x0000000000000000000000000000000000000002",
       inputs: [contracts.ASSETS[name]],
       outputs: [contracts.ASSETS[name], contracts.ASSETS[name]],
@@ -534,11 +534,38 @@ module.exports = (contracts = mainnetContracts) => {
           dataType: "uint8",
           min: 0,
           max: 100,
-          title: "% of split",
-          description: "Please enter a percentage to split. Default: 50%",
+          title: "% of split for first output",
+          description:
+            "Please enter a percentage to send to the first ouput. Default: 50%",
           required: false,
           default: "50",
           data: "50",
+        },
+      ],
+    };
+  };
+
+  const addSplitterFixedElement = (elements, name) => {
+    elements[`SPLITTER_FIXED_${name}`] = {
+      key: `SPLITTER_FIXED_${name}`,
+      type: "SplitterElement",
+      instrument: "Local",
+      description: `Split ${name} in two by fixed value`,
+      address: "0x0000000000000000000000000000000000000006",
+      inputs: [contracts.ASSETS[name]],
+      outputs: [contracts.ASSETS[name], contracts.ASSETS[name]],
+      connections: [],
+      executionData: [
+        {
+          type: "input",
+          dataType: "uint256",
+          min: 0,
+          title: "Amount for first output",
+          description:
+            "Please enter an amount to send to first ouput. Default: 0",
+          required: true,
+          default: "0",
+          data: "0",
         },
       ],
     };
@@ -633,6 +660,11 @@ module.exports = (contracts = mainnetContracts) => {
   //Add splitters
   for (asset in contracts.ASSETS) {
     addSplitterElement(elements, asset);
+  }
+
+  //Add fixed splitters
+  for (asset in contracts.ASSETS) {
+    addSplitterFixedElement(elements, asset);
   }
 
   //Add address
