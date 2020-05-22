@@ -32,8 +32,8 @@ export function OperationsOption(props) {
 
     dispatchGraph({ type: "ADD_OPERATION", addElement });
     props.closeModal();
-    parent.connections.length > 0 && setLimitColumn(parent.index[0]+ELEMENTS_OFFSET_MAP[parent.type]);
-    console.log('SETTING NEW BORDER LIMIT', parent.connections.length , parent.index[0],limitColumn, parent.index[0]+ELEMENTS_OFFSET_MAP[parent.type])
+    // parent.connections.length > 0 && setLimitColumn(parent.index[0]+ELEMENTS_OFFSET_MAP[parent.type]);
+    // console.log('SETTING NEW BORDER LIMIT', parent.connections.length , parent.index[0],limitColumn, parent.index[0]+ELEMENTS_OFFSET_MAP[parent.type])
 
   };
 

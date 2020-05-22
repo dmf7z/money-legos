@@ -7,7 +7,9 @@ import React, {
 } from "react";
 import ModalAction from "../components/ModalAction";
 import FactoryGraph from "../components/FactoryGraph";
-import { Web3Context, Web3Toolbar } from "@dapperlabs/react-web3";
+import { Web3Context } from "@dapperlabs/react-web3";
+
+
 import { StackContext } from "../contexts/stack";
 
 function CreatePage() {
@@ -31,14 +33,13 @@ function CreatePage() {
 
   const requestAccess = () => {
     console.log("click");
-    requestAccounts().then((res) => setIsWeb3Enabled(true));
+    getAccounts().then((res) => setIsWeb3Enabled(true));
   };
 
   const doTheDeploy = () => {
     console.log("click doTheDeploy");
-    requestAccounts().then((res) => {
+    console.log(web3.eth.getAccounts())
       deployGraph(web3);
-    });
   };
 
   return (

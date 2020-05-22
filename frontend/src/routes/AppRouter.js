@@ -5,7 +5,12 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import { Web3Provider } from "@dapperlabs/react-web3";
+
+import {
+  Web3Provider,
+  Web3Toolbar
+} from '@dapperlabs/react-web3';
+
 
 // import FundsPage from 'pages/Funds';
 import CreatePage from "../pages/CreatePage";
@@ -19,7 +24,9 @@ const AppRouter = () => (
   <Router>
     <Switch>
       <Web3Provider>
+        <Web3Toolbar />
         <Route path="/" component={CreatePage} exact={true} />
+
       </Web3Provider>
       {/* <Route path="/create" component={CreatePage} /> */}
 

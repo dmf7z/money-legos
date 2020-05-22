@@ -107,6 +107,7 @@ export const graphReducer = (state, action) => {
           index: 0,
           value: action.addElement.data.destinationaddress,
         },
+     
       ]);
 
       return state;

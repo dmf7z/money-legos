@@ -13,13 +13,13 @@ let element;
 // element = factory.getElements().INPUT_DAI;
 // startGraph.addElement(element, 0, 0);
 
-element = factory.getElements().INPUT_WBTC;
+element = factory.getElements().INPUT_ETH;
 let id2 = startGraph.addElement(element, 0, 0);
 
 // element = factory.getElements().INPUT_ETH;
 // startGraph.addElement(element, 2, 0);
 
-element = factory.getElements().OP_UNISWAP_WBTC_TO_ETH;
+element = factory.getElements().OP_UNISWAP_ETH_TO_DAI;
 startGraph.connectElements([[id2, 0, 0]], element, 0, 1);
 
 const StackContext = createContext(null);
@@ -38,7 +38,9 @@ const StackProvider = (props) => {
   }, [uiStack, graph, limitColumn]);
 
   async function deployGraph(web3){
+    console.log('deployGraph action')
     const address = await graph.deploy(web3) 
+    console.log(address)
   }
 
   return (
