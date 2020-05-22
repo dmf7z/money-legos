@@ -125,8 +125,25 @@ class Graph {
     }
     return "ready";
   }
+  async isReadyToDeploy() {
+    let hasFlashSwapIn = false;
+    let hasFlashSwapOut = false;
+    for (const element of this.elements) {
+      if (element.type == "FlashSwapIn") {
+        hasFlashSwapIn = true;
+      } else if (element.type == "FlashSwapOut") {
+        hasFlashSwapOut = true;
+      }
+    }
+    if (
+      (hasFlashSwapIn && !hasFlashSwapOut) ||
+      (!hasFlashSwapIn && hasFlashSwapOut)
+    ) {
+      return false;
+    }
+    return true;
+  }
   async isReadyToExecute(web3) {
-    //TODO: Validate if it has flashuniswapIn then it must have out
     for (const element of this.elements) {
       const result = await this.isElementReadyToExecute(web3, element.id);
       if (result !== "ready") {
@@ -230,53 +247,57 @@ class Graph {
     return availableElements;
   }
   async deploy(web3) {
-    //Prepare elements
-    const elements = this.elements.map((element) => {
-      const typesList = [];
-      const dataList = [];
-      for (const data of element.executionData) {
-        typesList.push(
-          data.dataType == "0xOrder"
-            ? "bytes"
-            : data.dataType == "timestamp"
-            ? "uint256"
-            : data.dataType
-        );
-        dataList.push(data.data);
-      }
-      console.log(typesList, dataList);
-      const params = ABICoder.encodeParameters(typesList, dataList);
-      const outputsIndexes = [];
-      const outputsInputIndexes = [];
-      for (const connection of element.connections) {
-        outputsIndexes.push(this.getElementIndexById(connection.id));
-        outputsInputIndexes.push(connection.index);
-      }
-      return {
-        hash: shortHash(element.key),
-        addr: element.address,
-        params,
-        outputsIndexes,
-        outputsInputIndexes,
-        x: element.index[0],
-        y: element.index[1],
-      };
-    });
-    console.log(elements);
-    //Deploy contract
-    const [account] = await web3.eth.getAccounts();
-    const graphContract = new web3.eth.Contract(GraphData.abi);
-    const graphInstance = await graphContract
-      .deploy({
-        data: GraphData.bytecode,
-        arguments: [elements],
-      })
-      .send({
-        from: account,
-        gas: 4000000,
+    if (this.isReadyToDeploy()) {
+      //Prepare elements
+      const elements = this.elements.map((element) => {
+        const typesList = [];
+        const dataList = [];
+        for (const data of element.executionData) {
+          typesList.push(
+            data.dataType == "0xOrder"
+              ? "bytes"
+              : data.dataType == "timestamp"
+              ? "uint256"
+              : data.dataType
+          );
+          dataList.push(data.data);
+        }
+        console.log(typesList, dataList);
+        const params = ABICoder.encodeParameters(typesList, dataList);
+        const outputsIndexes = [];
+        const outputsInputIndexes = [];
+        for (const connection of element.connections) {
+          outputsIndexes.push(this.getElementIndexById(connection.id));
+          outputsInputIndexes.push(connection.index);
+        }
+        return {
+          hash: shortHash(element.key),
+          addr: element.address,
+          params,
+          outputsIndexes,
+          outputsInputIndexes,
+          x: element.index[0],
+          y: element.index[1],
+        };
       });
-    this.address = graphInstance.options.address;
-    return this.address;
+      console.log(elements);
+      //Deploy contract
+      const [account] = await web3.eth.getAccounts();
+      const graphContract = new web3.eth.Contract(GraphData.abi);
+      const graphInstance = await graphContract
+        .deploy({
+          data: GraphData.bytecode,
+          arguments: [elements],
+        })
+        .send({
+          from: account,
+          gas: 4000000,
+        });
+      this.address = graphInstance.options.address;
+      return this.address;
+    } else {
+      throw "Not ready to deploy";
+    }
   }
   async execute(web3) {
     if (this.isReadyToExecute(web3)) {

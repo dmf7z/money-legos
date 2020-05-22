@@ -45,24 +45,17 @@ contract Graph is GraphBase {
         uint256[][] memory inputs = new uint256[][](elements.length);
         bool hasFlashSwap = false;
         uint256 flashSwapInIndex;
-        uint256 flashSwapOutIndex;
         for (uint256 i; i < elements.length; i++) {
             if (elements[i].addr == address(4)) {
                 //FlashSwap (only one allowed)
                 hasFlashSwap = true;
                 flashSwapInIndex = i;
-            } else if (elements[i].addr == address(5)) {
-                flashSwapOutIndex = i;
             }
             inputs[i] = new uint256[](_maxElementInputs);
         }
         if (hasFlashSwap) {
             //Execute element with flash swap
-            bytes memory data = abi.encodeWithSelector(
-                bytes4(keccak256("executeElements(bytes[],uint256[][])")),
-                _paramsList,
-                inputs
-            );
+            bytes memory data = abi.encode(_paramsList, inputs);
             (address pair, uint256 index, uint256 amount) = abi.decode(
                 _paramsList[flashSwapInIndex],
                 (address, uint256, uint256)
@@ -73,16 +66,26 @@ contract Graph is GraphBase {
                 address(this),
                 data
             );
-
-            address asset = abi.decode(
-                _paramsList[flashSwapOutIndex],
-                (address)
-            );
-            IERC20(asset).transfer(pair, inputs[flashSwapOutIndex][0]);
         } else {
             //Execute elements
             executeElements(_paramsList, inputs);
         }
+    }
+
+    /**
+     * Uniswap v2 flash swap callback .
+     */
+    function uniswapV2Call(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external {
+        (bytes[] memory paramsList, uint256[][] memory inputs) = abi.decode(
+            data,
+            (bytes[], uint256[][])
+        );
+        executeElements(paramsList, inputs);
     }
 
     /**
@@ -208,6 +211,24 @@ contract Graph is GraphBase {
                         _inputs[i][11]
                     );
                 }
+            } else if (element.addr == address(4)) {
+                //Nothing, flash swap in
+                (, , uint256 amount) = abi.decode(
+                    params,
+                    (address, uint256, uint256)
+                );
+                addAmountToInput(
+                    _inputs,
+                    element.outputsIndexes[0],
+                    element.outputsInputIndexes[0],
+                    amount
+                );
+            } else if (element.addr == address(5)) {
+                (address pair, address asset) = abi.decode(
+                    params,
+                    (address, address)
+                );
+                IERC20(asset).transfer(pair, _inputs[i][0]);
             } else {
                 uint256[] memory outAmounts = executeOperation(
                     element.addr,
