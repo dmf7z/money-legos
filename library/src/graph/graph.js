@@ -2,6 +2,7 @@ const ABICoder = require("web3-eth-abi");
 const BN = require("bn.js");
 const ERC20ABI = require("../abi/erc20");
 const GraphData = require("../abi/Graph.json");
+const GraphFactoryData = require("../abi/GraphFactory.json");
 const shortHash = require("short-hash");
 const Elements = require("../elements");
 const Op0xABI = require("../abi/op_0x");
@@ -283,17 +284,26 @@ class Graph {
       console.log(elements);
       //Deploy contract
       const [account] = await web3.eth.getAccounts();
-      const graphContract = new web3.eth.Contract(GraphData.abi);
-      const graphInstance = await graphContract
-        .deploy({
-          data: GraphData.bytecode,
-          arguments: [elements],
-        })
-        .send({
-          from: account,
-          gas: 5000000,
-        });
-      this.address = graphInstance.options.address;
+      // const graphContract = new web3.eth.Contract(GraphData.abi);
+      // const graphInstance = await graphContract
+      //   .deploy({
+      //     data: GraphData.bytecode,
+      //     arguments: [elements],
+      //   })
+      //   .send({
+      //     from: account,
+      //     gas: 5000000,
+      //   });
+      const factoryContract = new web3.eth.Contract(
+        GraphFactoryData.abi,
+        this.contracts.FACTORY
+      );
+      const tx = await factoryContract.methods.createInstance(elements).send({
+        from: account,
+        gas: 5000000,
+      });
+      this.address = tx.events.GraphCreated.returnValues["0"];
+      console.log(this.address);
       return this.address;
     } else {
       throw "Not ready to deploy";
@@ -327,7 +337,9 @@ class Graph {
             takerAssetAmount: order.order.takerAssetAmount.toString(10),
             makerFee: order.order.makerFee.toString(10),
             takerFee: order.order.takerFee.toString(10),
-            expirationTimeSeconds: order.order.expirationTimeSeconds.toString(10),
+            expirationTimeSeconds: order.order.expirationTimeSeconds.toString(
+              10
+            ),
             salt: order.order.salt.toString(10),
             makerAssetData: order.order.makerAssetData,
             takerAssetData: order.order.takerAssetData,

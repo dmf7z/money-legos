@@ -116,34 +116,20 @@ module.exports = {
         gas: 1500000,
       });
     contracts.OPERATIONS.OP_OASIS = oasisInstance.options.address;
-
-    const graphContract = new web3.eth.Contract(Graph.abi);
-    const graphInstance = await graphContract
+    
+    const factoryContract = new web3.eth.Contract(GraphFactory.abi);
+    const factoryInstance = await factoryContract
       .deploy({
-        data: Graph.bytecode,
-        arguments: [[]],
+        data: GraphFactory.bytecode,
+        arguments: [],
       })
       .send({
         from: admin,
         gas: 4500000,
       });
-    contracts.GRAPH = graphInstance.options.address;
-
-    const factoryContract = new web3.eth.Contract(GraphFactory.abi);
-    const factoryInstance = await factoryContract
-      .deploy({
-        data: GraphFactory.bytecode,
-        arguments: [contracts.GRAPH],
-      })
-      .send({
-        from: admin,
-        gas: 1500000,
-      });
     contracts.FACTORY = factoryInstance.options.address;
 
     console.log(JSON.stringify(contracts));
-
-    
 
     //Buy DAI to admin
     const secondsToToday = new Date().getTime() / 1000;

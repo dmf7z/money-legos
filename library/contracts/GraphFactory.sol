@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
 import "./GraphBase.sol";
-import "./GraphProxy.sol";
+import "./Graph.sol";
 
 
 /**
@@ -10,12 +10,9 @@ import "./GraphProxy.sol";
  * @dev Factory of graph proxy.
  */
 contract GraphFactory {
-    event GraphProxyCreated(address);
+    event GraphCreated(address);
 
-    address public graph;
-
-    constructor(address _graph) public {
-        graph = _graph;
+    constructor() public {
     }
 
     /**
@@ -23,8 +20,8 @@ contract GraphFactory {
      * @param _elements elements of the graph.
      */
     function createInstance(GraphBase.Element[] memory _elements) public {
-        GraphProxy proxy = new GraphProxy(graph, _elements);
+        Graph proxy = new Graph(_elements);
 
-        emit GraphProxyCreated(address(proxy));
+        emit GraphCreated(address(proxy));
     }
 }
