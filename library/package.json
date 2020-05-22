@@ -3,12 +3,13 @@
   "version": "0.1.2",
   "scripts": {
     "build": "oz compile --optimizer on && cp build/contracts/Graph.json ./src/abi/",
-    "test": "yarn build && mocha --timeout 100000 --exit --recursive tests/",
+    "test": "yarn build && mocha --timeout 1000000 --exit --recursive tests/",
     "deploy": "yarn build && node scripts/deploy.js"
   },
   "dependencies": {
     "bn.js": "^5.1.1",
     "ethereumjs-util": "^7.0.0",
+    "node-fetch": "^2.6.0",
     "short-hash": "^1.0.0",
     "web3-eth-abi": "^1.2.7",
     "webpack": "^4.43.0"

@@ -291,7 +291,7 @@ class Graph {
         })
         .send({
           from: account,
-          gas: 4000000,
+          gas: 5000000,
         });
       this.address = graphInstance.options.address;
       return this.address;
@@ -319,27 +319,25 @@ class Graph {
           );
           const order = element.executionData[0].data;
           const orderParam = {
-            makerAddress: order.signedOrder.makerAddress,
-            takerAddress: order.signedOrder.takerAddress,
-            feeRecipientAddress: order.signedOrder.feeRecipientAddress,
-            senderAddress: order.signedOrder.senderAddress,
-            makerAssetAmount: order.signedOrder.makerAssetAmount.toString(10),
-            takerAssetAmount: order.signedOrder.takerAssetAmount.toString(10),
-            makerFee: order.signedOrder.makerFee.toString(10),
-            takerFee: order.signedOrder.takerFee.toString(10),
-            expirationTimeSeconds: order.signedOrder.expirationTimeSeconds.toString(
-              10
-            ),
-            salt: order.signedOrder.salt.toString(10),
-            makerAssetData: order.signedOrder.makerAssetData,
-            takerAssetData: order.signedOrder.takerAssetData,
-            makerFeeAssetData: order.signedOrder.makerFeeAssetData,
-            takerFeeAssetData: order.signedOrder.takerFeeAssetData,
+            makerAddress: order.order.makerAddress,
+            takerAddress: order.order.takerAddress,
+            feeRecipientAddress: order.order.feeRecipientAddress,
+            senderAddress: order.order.senderAddress,
+            makerAssetAmount: order.order.makerAssetAmount.toString(10),
+            takerAssetAmount: order.order.takerAssetAmount.toString(10),
+            makerFee: order.order.makerFee.toString(10),
+            takerFee: order.order.takerFee.toString(10),
+            expirationTimeSeconds: order.order.expirationTimeSeconds.toString(10),
+            salt: order.order.salt.toString(10),
+            makerAssetData: order.order.makerAssetData,
+            takerAssetData: order.order.takerAssetData,
+            makerFeeAssetData: order.order.makerFeeAssetData,
+            takerFeeAssetData: order.order.takerFeeAssetData,
           };
           const params = await op0xContract.methods
             .encodeParams(
               orderParam,
-              order.signedOrder.signature,
+              order.order.signature,
               element.executionData[1].data
             )
             .call();

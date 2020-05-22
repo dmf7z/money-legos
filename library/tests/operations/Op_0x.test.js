@@ -2,12 +2,12 @@ const chaiAsPromised = require("chai-as-promised");
 const chai = require("chai");
 const Web3 = require("web3");
 const BN = require("bn.js");
+const fetch = require("node-fetch");
 const ABICoder = require("web3-eth-abi");
 const Deployer = require("../deploy/deployer");
 const ExecutorABI = require("../abi/executor");
 const Op0xABI = require("../abi/op_0x");
 const ERC20ABI = require("../abi/erc20");
-const MeshClient = require("@0x/mesh-rpc-client");
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -20,28 +20,14 @@ const addPrefix = (asset) => {
     .toLowerCase()}`;
 };
 
-const isPair = (order, asset1, asset2) => {
-  return (
-    order.signedOrder.makerAssetData === addPrefix(asset1) &&
-    order.signedOrder.takerAssetData === addPrefix(asset2)
+const getOrder = async (asset1, asset2) => {
+  const makerAssetData = addPrefix(asset1);
+  const takerAssetData = addPrefix(asset2);
+  const response = await fetch(
+    `https://api.0x.org/sra/v3/orders?makerAssetData=${makerAssetData}&takerAssetData=${takerAssetData}`
   );
-};
-
-const getOrder = (contracts) => {
-  const client = new MeshClient.WSClient("ws://192.168.1.12:60557");
-  return new Promise((resolve, reject) => {
-    client.subscribeToOrdersAsync(function(orders) {
-      for (let index = 0; index < orders.length; index++) {
-        const order = orders[index];
-        if (
-          isPair(order, contracts.ASSETS.DAI, contracts.ASSETS.WETH) &&
-          order.fillableTakerAssetAmount.gt(new BN("1000000000000000"))
-        ) {
-          return resolve(order);
-        }
-      }
-    });
-  });
+  const orders = await response.json();
+  return orders.records[4]; //Not the first one to avoid frontrun
 };
 
 describe("Operation 0x", function() {
@@ -49,7 +35,7 @@ describe("Operation 0x", function() {
   let order;
   before(async function() {
     contracts = await Deployer.deploy();
-    order = await getOrder(contracts);
+    order = await getOrder(contracts.ASSETS.DAI, contracts.ASSETS.WETH);
   });
 
   it("trade 0x order", async function() {
@@ -81,32 +67,26 @@ describe("Operation 0x", function() {
     expect(daiBalance.toString(10)).to.equal("0");
 
     const orderParam = {
-      makerAddress: order.signedOrder.makerAddress,
-      takerAddress: order.signedOrder.takerAddress,
-      feeRecipientAddress: order.signedOrder.feeRecipientAddress,
-      senderAddress: order.signedOrder.senderAddress,
-      makerAssetAmount: order.signedOrder.makerAssetAmount.toString(10),
-      takerAssetAmount: order.signedOrder.takerAssetAmount.toString(10),
-      makerFee: order.signedOrder.makerFee.toString(10),
-      takerFee: order.signedOrder.takerFee.toString(10),
-      expirationTimeSeconds: order.signedOrder.expirationTimeSeconds.toString(
-        10
-      ),
-      salt: order.signedOrder.salt.toString(10),
-      makerAssetData: order.signedOrder.makerAssetData,
-      takerAssetData: order.signedOrder.takerAssetData,
-      makerFeeAssetData: order.signedOrder.makerFeeAssetData,
-      takerFeeAssetData: order.signedOrder.takerFeeAssetData,
+      makerAddress: order.order.makerAddress,
+      takerAddress: order.order.takerAddress,
+      feeRecipientAddress: order.order.feeRecipientAddress,
+      senderAddress: order.order.senderAddress,
+      makerAssetAmount: order.order.makerAssetAmount.toString(10),
+      takerAssetAmount: order.order.takerAssetAmount.toString(10),
+      makerFee: order.order.makerFee.toString(10),
+      takerFee: order.order.takerFee.toString(10),
+      expirationTimeSeconds: order.order.expirationTimeSeconds.toString(10),
+      salt: order.order.salt.toString(10),
+      makerAssetData: order.order.makerAssetData,
+      takerAssetData: order.order.takerAssetData,
+      makerFeeAssetData: order.order.makerFeeAssetData,
+      takerFeeAssetData: order.order.takerFeeAssetData,
     };
 
     //Trade
     const paramsOp1 = ABICoder.encodeParameter("bool", true);
     const paramsOp2 = await op0xContract.methods
-      .encodeParams(
-        orderParam,
-        order.signedOrder.signature,
-        contracts.ASSETS.WETH
-      )
+      .encodeParams(orderParam, order.order.signature, contracts.ASSETS.WETH)
       .call();
 
     const result = await op0xContract.methods
@@ -114,11 +94,13 @@ describe("Operation 0x", function() {
       .call();
     expect(result).to.equal(true);
 
-    const amount = order.fillableTakerAssetAmount.gt(
+    const amount = new BN(order.metaData.remainingFillableTakerAssetAmount).gt(
       new BN("1000000000000000000")
     )
       ? "1000000000000000000"
-      : order.fillableTakerAssetAmount.toString(10);
+      : order.metaData.remainingFillableTakerAssetAmount;
+
+    console.log(`Amount to trade in 0x= ${amount}`)
 
     const fee0x = (await web3.eth.getGasPrice()) * 150000;
 
