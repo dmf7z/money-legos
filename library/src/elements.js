@@ -49,7 +49,7 @@ module.exports = (contracts = mainnetContracts) => {
         {
           type: "raw",
           dataType: "uint256",
-          data: index,
+          data: index.toString(),
         },
         {
           type: "input",
@@ -64,7 +64,7 @@ module.exports = (contracts = mainnetContracts) => {
     };
   };
 
-  const addFlashSwapOut = (elements, name) => {
+  const addFlashSwapOut = (elements, name, pairName) => {
     elements[`FLASH_SWAP_OUT_${name}`] = {
       key: `FLASH_SWAP_OUT_${name}`,
       type: "FlashSwapIn",
@@ -75,6 +75,11 @@ module.exports = (contracts = mainnetContracts) => {
       outputs: [],
       connections: [],
       executionData: [
+        {
+          type: "raw",
+          dataType: "address",
+          data: contracts.UNISWAPV2[pairName],
+        },
         {
           type: "raw",
           dataType: "address",
