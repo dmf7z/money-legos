@@ -20,7 +20,11 @@ let id2 = startGraph.addElement(element, 0, 0);
 // startGraph.addElement(element, 2, 0);
 
 element = factory.getElements().OP_UNISWAP_ETH_TO_DAI;
-startGraph.connectElements([[id2, 0, 0]], element, 0, 1);
+let id8 = startGraph.connectElements([[id2, 0, 0]], element, 0, 1);
+
+element = factory.getElements().ADDRESS;
+startGraph.connectElements([[id8, 0, 1]], element, 0, 2);
+
 
 const StackContext = createContext(null);
 

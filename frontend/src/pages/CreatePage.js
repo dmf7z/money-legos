@@ -8,8 +8,7 @@ import React, {
 import ModalAction from "../components/ModalAction";
 import FactoryGraph from "../components/FactoryGraph";
 import { Web3Context } from "@dapperlabs/react-web3";
-
-
+import { isEmpty } from "lodash";
 import { StackContext } from "../contexts/stack";
 
 function CreatePage() {
@@ -19,26 +18,59 @@ function CreatePage() {
     account,
     network,
     getAccounts,
-    requestAccounts,
+    requestAccounts
   } = useContext(Web3Context);
   const [isWeb3Enabled, setIsWeb3Enabled] = useState(false);
+  const [hasAccount, setHasAccount] = useState(false);
 
-  useEffect(() => {
+  useEffect(async () => {
+    const account =  await getAccounts()
+    setHasAccount(!isEmpty(account));
     setIsWeb3Enabled(checkingForWeb3);
     console.log("checkingForWeb3", checkingForWeb3);
-    console.log("checkingForWeb3", account);
+    console.log("isEmpty(account)", isEmpty(account));
+    
   }, []);
 
   const { deployGraph, limitColumn } = useContext(StackContext);
 
-  const requestAccess = () => {
-    console.log("click");
-    getAccounts().then((res) => setIsWeb3Enabled(true));
+    async function requestAccess(){
+      const account =  await getAccounts()
+    console.log("TESTTEST TEST TEST TEST");
+    console.log('web3.eth.getAccounts()',account)
+    console.log('empty! ', isEmpty(account) )
+    console.log('web3',web3)
+    console.log('network',network)
+    // console.log(await requestAccounts())
+    //  let un = window.ethereum.enable //.then((res) => console.log('checkingForWeb3()', res));
+    // web3.eth.getAccounts() //.then((res) => console.log('getAccounts()', res));
   };
+
+  async function mmReq(){
+    try {
+
+      window.ethereum
+      .enable()
+      .then(function(account) {
+        console.log(account);
+    setHasAccount(!isEmpty(account));
+
+      })
+      .catch(function(reason) {
+        // Handle error. Likely the user rejected the login:
+        console.log(reason === "User rejected provider access");
+      });
+  
+      // ...code
+  
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const doTheDeploy = () => {
     console.log("click doTheDeploy");
-    console.log(web3.eth.getAccounts())
+    
       deployGraph(web3);
   };
 
@@ -54,7 +86,13 @@ function CreatePage() {
             </span>
           </div>
           <div>
-            {isWeb3Enabled ? (
+          <button
+                onClick={() => mmReq()}
+                class="button is-warning is-outlined"
+              >
+                LOG WEB3
+              </button>
+            {hasAccount ? (
               <button
                 onClick={() => doTheDeploy()}
                 class="button is-warning is-outlined"
@@ -63,7 +101,7 @@ function CreatePage() {
               </button>
             ) : (
               <button
-                onClick={() => requestAccess()}
+                onClick={() => mmReq()}
                 class="button is-warning is-outlined"
               >
                 Connect Metamask
