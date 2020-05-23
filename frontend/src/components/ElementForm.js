@@ -12,18 +12,22 @@ export default function ElementForm(props) {
       data: data,
     };
 
-    console.log(data);
+    console.log('submitting data', data);
     props.action(addElement);
   };
   const { register, handleSubmit, watch, errors } = useForm();
-
+console.log(element)
+let info = []
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        {element.executionData
-          .filter((input) => input.type === "input")
-          .map((input) => {
+        {element && element.executionData  && element.executionData
+          // .filter((input) => input.type === "input")
+          .map((input, index) => {
+           if ( input.type === "input"){
             let name = slugify(input.title);
+            console.log('input!', name, index)
+
             return (
               <div class="field">
                 <label class="label">{input.title}</label>
@@ -31,9 +35,9 @@ export default function ElementForm(props) {
                   <input
                     class="input is-info"
                     type="text"
-                    name={name}
-                    placeholder={input.default}
-                    value={input.required ? input.default : ""}
+                    name={index}
+                    placeholder={input.data ? input.data : input.default}
+                    // value={input.required ? input.default : ""}
                     ref={register({ required: input.required })}
                   />
                 </div>
@@ -41,13 +45,15 @@ export default function ElementForm(props) {
                 {errors[name] && <span>This field is required</span>}
               </div>
             );
+           }
+
           })}
       </div>
       <div>
         <button
           type="submit"
           // onClick={() => handleAction(element)}
-          className="button is-warning is-fullwidth is-rounded"
+          className="button is-warning is-fullwidth is-rounded modal__ok-btn"
         >
           OK!
         </button>

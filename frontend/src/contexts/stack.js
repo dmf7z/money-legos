@@ -35,6 +35,7 @@ const StackProvider = (props) => {
   const [graph, dispatchGraph] = useReducer(graphReducer, startGraph);
   const [limitColumn, setLimitColumn] = useState(0);
   const [graphIsLoaded, setGraphIsLoaded] = useState(false);
+  const [graphIsReady, setGraphIsReady] = useState(false);
 
   useEffect(() => {
     console.log("SELECTED ITEMS: ", uiStack);
@@ -61,9 +62,30 @@ const StackProvider = (props) => {
   async function checkElement(web3, id){
     console.log('checkElement graph...', web3, id)
     console.log('checkElement graph...', graph)
-
     let result = await graph.isElementReadyToExecute(web3, id);
     console.log('checking element', id)
+    return result
+  }
+
+  async function allowElement(web3, id){
+    console.log('checkElement graph...', web3, id)
+    console.log('checkElement graph...', graph)
+    let result = await graph.allowInputElement(web3, id);
+    console.log('checking element', result)
+    return result
+  }
+
+  async function isReady(web3){
+    let result = await graph.isReadyToExecute(web3)
+    console.log('READYYYY???? ', result)
+    setGraphIsReady(result)
+    return result
+  }
+
+  async function executeGraph(web3){
+    let result = await graph.execute(web3);
+    console.log('EXECUTED ', result)
+    setGraphIsReady(result)
     return result
   }
 
@@ -83,7 +105,11 @@ const StackProvider = (props) => {
         deployGraph,
         loadGraphAddress,
         checkElement,
-        graphIsLoaded
+        graphIsLoaded,
+        isReady,
+        graphIsReady,
+        executeGraph,
+        allowElement
       }}
     >
       {props.children}

@@ -9,7 +9,6 @@ export const graphReducer = (state, action) => {
   let arrayIds = [];
   let elementPort = 0;
 
-
   switch (action.type) {
     case "ADD_INPUT":
       element = factory.getElements()[`INPUT_${action.addElement.asset}`];
@@ -107,7 +106,6 @@ export const graphReducer = (state, action) => {
           index: 0,
           value: action.addElement.data.destinationaddress,
         },
-     
       ]);
 
       return state;
@@ -119,14 +117,27 @@ export const graphReducer = (state, action) => {
       console.log("2 state ", state);
       // return state[action.element.pos[1]][action.element.pos[0]] = action.element
       return state;
-    
-      case "LOAD_GRAPH":
-       
-  
-        console.log("2 state ", state);
-        console.log("2 action ", action);
-        // return state[action.element.pos[1]][action.element.pos[0]] = action.element
-        return action.lg;
+
+    case "LOAD_GRAPH":
+      console.log("2 state ", state);
+      console.log("2 action ", action);
+      // return state[action.element.pos[1]][action.element.pos[0]] = action.element
+      return action.lg;
+
+    case "ADD_DATA":
+      console.log("2 action ", action);
+      const {element, data} = action.addElement
+      // element = state.getElementById(par);
+
+      for (const i of Object.keys(element.executionData) ) {
+        console.log('XOXOX',i,data[i]);
+        state.setExecutionData(element.id, i, data[i]);
+      }
+
+
+      console.log("2 state ", state);
+      // return state[action.element.pos[1]][action.element.pos[0]] = action.element
+      return state;
 
     case "CLEAR_STACK":
       return [];

@@ -437,4 +437,14 @@ body {
   &__tab {
     margin-bottom: 0.5rem !important;
   }
+  &__loaded-box {
+    padding: 0px 20px
+  }
+  &__loaded-content {
+    padding: 20px 0px
+  }
+  &__ok-btn {
+    margin: 20px 0px;
+
+  }
 }

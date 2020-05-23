@@ -13,6 +13,7 @@ import { SplittersOptions, SplittersOption } from "./modal/SplittersOption";
 import { isElementComplete } from "../utils";
 import { isEmpty } from "lodash";
 import { AddressOption } from "./modal/AddressOption";
+import { LoadedOptions } from "./modal/LoadedOption";
 
 export default function ModalAction() {
   const {
@@ -149,6 +150,8 @@ export default function ModalAction() {
             </div>
           )}
           {/* end of tabs */}
+          {/* init of tabs for create */}
+
           {!isInitStack && !isComplete && (
             <div className="modal__content">
               {tab === "operation" && !isComplete && (
@@ -197,6 +200,13 @@ export default function ModalAction() {
             </div>
           )}
           </>}
+          {/* end of tabs for create */}
+          { graphIsLoaded && (
+           <LoadedOptions ids={uiStack} closeModal={closeModal} />
+          )
+
+          }
+
         </div>
       </Modal>
     </div>

@@ -4,9 +4,10 @@ import { adjustColor } from "../../utils";
 
 const InputStack = React.forwardRef((props, ref) => {
   let selected = false;
-  const { id, outputs, inputs, isSelected, isReady, graphIsLoaded } = props;
+  const { id, outputs, inputs, isSelected, isReady, graphIsLoaded, executionData} = props;
 
   let asset = ASSETS_NAMES[outputs[0]];
+  let amount = executionData[1].data;
 
   return (
     <div className="stack__common" ref={ref} onClick={props.selectAction}>
@@ -19,7 +20,7 @@ const InputStack = React.forwardRef((props, ref) => {
         }`}
       >
         <div className="stack-color__content">
-          <div className="stack-color__name">START WITH {asset}</div>
+          <div className="stack-color__name">START WITH {graphIsLoaded && amount} {asset}</div>
         </div>
         <div className={`stack-color stack-color--${asset}`}>
           <div
