@@ -7,7 +7,7 @@ export default function ElementForm(props) {
   const onSubmit = (data) => {
     let addElement = {
       parents: parents,
-      element: element,
+      selectedElement: element,
       limit: limitColumn,
       data: data,
     };

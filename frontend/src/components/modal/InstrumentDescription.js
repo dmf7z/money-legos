@@ -47,6 +47,21 @@ export const InstrumentDescription = (props) => {
         </span>
       );
 
+    case "Uniswap V2":
+      return (
+        <span className="modal__op--title">
+          
+          Uniswap{" "}
+          <img
+            className="modal__op--img-uni"
+            src={require("../../assets/icons/uniswapv2.svg")}
+          />
+          <span class="tag is-rounded is-danger is-normal">V2</span>
+          {" "}
+        </span>
+
+      )
+
     default:
       return <span>{props.instrument}</span>;
   }
