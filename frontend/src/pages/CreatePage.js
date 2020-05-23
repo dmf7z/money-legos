@@ -18,60 +18,61 @@ function CreatePage() {
     account,
     network,
     getAccounts,
-    requestAccounts
+    requestAccounts,
   } = useContext(Web3Context);
   const [isWeb3Enabled, setIsWeb3Enabled] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
+  const [loadedGraph, setLoadedGraph] = useState([]);
 
   useEffect(async () => {
-    const account =  await getAccounts()
+    const account = await getAccounts();
     setHasAccount(!isEmpty(account));
     setIsWeb3Enabled(checkingForWeb3);
     console.log("checkingForWeb3", checkingForWeb3);
     console.log("isEmpty(account)", isEmpty(account));
-    
   }, []);
 
-  const { deployGraph, limitColumn } = useContext(StackContext);
+  const { deployGraph, limitColumn, loadGraph } = useContext(StackContext);
 
-    async function requestAccess(){
-      const account =  await getAccounts()
+  async function requestAccess() {
+    const account = await getAccounts();
     console.log("TESTTEST TEST TEST TEST");
-    console.log('web3.eth.getAccounts()',account)
-    console.log('empty! ', isEmpty(account) )
-    console.log('web3',web3)
-    console.log('network',network)
+    console.log("web3.eth.getAccounts()", account);
+    console.log("empty! ", isEmpty(account));
+    console.log("web3", web3);
+    console.log("network", network);
     // console.log(await requestAccounts())
     //  let un = window.ethereum.enable //.then((res) => console.log('checkingForWeb3()', res));
     // web3.eth.getAccounts() //.then((res) => console.log('getAccounts()', res));
-  };
+  }
 
-  async function mmReq(){
+  async function mmReq() {
     try {
-
       window.ethereum
-      .enable()
-      .then(function(account) {
-        console.log(account);
-    setHasAccount(!isEmpty(account));
+        .enable()
+        .then(function (account) {
+          console.log(account);
+          setHasAccount(!isEmpty(account));
+        })
+        .catch(function (reason) {
+          // Handle error. Likely the user rejected the login:
+          console.log(reason === "User rejected provider access");
+        });
 
-      })
-      .catch(function(reason) {
-        // Handle error. Likely the user rejected the login:
-        console.log(reason === "User rejected provider access");
-      });
-  
       // ...code
-  
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
   const doTheDeploy = () => {
     console.log("click doTheDeploy");
-    
-      deployGraph(web3);
+    deployGraph(web3);
+  };
+  const loadG = async () => {
+    let lg = await loadGraph(web3, '0xd176f11B673594698722c761BB5E9ce6C38207D1' )
+    setLoadedGraph(lg)
+    console.log('lg', lg)
   };
 
   return (
@@ -86,12 +87,12 @@ function CreatePage() {
             </span>
           </div>
           <div>
-          <button
-                onClick={() => mmReq()}
-                class="button is-warning is-outlined"
-              >
-                LOG WEB3
-              </button>
+            <button
+              onClick={() => loadG()}
+              class="button is-warning is-outlined"
+            >
+             LOAD 
+            </button>
             {hasAccount ? (
               <button
                 onClick={() => doTheDeploy()}
@@ -110,7 +111,7 @@ function CreatePage() {
           </div>
         </div>
       </div>
-      <FactoryGraph />
+      <FactoryGraph graph={loadedGraph} />
 
       <ModalAction />
     </section>

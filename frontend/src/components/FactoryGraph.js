@@ -18,16 +18,17 @@ function FactoryGraph(props) {
   const ref = useRef();
 
   useEffect(() => {
-    // let useMap = isEmpty(graph) ? props.graph : graph;
+    let useMap = props.graph ? props.graph : graph;
     // console.log("getting new Graph!");
     // console.log(graph);
+    console.log(props)
 
-    let newMap = GenerateMap(graph, limitColumn);
+    let newMap = GenerateMap(props.graph , limitColumn);
 
     setgraphMap(newMap);
     setIsLoading(false);
     //
-  }, [graph, uiStack]);
+  }, [props.graph]);
 
   return (
     <ArcherContainer

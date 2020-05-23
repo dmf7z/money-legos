@@ -22,8 +22,8 @@ let id2 = startGraph.addElement(element, 0, 0);
 element = factory.getElements().OP_UNISWAP_ETH_TO_DAI;
 let id8 = startGraph.connectElements([[id2, 0, 0]], element, 0, 1);
 
-element = factory.getElements().ADDRESS;
-startGraph.connectElements([[id8, 0, 1]], element, 0, 2);
+// element = factory.getElements().ADDRESS;
+// startGraph.connectElements([[id8, 0, 1]], element, 0, 2);
 
 
 const StackContext = createContext(null);
@@ -47,6 +47,15 @@ const StackProvider = (props) => {
     console.log(address)
   }
 
+  // 0xd176f11B673594698722c761BB5E9ce6C38207D1
+
+  async function loadGraph(web3, address){
+    console.log('deployGraph action')
+    const loadedGraph = await factory.loadGraph(web3, address);
+    console.log(loadedGraph)
+    return loadedGraph
+  }
+
   return (
     <StackContext.Provider
       value={{
@@ -60,7 +69,8 @@ const StackProvider = (props) => {
         setShowAvailable,
         limitColumn,
         setLimitColumn,
-        deployGraph
+        deployGraph,
+        loadGraph
       }}
     >
       {props.children}
