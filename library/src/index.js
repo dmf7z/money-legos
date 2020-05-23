@@ -4,6 +4,7 @@ const Graph = require("./graph/graph");
 const Elements = require("./elements");
 const GraphABI = require("./abi/Graph.json").abi;
 const mainnetContracts = require("./common/contracts");
+const OrderHelper = require("./utils/orderHelper");
 
 const findElementByHash = (elements, hash) => {
   for (key in elements) {
@@ -34,6 +35,7 @@ const getIndexOfParentsOutput = (coreElements, indexChild, inputIndexChild) => {
 };
 
 module.exports = {
+  helper: OrderHelper,
   getElements: (contracts = mainnetContracts) => {
     return Elements(contracts);
   },
