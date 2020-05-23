@@ -9,10 +9,15 @@ export const graphReducer = (state, action) => {
   let elementPort = 0;
   let element;
 
-
   switch (action.type) {
     case "ADD_INPUT":
       element = factory.getElements()[`INPUT_${action.addElement.asset}`];
+      state.addElement(element, action.addElement.limit, 0);
+      return state;
+    case "ADD_FLASH_SWAP":
+      element = factory.getElements()[
+        `FLASH_SWAP_IN_${action.addElement.asset}`
+      ];
       state.addElement(element, action.addElement.limit, 0);
       return state;
 
@@ -73,7 +78,7 @@ export const graphReducer = (state, action) => {
       ]);
 
       return state;
-    case "ADD_ADDRESS":
+    case "ADD_OUTPUT":
       console.log("ADD_ADDRESS MY FRIEND", action);
       element = factory.getElements()[action.addElement.selectedElement.key];
 
@@ -100,8 +105,7 @@ export const graphReducer = (state, action) => {
         const inputIndex = element.inputs.indexOf(asset);
 
         arrayIds.push([par, elementPort, inputIndex]);
-        console.log(arrayIds, element, asset, inputIndex)
-
+        console.log(arrayIds, element, asset, inputIndex);
       }
 
       state.connectElements(arrayIds, element, maxX, maxY + 1);
@@ -124,14 +128,13 @@ export const graphReducer = (state, action) => {
 
     case "ADD_DATA":
       console.log("2 action ", action);
-      const {selectedElement, data} = action.addElement
+      const { selectedElement, data } = action.addElement;
       // element = state.getElementById(par);
 
-      for (const i of Object.keys(selectedElement.executionData) ) {
-        console.log('XOXOX',i,data[i]);
+      for (const i of Object.keys(selectedElement.executionData)) {
+        console.log("XOXOX", i, data[i]);
         state.setExecutionData(selectedElement.id, i, data[i]);
       }
-
 
       console.log("2 state ", state);
       // return state[action.element.pos[1]][action.element.pos[0]] = action.element

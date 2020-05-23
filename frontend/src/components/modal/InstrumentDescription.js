@@ -6,6 +6,8 @@ export const InstrumentDescription = (props) => {
   switch (props.instrument) {
     case "Uniswap":
       return <span className="modal__op--title">Uniswap 🦄</span>;
+      case "WETH":
+        return <span className="modal__op--title">Weth {" "}</span>;
     case "Compound":
       return (
         <span className="modal__op--title">
