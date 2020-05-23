@@ -6,6 +6,7 @@ import EmptyStack from "./EmptyStack";
 import NewInitStack from "./NewInitStack";
 import SplitterStack from "./SplitterStack";
 import AddressStack from "./AddressStack";
+import FlashStack from "./FlashStack";
 import WrapperStack from "./WrapperStack";
 
 function RenderElement(props) {
@@ -16,6 +17,7 @@ function RenderElement(props) {
           <InputStack {...props} />
         </WrapperStack>
       );
+
     case "OperationElement":
       return (
         <WrapperStack {...props}>
@@ -35,6 +37,18 @@ function RenderElement(props) {
           <AddressStack {...props} />
         </WrapperStack>
       );
+    case "FlashSwapOut":
+      return (
+        <WrapperStack {...props}>
+          <FlashStack {...props} />
+        </WrapperStack>
+      );
+      case "FlashSwapIn":
+        return (
+          <WrapperStack {...props}>
+            <FlashStack {...props} />
+          </WrapperStack>
+        );
     case "NewInitStack":
       return (
         <WrapperStack {...props}>
