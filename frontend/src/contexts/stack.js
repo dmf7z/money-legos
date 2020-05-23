@@ -13,17 +13,17 @@ let element;
 // element = factory.getElements().INPUT_DAI;
 // startGraph.addElement(element, 0, 0);
 
-element = factory.getElements().INPUT_ETH;
-let id2 = startGraph.addElement(element, 0, 0);
+// element = factory.getElements().INPUT_ETH;
+// let id2 = startGraph.addElement(element, 0, 0);
 
 // element = factory.getElements().INPUT_ETH;
 // startGraph.addElement(element, 2, 0);
 
-element = factory.getElements().OP_UNISWAP_ETH_TO_DAI;
-let id8 = startGraph.connectElements([[id2, 0, 0]], element, 0, 1);
+// element = factory.getElements().OP_UNISWAP_ETH_TO_DAI;
+// let id8 = startGraph.connectElements([[id2, 0, 0]], element, 0, 1);
 
-element = factory.getElements().ADDRESS;
-startGraph.connectElements([[id8, 0, 1]], element, 0, 2);
+// element = factory.getElements().ADDRESS;
+// startGraph.connectElements([[id8, 0, 1]], element, 0, 2);
 
 
 const StackContext = createContext(null);
@@ -34,6 +34,8 @@ const StackProvider = (props) => {
   const [uiStack, dispatchUi] = useReducer(uiReducer, initialUiStack);
   const [graph, dispatchGraph] = useReducer(graphReducer, startGraph);
   const [limitColumn, setLimitColumn] = useState(0);
+  const [graphIsLoaded, setGraphIsLoaded] = useState(false);
+  const [graphIsReady, setGraphIsReady] = useState(false);
 
   useEffect(() => {
     console.log("SELECTED ITEMS: ", uiStack);
@@ -45,6 +47,46 @@ const StackProvider = (props) => {
     console.log('deployGraph action')
     const address = await graph.deploy(web3) 
     console.log(address)
+  }
+
+  // 0xd176f11B673594698722c761BB5E9ce6C38207D1
+
+  async function loadGraphAddress(web3, address){
+    console.log('Loading graph...', web3, address)
+    const loadedGraph = await factory.loadGraph(web3, address);
+    setGraphIsLoaded(true)
+    console.log(loadedGraph)
+    return loadedGraph
+  }
+
+  async function checkElement(web3, id){
+    console.log('checkElement graph...', web3, id)
+    console.log('checkElement graph...', graph)
+    let result = await graph.isElementReadyToExecute(web3, id);
+    console.log('checking element', id)
+    return result
+  }
+
+  async function allowElement(web3, id){
+    console.log('checkElement graph...', web3, id)
+    console.log('checkElement graph...', graph)
+    let result = await graph.allowInputElement(web3, id);
+    console.log('checking element', result)
+    return result
+  }
+
+  async function isReady(web3){
+    let result = await graph.isReadyToExecute(web3)
+    console.log('READYYYY???? ', result)
+    setGraphIsReady(result)
+    return result
+  }
+
+  async function executeGraph(web3){
+    let result = await graph.execute(web3);
+    console.log('EXECUTED ', result)
+    setGraphIsReady(result)
+    return result
   }
 
   return (
@@ -60,7 +102,14 @@ const StackProvider = (props) => {
         setShowAvailable,
         limitColumn,
         setLimitColumn,
-        deployGraph
+        deployGraph,
+        loadGraphAddress,
+        checkElement,
+        graphIsLoaded,
+        isReady,
+        graphIsReady,
+        executeGraph,
+        allowElement
       }}
     >
       {props.children}

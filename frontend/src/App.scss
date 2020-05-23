@@ -212,19 +212,35 @@ body {
   box-shadow: 0px 3px 0px 0px rgba(226, 228, 231, 0.75);
 }
 
-.stack__common{
-  z-index: 50;
-  .stack, .stack--new{
-    &:hover::before {
-      transform: scale(1.4);
-      box-shadow: 0 0 25px #fff;
+.stack {
+  &__common {
+    z-index: 50;
+    position: relative;
+    .stack,
+    .stack--new {
+      &:hover::before {
+        transform: scale(1.4);
+        box-shadow: 0 0 25px #fff;
+      }
+      &:hover {
+        color: #fff;
+        box-shadow: 0 0 15px #fff;
+        text-shadow: 0 0 15px #fff;
+        cursor: pointer;
+      }
     }
-    &:hover {
-      color: #fff;
-      box-shadow: 0 0 15px #fff;
-      text-shadow: 0 0 15px #fff;
-      cursor: pointer;
-    }
+  }
+  &__icon {
+    position: absolute;
+    top: 1px;
+    right: 40px;
+    z-index: 55;
+  }
+  &__icon--address {
+    position: absolute;
+    top: 1px;
+    right: 0px;
+    z-index: 55;
   }
 }
 
@@ -348,7 +364,6 @@ body {
     padding: 0px 20px;
     margin-bottom: 10px;
     overflow-y: scroll;
-
   }
   &__selected {
     display: flex;
@@ -371,34 +386,33 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-size: .75em
+    font-size: 0.75em;
   }
   &__title {
     padding: 10px 0px;
     font-weight: bold;
-    color: #3d3d3d
+    color: #3d3d3d;
   }
-  &__op-btn{
+  &__op-btn {
     width: 100%;
     display: flex;
     justify-content: space-between;
     margin: 5px 0px;
   }
-  &__op-desc{
+  &__op-desc {
     padding: 0px 0px;
   }
-  &__svg--small{
+  &__svg--small {
     height: 30px;
     width: 30px;
   }
-  &__options{
+  &__options {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 
     width: 100%;
-
   }
   &__op--title {
     font-size: 1.15rem;
@@ -406,24 +420,31 @@ body {
 
     justify-content: flex-start;
     align-items: center;
-    
   }
   &__op--img {
     height: 15px;
-    
   }
   &__op--desc {
     font-size: 0.75rem;
     font-weight: 300;
   }
   &__close {
-    margin-left: 5px
-
+    margin-left: 5px;
   }
-  &__asset-icon{
+  &__asset-icon {
     height: 20px;
   }
-  &__tab{
+  &__tab {
     margin-bottom: 0.5rem !important;
+  }
+  &__loaded-box {
+    padding: 0px 20px
+  }
+  &__loaded-content {
+    padding: 20px 0px
+  }
+  &__ok-btn {
+    margin: 20px 0px;
+
   }
 }

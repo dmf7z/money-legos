@@ -10,28 +10,63 @@ import FactoryGraph from "../components/FactoryGraph";
 import { Web3Context } from "@dapperlabs/react-web3";
 import { isEmpty } from "lodash";
 import { StackContext } from "../contexts/stack";
+import { isAddress } from "../utils";
+import {
+  useWeb3Injected,
+} from "@openzeppelin/network/react";
 
-function CreatePage() {
+export default function LoadPage({ match }) {
   const {
     checkingForWeb3,
     web3,
+    account,
     network,
     getAccounts,
+    requestAccounts,
   } = useContext(Web3Context);
+  const injected = useWeb3Injected();
+  // const { accounts, networkId, networkName, providerName, lib, connected } = web3Context();
+  // const {web3, checking} = useInjectedWeb3()
   const [isWeb3Enabled, setIsWeb3Enabled] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
   const [loadedGraph, setLoadedGraph] = useState([]);
+  const { dispatchGraph, loadGraphAddress, graph,graphIsReady,isReady,executeGraph  } = useContext(StackContext);
 
-  useEffect(async () => {
-    const account = await getAccounts();
-    setHasAccount(!isEmpty(account));
-    setIsWeb3Enabled(checkingForWeb3);
-    console.log("checkingForWeb3", checkingForWeb3);
-    console.log("isEmpty(account)", isEmpty(account));
-  }, []);
+  let { address } = match.params;
+  // console.log(address, web3);
 
-  const { deployGraph, limitColumn, loadGraph } = useContext(StackContext);
- 
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        console.log("account", injected);
+        setHasAccount(!isEmpty(injected.accounts));
+        let lg = await loadGraphAddress(web3, address);
+        dispatchGraph({ type: "LOAD_GRAPH", lg });
+
+        setLoadedGraph(lg);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    init();
+  }, [injected.connected]);
+
+
+  useEffect(() => {
+    const check = async () => {
+      try {
+        console.log("account", injected);
+        isReady(web3)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    check();
+  }, [graph]);
+
+
+
   async function mmReq() {
     try {
       window.ethereum
@@ -44,16 +79,15 @@ function CreatePage() {
           // Handle error. Likely the user rejected the login:
           console.log(reason === "User rejected provider access");
         });
-
-      // ...code
     } catch (error) {
       console.error(error);
     }
   }
 
-  const doTheDeploy = () => {
-    console.log("click doTheDeploy");
-    deployGraph(web3);
+  const doTheExecute = () => {
+    console.log("click EXECUTE");
+    let result = executeGraph(web3);
+    console.log(result)
   };
 
   return (
@@ -68,14 +102,7 @@ function CreatePage() {
             </span>
           </div>
           <div>
-            {hasAccount ? (
-              <button
-                onClick={() => doTheDeploy()}
-                class="button is-warning is-outlined"
-              >
-                Deploy Graph {limitColumn}
-              </button>
-            ) : (
+            {!hasAccount && (
               <button
                 onClick={() => mmReq()}
                 class="button is-warning is-outlined"
@@ -83,14 +110,21 @@ function CreatePage() {
                 Connect Metamask
               </button>
             )}
+             {graphIsReady && (
+              <button
+                onClick={() => doTheExecute()}
+                class="button is-warning is-outlined"
+              >
+                Ready to EXECUTE 🏃‍♀
+              </button>
+            )}
           </div>
         </div>
       </div>
-      <FactoryGraph graph={loadedGraph} />
+      {hasAccount && <FactoryGraph />}
+      {!hasAccount && <div>Sorry, we need Metamask</div>}
 
       <ModalAction />
     </section>
   );
 }
-
-export default CreatePage;
