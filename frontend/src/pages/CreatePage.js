@@ -15,10 +15,8 @@ function CreatePage() {
   const {
     checkingForWeb3,
     web3,
-    account,
     network,
     getAccounts,
-    requestAccounts,
   } = useContext(Web3Context);
   const [isWeb3Enabled, setIsWeb3Enabled] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
@@ -33,19 +31,7 @@ function CreatePage() {
   }, []);
 
   const { deployGraph, limitColumn, loadGraph } = useContext(StackContext);
-
-  async function requestAccess() {
-    const account = await getAccounts();
-    console.log("TESTTEST TEST TEST TEST");
-    console.log("web3.eth.getAccounts()", account);
-    console.log("empty! ", isEmpty(account));
-    console.log("web3", web3);
-    console.log("network", network);
-    // console.log(await requestAccounts())
-    //  let un = window.ethereum.enable //.then((res) => console.log('checkingForWeb3()', res));
-    // web3.eth.getAccounts() //.then((res) => console.log('getAccounts()', res));
-  }
-
+ 
   async function mmReq() {
     try {
       window.ethereum
@@ -69,11 +55,6 @@ function CreatePage() {
     console.log("click doTheDeploy");
     deployGraph(web3);
   };
-  const loadG = async () => {
-    let lg = await loadGraph(web3, '0xd176f11B673594698722c761BB5E9ce6C38207D1' )
-    setLoadedGraph(lg)
-    console.log('lg', lg)
-  };
 
   return (
     <section className="view">
@@ -87,12 +68,6 @@ function CreatePage() {
             </span>
           </div>
           <div>
-            <button
-              onClick={() => loadG()}
-              class="button is-warning is-outlined"
-            >
-             LOAD 
-            </button>
             {hasAccount ? (
               <button
                 onClick={() => doTheDeploy()}

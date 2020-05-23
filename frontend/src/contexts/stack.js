@@ -13,8 +13,8 @@ let element;
 // element = factory.getElements().INPUT_DAI;
 // startGraph.addElement(element, 0, 0);
 
-element = factory.getElements().INPUT_ETH;
-let id2 = startGraph.addElement(element, 0, 0);
+// element = factory.getElements().INPUT_ETH;
+// let id2 = startGraph.addElement(element, 0, 0);
 
 // element = factory.getElements().INPUT_ETH;
 // startGraph.addElement(element, 2, 0);

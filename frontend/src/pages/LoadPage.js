@@ -13,9 +13,6 @@ import { StackContext } from "../contexts/stack";
 import { isAddress } from "../utils";
 import {
   useWeb3Injected,
-  useWeb3Network,
-  useEphemeralKey,
-  web3Context,
 } from "@openzeppelin/network/react";
 
 export default function LoadPage({ match }) {

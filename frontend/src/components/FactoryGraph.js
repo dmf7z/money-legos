@@ -62,7 +62,8 @@ function GenerateMap(graph, limitColumn, graphIsLoaded) {
 
   console.log("starting map", graph);
   if (isEmpty(graph.elements)) {
-    return [];
+    let initMap =[[NEW_INIT_ELEMENT]]
+    return initMap;
   }
   let elementsMap = [];
   let firstEmptyElement = true
