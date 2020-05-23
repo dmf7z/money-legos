@@ -8,7 +8,7 @@ import ElementForm from "../ElementForm";
 
 export function OperationsOption(props) {
   const [opSelected, setOpSelected] = useState(null);
-  const { graph, dispatchGraph, limitColumn, setLimitColumn } = useContext(StackContext);
+  const { graph, dispatchGraph, limitColumn, setLimitColumn, graphIsLoaded } = useContext(StackContext);
   const { ids } = props;
   console.log("id selected ", ids);
 
@@ -74,7 +74,7 @@ export function OperationsOption(props) {
                   </div>
                 </div>
 
-                {opSelected && <ElementForm  element={element} parents={ids} limitColumn={limitColumn} action={handleAction} /> }
+                {opSelected && <ElementForm  element={element} parents={ids} limitColumn={limitColumn} graphIsLoaded={graphIsLoaded} action={handleAction} /> }
 
               </>
             );
