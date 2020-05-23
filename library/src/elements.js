@@ -34,8 +34,8 @@ module.exports = (contracts = mainnetContracts) => {
     elements[`FLASH_SWAP_IN_${name}`] = {
       key: `FLASH_SWAP_IN_${name}`,
       type: "FlashSwapIn",
-      instrument: "Uniswap",
-      description: "Input the amount to borrow",
+      instrument: "Uniswap V2",
+      description: "Flashswap in",
       address: "0x0000000000000000000000000000000000000004",
       inputs: [],
       outputs: [contracts.ASSETS[name]],
@@ -68,8 +68,8 @@ module.exports = (contracts = mainnetContracts) => {
     elements[`FLASH_SWAP_OUT_${name}`] = {
       key: `FLASH_SWAP_OUT_${name}`,
       type: "FlashSwapOut",
-      instrument: "Uniswap",
-      description: "Input the amount to borrow",
+      instrument: "Uniswap V2",
+      description: "Flashswap out",
       address: "0x0000000000000000000000000000000000000005",
       inputs: [contracts.ASSETS[name]],
       outputs: [],
