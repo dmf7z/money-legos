@@ -2,12 +2,13 @@ import * as factory from "library";
 
 export const graphReducer = (state, action) => {
   console.log("graphReducer action ", action);
-  let element;
   let parent;
   let maxX = 0;
   let maxY = 0;
   let arrayIds = [];
   let elementPort = 0;
+  let element;
+
 
   switch (action.type) {
     case "ADD_INPUT":
@@ -16,7 +17,7 @@ export const graphReducer = (state, action) => {
       return state;
 
     case "ADD_OPERATION":
-      element = factory.getElements()[action.addElement.element.key];
+      element = factory.getElements()[action.addElement.selectedElement.key];
 
       for (const par of action.addElement.parents) {
         parent = state.getElementById(par);
@@ -126,12 +127,12 @@ export const graphReducer = (state, action) => {
 
     case "ADD_DATA":
       console.log("2 action ", action);
-      const {element, data} = action.addElement
+      const {selectedElement, data} = action.addElement
       // element = state.getElementById(par);
 
-      for (const i of Object.keys(element.executionData) ) {
+      for (const i of Object.keys(selectedElement.executionData) ) {
         console.log('XOXOX',i,data[i]);
-        state.setExecutionData(element.id, i, data[i]);
+        state.setExecutionData(selectedElement.id, i, data[i]);
       }
 
 

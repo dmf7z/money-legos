@@ -1,10 +1,11 @@
 import React from "react";
 import { ASSETS_NAMES, ASSETS_COLORS } from "../../constants";
 import { adjustColor } from "../../utils";
+import { InstrumentDescription } from "../modal/InstrumentDescription";
 
 const OperationStack = React.forwardRef((props, ref) => {
   // console.log("props op: ", props);
-  const { id, outputs, inputs, isSelected, isReady, graphIsLoaded } = props;
+  const { id, outputs, inputs, isSelected, isReady, graphIsLoaded, instrument } = props;
   let assetIn = ASSETS_NAMES[inputs[0]]
   let assetOut = ASSETS_NAMES[outputs[0]]
 
@@ -13,6 +14,10 @@ const OperationStack = React.forwardRef((props, ref) => {
       { graphIsLoaded && <div className="stack__icon">
         {isReady ? '✅' : '❌' }
       </div>}
+      {true && <div className="instrument__box">
+                    <InstrumentDescription instrument={instrument} />{" "}
+                    </div>
+      }
       <div
         className={` stack stack--square box box--square ${isSelected &&
           "selection__box"}`}

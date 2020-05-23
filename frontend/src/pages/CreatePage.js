@@ -73,7 +73,7 @@ function CreatePage() {
                 onClick={() => doTheDeploy()}
                 class="button is-warning is-outlined"
               >
-                Deploy Graph {limitColumn}
+                Deploy Graph 
               </button>
             ) : (
               <button

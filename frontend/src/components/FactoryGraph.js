@@ -7,7 +7,7 @@ import RenderElement from "./elements/RenderElement";
 import { isEmpty } from "lodash";
 import { EMPTY_ELEMENT, NEW_INIT_ELEMENT } from "../constants";
 
-const MAP_INDEX = [6, 6];
+const MAP_INDEX = [10, 10];
 
 function FactoryGraph(props) {
   const { graph, uiStack, limitColumn, graphIsLoaded } = useContext(StackContext);
@@ -59,14 +59,19 @@ export default FactoryGraph;
 
 function GenerateMap(graph, limitColumn, graphIsLoaded) {
   let limitCol = limitColumn
+  let emptyWithPos 
 
   console.log("starting map", graph);
   if (isEmpty(graph.elements)) {
-    let initMap =[[NEW_INIT_ELEMENT]]
+    emptyWithPos = NEW_INIT_ELEMENT;
+    emptyWithPos.index = [0, 0];
+    let initMap =[[emptyWithPos]]
+
     return initMap;
   }
   let elementsMap = [];
   let firstEmptyElement = true
+   emptyWithPos = EMPTY_ELEMENT;
   
   for (let i = 0; i < MAP_INDEX[1]; i++) {
     let line = [];
@@ -74,7 +79,6 @@ function GenerateMap(graph, limitColumn, graphIsLoaded) {
       let graphElement = graph.elements.filter(
         (el) => el.index[0] == m && el.index[1] == i
       );
-      let emptyWithPos = EMPTY_ELEMENT;
       emptyWithPos.index = [m, i];
       // Check with is the first empty element, 
       // to add NewInit element (future InputElement)
@@ -90,6 +94,8 @@ function GenerateMap(graph, limitColumn, graphIsLoaded) {
         console.log(`element [${m}][${i}] = ${squareElement.type} ${squareElement.key} `);
 
       line[m] = squareElement;
+   emptyWithPos = EMPTY_ELEMENT;
+
       // if(graphElement.length > 0 && m >= limitCol && i > 0){
       // console.log(`IF element [${m}][${i}] = ${squareElement} ES MAYOR o igual que el init`);
       // console.log(elementsMap[0][m])

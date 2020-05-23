@@ -401,6 +401,9 @@ body {
   }
   &__op-desc {
     padding: 0px 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
   }
   &__svg--small {
     height: 30px;
@@ -417,12 +420,18 @@ body {
   &__op--title {
     font-size: 1.15rem;
     font-weight: bold;
-
+    display: flex;
     justify-content: flex-start;
     align-items: center;
+    img {
+      margin: 0px 5px;
+    }
   }
   &__op--img {
     height: 15px;
+  }
+  &__op--img-uni {
+    height: 21px;
   }
   &__op--desc {
     font-size: 0.75rem;
@@ -438,13 +447,34 @@ body {
     margin-bottom: 0.5rem !important;
   }
   &__loaded-box {
-    padding: 0px 20px
+    padding: 0px 20px;
   }
   &__loaded-content {
-    padding: 20px 0px
+    padding: 20px 0px;
   }
   &__ok-btn {
     margin: 20px 0px;
+  }
+}
 
+.instrument {
+  &__box {
+    background-color: white;
+    width: 190px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    opacity: 1;
+    position: absolute;
+    z-index: 0;
+    padding: 3px 0px;
+    top: 83px;
+    left: -70px;
+    display: flex;
+    justify-content: center;
+    transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
   }
 }
