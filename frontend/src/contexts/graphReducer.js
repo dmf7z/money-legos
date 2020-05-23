@@ -119,6 +119,14 @@ export const graphReducer = (state, action) => {
       console.log("2 state ", state);
       // return state[action.element.pos[1]][action.element.pos[0]] = action.element
       return state;
+    
+      case "LOAD_GRAPH":
+       
+  
+        console.log("2 state ", state);
+        console.log("2 action ", action);
+        // return state[action.element.pos[1]][action.element.pos[0]] = action.element
+        return action.lg;
 
     case "CLEAR_STACK":
       return [];

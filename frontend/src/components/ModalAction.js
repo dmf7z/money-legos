@@ -23,6 +23,7 @@ export default function ModalAction() {
     uiStack,
     graph,
     setShowAvailable,
+    graphIsLoaded
   } = useContext(StackContext);
   const [idsSelected, setIdsSelected] = useState([]);
   const [isInitStack, setIsInitStack] = useState(false);
@@ -85,7 +86,7 @@ export default function ModalAction() {
             <div className="modal__selected--options">
               <div className="modal__title">Stack Selected:</div>
               <div>
-                {!isInitStack && (
+                {!isInitStack &&  !graphIsLoaded && (
                   <button
                     onClick={() => setShowModal(false)}
                     class="button is-primary is-small is-outlined"
@@ -106,6 +107,8 @@ export default function ModalAction() {
                 uiStack.map((el) => <SmallElement key={el.id} id={el} />)}
             </div>
           </div>
+          {/* init of tabs */}
+          {!graphIsLoaded && <>
           {!isInitStack && !isComplete && (
             <div class="tabs is-centered is-boxed modal__tab">
               <ul>
@@ -145,6 +148,7 @@ export default function ModalAction() {
               </ul>
             </div>
           )}
+          {/* end of tabs */}
           {!isInitStack && !isComplete && (
             <div className="modal__content">
               {tab === "operation" && !isComplete && (
@@ -180,7 +184,7 @@ export default function ModalAction() {
               )}
             </div>
           )}
-          {isInitStack && (
+          {isInitStack && !isComplete && (
             <div className="modal__content">
               <div>
                 <div className="modal__options">
@@ -192,6 +196,7 @@ export default function ModalAction() {
               </div>
             </div>
           )}
+          </>}
         </div>
       </Modal>
     </div>

@@ -10,7 +10,7 @@ import { EMPTY_ELEMENT, NEW_INIT_ELEMENT } from "../constants";
 const MAP_INDEX = [6, 6];
 
 function FactoryGraph(props) {
-  const { graph, uiStack, limitColumn } = useContext(StackContext);
+  const { graph, uiStack, limitColumn, graphIsLoaded } = useContext(StackContext);
 
   const [isLoading, setIsLoading] = useState(true);
   const [graphMap, setgraphMap] = useState([{}]);
@@ -18,17 +18,17 @@ function FactoryGraph(props) {
   const ref = useRef();
 
   useEffect(() => {
-    let useMap = props.graph ? props.graph : graph;
+    // let useMap = props.graph ? props.graph : graph;
     // console.log("getting new Graph!");
     // console.log(graph);
     console.log(props)
 
-    let newMap = GenerateMap(props.graph , limitColumn);
+    let newMap = GenerateMap(graph , limitColumn, graphIsLoaded);
 
     setgraphMap(newMap);
     setIsLoading(false);
     //
-  }, [props.graph]);
+  }, [graph, uiStack]);
 
   return (
     <ArcherContainer
@@ -57,7 +57,7 @@ function FactoryGraph(props) {
 
 export default FactoryGraph;
 
-function GenerateMap(graph, limitColumn) {
+function GenerateMap(graph, limitColumn, graphIsLoaded) {
   let limitCol = limitColumn
 
   console.log("starting map", graph);
@@ -77,7 +77,7 @@ function GenerateMap(graph, limitColumn) {
       emptyWithPos.index = [m, i];
       // Check with is the first empty element, 
       // to add NewInit element (future InputElement)
-      if (  firstEmptyElement && graphElement.length === 0 ){
+      if (  firstEmptyElement && graphElement.length === 0 && !graphIsLoaded ){
         firstEmptyElement = false
         emptyWithPos = NEW_INIT_ELEMENT;
         emptyWithPos.index = [m, i];
