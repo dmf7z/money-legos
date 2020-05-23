@@ -75,7 +75,7 @@ export const graphReducer = (state, action) => {
       return state;
     case "ADD_ADDRESS":
       console.log("ADD_ADDRESS MY FRIEND", action);
-      element = factory.getElements()[action.addElement.element.key];
+      element = factory.getElements()[action.addElement.selectedElement.key];
 
       for (const par of action.addElement.parents) {
         parent = state.getElementById(par);
@@ -100,14 +100,11 @@ export const graphReducer = (state, action) => {
         const inputIndex = element.inputs.indexOf(asset);
 
         arrayIds.push([par, elementPort, inputIndex]);
+        console.log(arrayIds, element, asset, inputIndex)
+
       }
 
-      state.connectElements(arrayIds, element, maxX, maxY + 1, [
-        {
-          index: 0,
-          value: action.addElement.data.destinationaddress,
-        },
-      ]);
+      state.connectElements(arrayIds, element, maxX, maxY + 1);
 
       return state;
 

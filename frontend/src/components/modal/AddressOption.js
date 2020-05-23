@@ -21,7 +21,7 @@ export function AddressOption(props) {
 
   const handleAction = (addElement) => {
     console.log("Do Action", addElement);
-    dispatchGraph({ type: "ADD_OPERATION", addElement });
+    dispatchGraph({ type: "ADD_ADDRESS", addElement });
     props.closeModal();
   };
 
