@@ -236,11 +236,22 @@ body {
     right: 40px;
     z-index: 55;
   }
+  &__icon-add {
+    position: absolute;
+    top: 1px;
+    right: 0px;
+    z-index: 55;
+  }
   &__icon--address {
     position: absolute;
     top: 1px;
     right: 0px;
     z-index: 55;
+  }
+  &__tag-min{
+    padding: 0px 3px;
+    font-size: 0.65rem !important;
+    width: 200px;
   }
 }
 

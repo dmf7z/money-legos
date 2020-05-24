@@ -41,7 +41,7 @@ function WrapperStack(props) {
   }, [uiStack, connections]);
 
   useEffect(() => {
-    console.log("ELEMENTE!!! ->", id, outputs, type);
+    // console.log("ELEMENTE!!! ->", id, outputs, type);
 
     const init = async () => {
       try {
@@ -53,10 +53,10 @@ function WrapperStack(props) {
       }
     };
     init();
-  }, []);
+  }, [uiStack]);
 
   const handleSelect = () => {
-    console.log("Wrapped click:", id);
+    // console.log("Wrapped click:", id);\
     if (isSelected) {
       dispatchUi({ type: "UNSELECT_ELEMENT", id });
     } else {

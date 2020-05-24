@@ -17,8 +17,16 @@ const AddressStack = React.forwardRef((props, ref) => {
       onClick={handleClickInit}
       className="stack__common stack--square box box--square"
     >
-      {graphIsLoaded && (
-        <div className="stack__icon--address">{isReady ? "✅" : "❌"}</div>
+   {graphIsLoaded && (
+        <div className="stack__icon--add">
+          {isReady === true ? (
+            <span class="is-normal ">✅</span>
+          ) : (
+            <span class="tag is-normal is-danger stack__tag-min">
+              {isReady}
+            </span>
+          )}
+        </div>
       )}
       <div className=" stack stack-color__content">
         <div className="stack-color__address">

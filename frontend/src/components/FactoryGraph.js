@@ -86,12 +86,12 @@ function GenerateMap(graph, limitColumn, graphIsLoaded) {
         firstEmptyElement = false
         emptyWithPos = NEW_INIT_ELEMENT;
         emptyWithPos.index = [m, i];
-        console.log('Setting Init at: ', [m, i])
+        // console.log('Setting Init at: ', [m, i])
         limitCol = m
       }
       let squareElement =
         graphElement.length > 0 ? graphElement[0] : emptyWithPos;
-        console.log(`element [${m}][${i}] = ${squareElement.type} ${squareElement.key} `);
+        // console.log(`element [${m}][${i}] = ${squareElement.type} ${squareElement.key} `);
 
       line[m] = squareElement;
    emptyWithPos = EMPTY_ELEMENT;
@@ -115,8 +115,8 @@ function GenerateMap(graph, limitColumn, graphIsLoaded) {
       // }
     }
     elementsMap[i] = line;
-    console.log("LINE! ", i);
-    console.log(line);
+    // console.log("LINE! ", i);
+    // console.log(line);
   }
 
   // console.log("FINAL: ", elementsMap);

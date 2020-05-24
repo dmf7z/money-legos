@@ -5,11 +5,15 @@ import React, {
   useReducer,
   useContext,
 } from "react";
+import { Redirect } from "react-router-dom";
 import ModalAction from "../components/ModalAction";
 import FactoryGraph from "../components/FactoryGraph";
 import { Web3Context } from "@dapperlabs/react-web3";
 import { isEmpty } from "lodash";
 import { StackContext } from "../contexts/stack";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 function CreatePage() {
   const { checkingForWeb3, web3, network, getAccounts } = useContext(
@@ -17,7 +21,9 @@ function CreatePage() {
   );
   const [isWeb3Enabled, setIsWeb3Enabled] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
+  const [successDeploy, setSuccessDeploy] = useState(false);
   const [loadedGraph, setLoadedGraph] = useState([]);
+  const [deployedContract, setDeployedContract] = useState(null);
 
   useEffect(async () => {
     const account = await getAccounts();
@@ -48,13 +54,25 @@ function CreatePage() {
     }
   }
 
-  const doTheDeploy = () => {
+  const doTheDeploy = async () => {
     console.log("click doTheDeploy");
-    deployGraph(web3);
+    try {
+      let result = await deployGraph(web3);
+      console.log(result);
+      toast(`Wow, Its alive: ${result}`);
+      setTimeout(() => {
+        setDeployedContract(result);
+        setSuccessDeploy(true);
+        window.location.href = `/load/${result}`;
+      }, 5000);
+    } catch (error) {
+      toast.error("Oppps");
+    }
   };
 
   return (
     <section className="view">
+ 
       <div id="main" className="container">
         <div className="header">
           <div>
@@ -86,6 +104,7 @@ function CreatePage() {
       <FactoryGraph graph={loadedGraph} />
 
       <ModalAction />
+      <ToastContainer />
     </section>
   );
 }
