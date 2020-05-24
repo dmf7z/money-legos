@@ -20,7 +20,15 @@ const OperationStack = React.forwardRef((props, ref) => {
   return (
     <div className="stack__common" ref={ref} onClick={props.selectAction}>
       {graphIsLoaded && (
-        <div className="stack__icon">{isReady ? "✅" : "❌"}</div>
+        <div className="stack__icon">
+          {isReady === true ? (
+            <span class="is-normal ">✅</span>
+          ) : (
+            <span class="tag is-normal is-danger stack__tag-min">
+              {isReady}
+            </span>
+          )}
+        </div>
       )}
       {true && (
         <div className="instrument__box">

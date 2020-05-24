@@ -56,7 +56,7 @@ function WrapperStack(props) {
   }, [uiStack]);
 
   const handleSelect = () => {
-    // console.log("Wrapped click:", id);
+    // console.log("Wrapped click:", id);\
     if (isSelected) {
       dispatchUi({ type: "UNSELECT_ELEMENT", id });
     } else {
