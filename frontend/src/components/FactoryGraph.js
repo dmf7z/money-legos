@@ -7,7 +7,7 @@ import RenderElement from "./elements/RenderElement";
 import { isEmpty } from "lodash";
 import { EMPTY_ELEMENT, NEW_INIT_ELEMENT } from "../constants";
 
-const MAP_INDEX = [10, 10];
+const MAP_INDEX = [12, 12];
 
 function FactoryGraph(props) {
   const { graph, uiStack, limitColumn, graphIsLoaded } = useContext(StackContext);

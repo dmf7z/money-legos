@@ -30,7 +30,9 @@ const AddressStack = React.forwardRef((props, ref) => {
     <div
       ref={ref}
       onClick={handleClickInit}
-      className="stack__common stack--square box box--square"
+      className={`stack__common stack stack--square box box--square ${
+        isSelected && "selection__box"
+      }`}
     >
       {graphIsLoaded && (
         <div className="stack__icon--address">{isReady ? "✅" : "❌"}</div>
@@ -45,11 +47,7 @@ const AddressStack = React.forwardRef((props, ref) => {
         </div>
       )}
       {type == "FlashSwapIn" && (
-        <div
-          className={`stack__common stack stack--square box box--square ${
-            isSelected && "selection__box"
-          }`}
-        >
+     <>
           <div className="stack-color__content">
             <InstrumentDescription instrument={instrument} />
 
@@ -75,7 +73,7 @@ const AddressStack = React.forwardRef((props, ref) => {
               <img src={require(`../../assets/icons/${asset}.svg`)}></img>
             </div>
           </div>
-        </div>
+          </>
       )}
     </div>
   );

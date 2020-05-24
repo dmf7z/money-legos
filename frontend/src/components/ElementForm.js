@@ -24,7 +24,7 @@ export default function ElementForm(props) {
     props.action(addElement);
   };
   const { register, handleSubmit, watch, errors } = useForm();
-  console.log(element);
+  // console.log(element);
 
 
   const checkOrder0x = async (e) => {

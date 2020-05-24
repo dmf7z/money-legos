@@ -10,6 +10,7 @@ export const graphReducer = (state, action) => {
   let elementPort = 0;
   let element;
   let rawData;
+  let limitX
   const { selectedElement, data } = action.addElement;
 
   switch (action.type) {
@@ -125,7 +126,10 @@ export const graphReducer = (state, action) => {
           parent.connections.length == 1
         ) {
           elementPort = parent.connections.length;
-          maxX = action.addElement.limit;
+          limitX = action.addElement.limit 
+          //FIXME this is a workaround for limit now updating
+          if(action.addElement.limit == parent.index[0]){ limitX = action.addElement.limit + 1 }
+          maxX = limitX;
           console.log("New Max ", maxX);
         }
 
