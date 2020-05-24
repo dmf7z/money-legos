@@ -101,13 +101,25 @@ export default function LoadPage({ match }) {
     }
   };
 
+  const doCheck = async () => {
+    console.log("click Checking");
+    try {
+      let result = await isReady(web3);
+
+      console.log(result);
+      toast(`Perfect!: ${result}`);
+    } catch (error) {
+      toast.error("Oppps");
+    }
+  };
+
   return (
     <section className="view">
       <div id="main" className="container">
         <div className="header">
           <div>
             <h1 className="title is-3 has-text-warning">compose.fi</h1>
-            <h2 className="subtitle">Experiments 🧪 with DeFi</h2>
+            <h2 className="subtitle landing__icon">Experiments <img src={require("../assets/icons/lab.svg")} /> with with DeFi</h2>
             <span class="tag is-danger is-light is-small">
               🚨 Caution! Use at your own risk!{" "}
             </span>
@@ -127,6 +139,15 @@ export default function LoadPage({ match }) {
                 class="button is-warning is-outlined"
               >
                 Ready to EXECUTE 🏃‍♀
+              </button>
+            )}
+             {!graphIsReady && (
+              <button
+              onClick={() => doCheck()}
+
+                class="button is-warning is-outlined is-disabled"
+              >
+                Check graph
               </button>
             )}
           </div>
