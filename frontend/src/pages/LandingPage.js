@@ -32,14 +32,14 @@ function LandingPage() {
             </div>
             <div className="landing__description">
               <div>
-                It is a visual tool, where anyone can manually connect the DeFi
-                l*gos and compose more complex DeFi operations.
+                A didactic tool to visually connect DeFi instruments and learn
+                about composability.
               </div>
-              For example buy ETH in Uniswap and lend them in Compound. Even
+              {/* For example buy ETH in Uniswap and lend them in Compound. Even
               that the tool is aimed for newcomers to learn about DeFi
               composability, anyone can use it to test protocols, do manual
               arbitrage, check for arbitrage attacks, Zap many operations into
-              one, among other things.
+              one, among other things. */}
             </div>
             <div className="landing__description">
               <figure className="image is-16by9">
@@ -47,7 +47,7 @@ function LandingPage() {
                   className="has-ratio"
                   width="640"
                   height="360"
-                  src="https://www.youtube.com/embed/YE7VzlLtp-4?showsuccess=0"
+                  src="https://www.youtube.com/embed/YE7V32Ltp-4?showsuccess=0"
                   frameborder="0"
                   allowfullscreen
                 ></iframe>
@@ -128,31 +128,50 @@ function LandingPage() {
       </ArcherContainer>
       <div className="container landing__questions">
         {/* Q */}
+        <h3 class="title is-3 has-text-warning is-spaced">How can I use it?</h3>
+        <p class="subtitle is-5 is-spaced">
+          
+            Simply connect the DeFi pieces manually, create the graph and
+            execute it! Check this example:{" "}
+        
+        </p>
+        <img
+            className="is-fullwidth"
+            src={require("../assets/demo/gif1b.gif")}
+          />
+        {/* Q */}
+        <p class="subtitle is-5 is-spaced">
+          
+           
+        
+        </p>
+        <h3 class="title is-3 has-text-warning is-spaced">How does it work?</h3>
+        <p class="subtitle is-5 is-spaced">
+          A graph is deployed and executed as a smart contract. There is no
+          central db involved, just writing/reading blockchain data.
+        </p>
+        {/* Q */}
+        <h3 class="title is-3 has-text-warning is-spaced">Who is this for??</h3>
+        <p class="subtitle is-5 is-spaced">
+          Teachers, students, newcomers, devs. This is a tool that anyone can
+          use to play, learn, teach DeFi composability or even create custom
+          snaps.
+        </p>
         <h3 class="title is-3 has-text-warning is-spaced">
-          Sorry, I have one question?
+          Why did you built it?
         </h3>
         <p class="subtitle is-5 is-spaced">
-          {" "}
-          It is a visual tool, where anyone can manually connect the DeFi l*gos
-          and compose more complex DeFi operations.{" "}
+          This was built for <a className="is-text landing__link" href="https://ethglobal.online/">HackMoney hackathon</a>.
         </p>
-         {/* Q */}
-         <h3 class="title is-3 has-text-warning is-spaced">
-          Sorry, I have one question?
+        <h3 class="title is-3 has-text-warning is-spaced">
+          Who is behind this project?
         </h3>
         <p class="subtitle is-5 is-spaced">
-          {" "}
-          It is a visual tool, where anyone can manually connect the DeFi l*gos
-          and compose more complex DeFi operations.{" "}
+          <a className="is-text landing__link" href="https://github.com/brunitob">Bruno Balzani</a> and <a className="is-text landing__link" href="https://github.com/dmf7z">Daniel Fernandez </a>
         </p>
-         {/* Q */}
-         <h3 class="title is-3 has-text-warning is-spaced">
-          Sorry, I have one question?
-        </h3>
+        <h3 class="title is-3 has-text-warning is-spaced">What's next?</h3>
         <p class="subtitle is-5 is-spaced">
-          {" "}
-          It is a visual tool, where anyone can manually connect the DeFi l*gos
-          and compose more complex DeFi operations.{" "}
+          Oh well, if people like it, we promise to add more instruments.
         </p>
       </div>
     </section>

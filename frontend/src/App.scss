@@ -526,6 +526,13 @@ body {
   &__questions{
     padding: 50px 0px;
   }
+  &__link {
+    font-weight: 600;
+    &:hover {
+      text-decoration: underline;
+
+    }
+  }
 
 }
 
