@@ -11,7 +11,6 @@ export const graphReducer = (state, action) => {
   let element;
   let rawData;
   let limitX
-  const { selectedElement, data } = action.addElement;
 
   switch (action.type) {
     case "ADD_INPUT":
@@ -49,12 +48,12 @@ export const graphReducer = (state, action) => {
           console.log("New Max ", maxX);
         }
 
-        for (const i of Object.keys(selectedElement.executionData)) {
-          if (selectedElement.executionData[i].type == "input" && data[i]) {
+        for (const i of Object.keys(action.addElement.selectedElement.executionData)) {
+          if (action.addElement.selectedElement.executionData[i].type == "input" && action.addElement.data[i]) {
             // console.log('adding data for index: ', i, data[i])
             // state.setExecutionData(selectedElement.id, i, data[i]);
-            rawData = data[i]
-            if(selectedElement.key.includes('0x')){rawData = JSON.parse(data[i]) }
+            rawData = action.addElement.data[i]
+            if(action.addElement.selectedElement.key.includes('0x')){rawData = JSON.parse(action.addElement.data[i]) }
             arrayData.push(
               {
                 index: i,
@@ -90,14 +89,14 @@ export const graphReducer = (state, action) => {
         arrayIds.push([par, elementPort, 0]);
       }
 
-      for (const i of Object.keys(selectedElement.executionData)) {
-        if (selectedElement.executionData[i].type == "input" && data[i]) {
-          console.log('adding data for index: ', i, data[i])
+      for (const i of Object.keys(action.addElement.selectedElement.executionData)) {
+        if (action.addElement.selectedElement.executionData[i].type == "input" && action.addElement.data[i]) {
+          console.log('adding data for index: ', i, action.addElement.data[i])
           // state.setExecutionData(selectedElement.id, i, data[i]);
           arrayData.push(
             {
               index: i,
-              value: data[i],
+              value: action.addElement.data[i],
             },
           )
         }
@@ -140,14 +139,14 @@ export const graphReducer = (state, action) => {
         console.log(arrayIds, element, asset, inputIndex);
       }
 
-      for (const i of Object.keys(selectedElement.executionData)) {
-        if (selectedElement.executionData[i].type == "input" && data[i]) {
-          console.log('adding data for index: ', i, data[i])
+      for (const i of Object.keys(action.addElement.selectedElement.executionData)) {
+        if (action.addElement.selectedElement.executionData[i].type == "input" && action.addElement.data[i]) {
+          console.log('adding data for index: ', i, action.addElement.data[i])
           // state.setExecutionData(selectedElement.id, i, data[i]);
           arrayData.push(
             {
               index: i,
-              value: data[i],
+              value: action.addElement.data[i],
             },
           )
         }
@@ -176,10 +175,10 @@ export const graphReducer = (state, action) => {
       // const { selectedElement, data } = action.addElement;
       // element = state.getElementById(par);
 
-      for (const i of Object.keys(selectedElement.executionData)) {
-        if (selectedElement.executionData[i].type == "input" && data[i]) {
-          console.log('adding data for index: ', i, data[i])
-          state.setExecutionData(selectedElement.id, i, data[i]);
+      for (const i of Object.keys(action.addElement.selectedElement.executionData)) {
+        if (action.addElement.selectedElement.executionData[i].type == "input" && action.addElement.data[i]) {
+          console.log('adding data for index: ', i, action.addElement.data[i])
+          state.setExecutionData(action.addElement.selectedElement.id, i, action.addElement.data[i]);
         }
       }
 

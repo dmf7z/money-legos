@@ -24,13 +24,17 @@ function LandingPage() {
               power by 🔥 Defire
             </div>
             <div className="landing__description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum
+              <div>
+              It is a visual tool, where anyone can manually connect the DeFi
+              l*gos and compose more complex DeFi operations. 
+
+              </div>
+              
+              For example buy
+              ETH in Uniswap and lend them in Compound. Even that the tool is
+              aimed for newcomers to learn about DeFi composability, anyone can
+              use it to test protocols, do manual arbitrage, check for arbitrage
+              attacks, Zap many operations into one, among other things.
             </div>
             <div className="landing__description">
               <figure className="image is-16by9">
@@ -45,10 +49,7 @@ function LandingPage() {
               </figure>
             </div>
             <div className="landing__description">
-              <Link
-                to="/new"
-                class="button is-warning is-outlined"
-              >
+              <Link to="/new" class="button is-warning is-outlined">
                 Create new graph 👉
               </Link>
             </div>

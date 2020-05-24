@@ -9,17 +9,16 @@ const Deployer = require("./deploy/deployer");
 const ERC20ABI = require("./abi/erc20");
 
 chai.use(chaiAsPromised);
-const expect = chai.expect;
-
-var web3 = new Web3(process.env.PROVIDER || "ws://localhost:8545");
+const expect = chai.expec
+var web3 = new Web3("ws://localhost:8545");
 
 describe("Donate Graph", function() {
   let contracts;
   let elements;
-  before(async function() {
-    contracts = await Deployer.deploy(true, true, true); //Buy dai, wbtc and usdc
-    elements = Elements(contracts);
-  });
+  // before(async function() {
+  //   contracts = await Deployer.deploy(true, true, true); //Buy dai, wbtc and usdc
+  //   elements = Elements(contracts);
+  // });
   it("Donate Graph", async function() {
     //Add DAI, WBTC,
     const daiContract = new web3.eth.Contract(ERC20ABI, contracts.ASSETS.DAI);

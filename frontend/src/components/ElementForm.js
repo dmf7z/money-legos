@@ -41,6 +41,8 @@ export default function ElementForm(props) {
   };
 
   const checkOrderOasis = async (e) => {
+    setIsLoading(true)
+
     console.log("checking Oasis", e);
 
   
@@ -48,6 +50,8 @@ export default function ElementForm(props) {
 
     console.log("checking 0x result ", orderOasis);
     setOasisBestOrder(orderOasis);
+    setIsLoading(false)
+
   };
   let info = [];
   return (
@@ -121,7 +125,8 @@ export default function ElementForm(props) {
           <>
             <div
               onClick={(e) => checkOrderOasis(e)}
-              class="button is-primary is-small is-outlined"
+              class={`button is-primary is-small is-outlined ${isLoading && 'is-loading'}`}
+
             >
               Check *best* Oasis order
             </div>
@@ -130,8 +135,8 @@ export default function ElementForm(props) {
               <label class="label">{element.executionData[0].title}</label>
               
               <div class="control">
-                <textarea
-                  class="textarea is-info is-small"
+                <input
+                  class="input is-info is-small"
                   type="text"
                   name={0}
                   placeholder={
@@ -139,7 +144,7 @@ export default function ElementForm(props) {
                       ? element.executionData[0].data
                       : element.executionData[0].default
                   }
-                  value={JSON.stringify(oasisBestOrder)}
+                  value={oasisBestOrder}
                   ref={register(graphIsLoaded && { required: true })}
                 />
               </div>

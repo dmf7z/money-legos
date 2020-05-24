@@ -95,7 +95,7 @@ export default function LoadPage({ match }) {
       let result = await executeGraph(web3);
 
       console.log(result);
-      toast(`Perfect!: ${result}`);
+      toast(`${result}`);
     } catch (error) {
       toast.error("Oppps");
     }
@@ -105,9 +105,9 @@ export default function LoadPage({ match }) {
     console.log("click Checking");
     try {
       let result = await isReady(web3);
-
       console.log(result);
-      toast(`Perfect!: ${result}`);
+      let msg = result ? "Its ready!" : "Graph not ready :("
+      toast(`Perfect!: ${msg}`);
     } catch (error) {
       toast.error("Oppps");
     }
@@ -147,7 +147,7 @@ export default function LoadPage({ match }) {
 
                 class="button is-warning is-outlined is-disabled"
               >
-                Check graph
+                Check graph 
               </button>
             )}
           </div>
