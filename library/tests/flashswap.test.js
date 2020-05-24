@@ -81,10 +81,10 @@ describe("Flash swap Graph", function() {
     expect(hash1).to.equal(hash2);
 
     //Execute
-    result = await graph.isReadyToExecute(web3);
+    result = await loadedGraph.isReadyToExecute(web3);
     expect(result).to.be.true;
 
-    const txHash = await graph.execute(web3);
+    const txHash = await loadedGraph.execute(web3);
     console.log(txHash);
   });
 });

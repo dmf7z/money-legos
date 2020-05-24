@@ -30,7 +30,7 @@ const getOrder = async (index, asset1, asset2) => {
     `https://api.0x.org/sra/v3/orders?makerAssetData=${makerAssetData}&takerAssetData=${takerAssetData}`
   );
   const orders = await response.json();
-  return orders.records[index]; 
+  return orders.records[index];
 };
 
 const getNotExpiringOrder = async (asset1, asset2) => {
@@ -38,8 +38,7 @@ const getNotExpiringOrder = async (asset1, asset2) => {
   let index = 0;
   let time = new Date().getTime() / 1000 + 300; //+ 5 min
   while (!order || parseInt(order.order.expirationTimeSeconds) < time) {
-    if(order)
-    console.log(time, parseInt(order.order.expirationTimeSeconds))
+    if (order) console.log(time, parseInt(order.order.expirationTimeSeconds));
     order = await getOrder(index, asset1, asset2);
     index++;
   }
@@ -104,12 +103,21 @@ describe("Arbitrage Graph with Flashswaps", function() {
 
     //Splitter
     element = elements.SPLITTER_WETH;
-    let id3 = graph.connectElements([[id00, 0, 0],[id2, 0, 0]], element, 0, 2, [
-      {
-        index: 0,
-        value: "50",
-      },
-    ]);
+    let id3 = graph.connectElements(
+      [
+        [id00, 0, 0],
+        [id2, 0, 0],
+      ],
+      element,
+      0,
+      2,
+      [
+        {
+          index: 0,
+          value: "50",
+        },
+      ]
+    );
 
     //Oasis
     element = elements.OP_OASIS_WETH_TO_DAI;
@@ -147,25 +155,18 @@ describe("Arbitrage Graph with Flashswaps", function() {
     element = elements.OP_WRAPPER_ETH_TO_WETH;
     let id8 = graph.connectElements([[id7, 0, 0]], element, 0, 1);
 
-     //Fixed Splitter
-     element = elements.SPLITTER_FIXED_WETH;
-     let id9 = graph.connectElements([[id8, 0, 0]], element, 0, 2, [
-       {
-         index: 0,
-         value: returnFlashSwap.toString(10),
-       },
-     ]);
+    //Fixed Splitter
+    element = elements.SPLITTER_FIXED_WETH;
+    let id9 = graph.connectElements([[id8, 0, 0]], element, 0, 2, [
+      {
+        index: 0,
+        value: returnFlashSwap.toString(10),
+      },
+    ]);
 
     //FlashSwap out
     element = elements.FLASH_SWAP_OUT_WETH;
-    let id10 = graph.connectElements(
-      [
-        [id9, 0, 0],
-      ],
-      element,
-      0,
-      3
-    );
+    let id10 = graph.connectElements([[id9, 0, 0]], element, 0, 3);
 
     //Unwap WETH
     element = elements.OP_WRAPPER_WETH_TO_ETH;
@@ -188,8 +189,8 @@ describe("Arbitrage Graph with Flashswaps", function() {
     expect(hash1).to.equal(hash2);
 
     //Set execution params for input
-    graph.setExecutionData(id1, 1, "1000000000000000");
-    result = await graph.isElementReadyToExecute(web3, id1);
+    loadedGraph.setExecutionData(id1, 1, "1000000000000000");
+    result = await loadedGraph.isElementReadyToExecute(web3, id1);
     expect(result).to.equal("ready");
 
     //Set execution params for oasis
@@ -200,26 +201,26 @@ describe("Arbitrage Graph with Flashswaps", function() {
     const offerId = await oasisContract.methods
       .getBestOffer(contracts.ASSETS.DAI, contracts.ASSETS.WETH)
       .call();
-    graph.setExecutionData(id4, 0, offerId);
-    result = await graph.isElementReadyToExecute(web3, id4);
+    loadedGraph.setExecutionData(id4, 0, offerId);
+    result = await loadedGraph.isElementReadyToExecute(web3, id4);
     expect(result).to.equal("ready");
 
     const offerResult = await oasisContract.methods.getOffer(offerId).call();
     console.log(offerResult);
 
     //Set execution params for 0x
-    graph.setExecutionData(id5, 0, order);
+    loadedGraph.setExecutionData(id5, 0, order);
 
     //Set execution params for address
-    graph.setExecutionData(id12, 0, account);
-    result = await graph.isElementReadyToExecute(web3, id12);
+    loadedGraph.setExecutionData(id12, 0, account);
+    result = await loadedGraph.isElementReadyToExecute(web3, id12);
     expect(result).to.equal("ready");
 
     //Execute
-    result = await graph.isReadyToExecute(web3);
+    result = await loadedGraph.isReadyToExecute(web3);
     expect(result).to.be.true;
 
-    result = await graph.execute(web3);
+    result = await loadedGraph.execute(web3);
     console.log(result);
 
     let finalBalance = await web3.eth.getBalance(account);

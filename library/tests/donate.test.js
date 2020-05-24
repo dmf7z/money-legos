@@ -162,27 +162,27 @@ describe("Donate Graph", function() {
     expect(hash1).to.equal(hash2);
 
     //Set execution params
-    graph.setExecutionData(id2, 1, wbtcBalance.toString(10));
-    result = await graph.isElementReadyToExecute(web3, id2);
+    loadedGraph.setExecutionData(id2, 1, wbtcBalance.toString(10));
+    result = await loadedGraph.isElementReadyToExecute(web3, id2);
     expect(result).to.equal("Not enough allowance for the input value");
     //Add validation
-    await graph.allowInputElement(web3, id1);
-    await graph.allowInputElement(web3, id2);
-    await graph.allowInputElement(web3, id3);
-    await graph.allowInputElement(web3, id4);
-    result = await graph.isElementReadyToExecute(web3, id1);
+    await loadedGraph.allowInputElement(web3, id1);
+    await loadedGraph.allowInputElement(web3, id2);
+    await loadedGraph.allowInputElement(web3, id3);
+    await loadedGraph.allowInputElement(web3, id4);
+    result = await loadedGraph.isElementReadyToExecute(web3, id1);
     expect(result).to.equal("ready");
-    result = await graph.isElementReadyToExecute(web3, id2);
+    result = await loadedGraph.isElementReadyToExecute(web3, id2);
     expect(result).to.equal("ready");
-    result = await graph.isElementReadyToExecute(web3, id3);
+    result = await loadedGraph.isElementReadyToExecute(web3, id3);
     expect(result).to.equal("ready");
-    result = await graph.isElementReadyToExecute(web3, id4);
+    result = await loadedGraph.isElementReadyToExecute(web3, id4);
     expect(result).to.equal("ready");
 
     //Set execution params
     const toAddress1 = "0x4c3484cC845D9DE01a0e284FFC726ec32A85bA10";
-    graph.setExecutionData(id9, 0, toAddress1);
-    result = await graph.isElementReadyToExecute(web3, id9);
+    loadedGraph.setExecutionData(id9, 0, toAddress1);
+    result = await loadedGraph.isElementReadyToExecute(web3, id9);
     expect(result).to.equal("ready");
 
     //Address 1 should not have DAI
@@ -190,8 +190,8 @@ describe("Donate Graph", function() {
     expect(daiBalance.toString(10)).to.equal("0");
 
     const toAddress2 = "0xa16978f6f3Ab62ceF7FDb512d936D1073a8D7544";
-    graph.setExecutionData(id10, 0, toAddress2);
-    result = await graph.isElementReadyToExecute(web3, id10);
+    loadedGraph.setExecutionData(id10, 0, toAddress2);
+    result = await loadedGraph.isElementReadyToExecute(web3, id10);
     expect(result).to.equal("ready");
 
     //Address 2 should not have DAI
@@ -199,10 +199,10 @@ describe("Donate Graph", function() {
     expect(daiBalance.toString(10)).to.equal("0");
 
     //Execute
-    result = await graph.isReadyToExecute(web3);
+    result = await loadedGraph.isReadyToExecute(web3);
     expect(result).to.be.true;
 
-    result = await graph.execute(web3);
+    result = await loadedGraph.execute(web3);
     console.log(result);
 
     daiBalance = await daiContract.methods.balanceOf(toAddress1).call();

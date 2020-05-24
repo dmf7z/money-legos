@@ -192,17 +192,29 @@ describe("Graph Validation", function() {
     result = await graph.isReadyToDeploy();
     expect(result).to.be.true;
 
+    //Deploy
+    const address = await graph.deploy(web3);
+    console.log(address);
+
+    //Load Graph from address
+    const loadedGraph = await factory.loadGraph(web3, address, contracts);
+
+    const hash1 = md5(JSON.stringify(graph.elements));
+    const hash2 = md5(JSON.stringify(loadedGraph.elements));
+
+    expect(hash1).to.equal(hash2);
+
     //Should not be ready to execute
-    result = await graph.isReadyToExecute();
+    result = await loadedGraph.isReadyToExecute();
     expect(result).to.be.false;
 
     //Set execution params for input
-    graph.setExecutionData(id1, 1, "1000000000000000");
-    result = await graph.isElementReadyToExecute(web3, id1);
+    loadedGraph.setExecutionData(id1, 1, "1000000000000000");
+    result = await loadedGraph.isElementReadyToExecute(web3, id1);
     expect(result).to.equal("ready");
 
     //No Oasis order
-    result = await graph.isElementReadyToExecute(web3, id4);
+    result = await loadedGraph.isElementReadyToExecute(web3, id4);
     expect(result).to.equal("Invalid Oasis order");
 
     //Set execution params for oasis
@@ -213,38 +225,38 @@ describe("Graph Validation", function() {
     const offerId = await oasisContract.methods
       .getBestOffer(contracts.ASSETS.DAI, contracts.ASSETS.WETH)
       .call();
-    graph.setExecutionData(id4, 0, offerId);
-    result = await graph.isElementReadyToExecute(web3, id4);
+    loadedGraph.setExecutionData(id4, 0, offerId);
+    result = await loadedGraph.isElementReadyToExecute(web3, id4);
     expect(result).to.equal("ready");
 
     //No 0x order yet
-    result = await graph.isElementReadyToExecute(web3, id5);
+    result = await loadedGraph.isElementReadyToExecute(web3, id5);
     expect(result).to.equal("Invalid 0x order");
     //Set execution params for 0x
-    graph.setExecutionData(id5, 0, order);
-    result = await graph.isElementReadyToExecute(web3, id5);
+    loadedGraph.setExecutionData(id5, 0, order);
+    result = await loadedGraph.isElementReadyToExecute(web3, id5);
     expect(result).to.equal("ready");
 
     //False: not valid address yet
-    result = await graph.isReadyToExecute();
+    result = await loadedGraph.isReadyToExecute();
     expect(result).to.be.false;
 
-     //Invalid address 0x00.000
-     result = await graph.isElementReadyToExecute(web3, id12);
-     expect(result).to.equal("Please enter an output address");
+    //Invalid address 0x00.000
+    result = await loadedGraph.isElementReadyToExecute(web3, id12);
+    expect(result).to.equal("Please enter an output address");
 
-     //Set invalida address, not ready
-    graph.setExecutionData(id12, 0, "0x32938293232");
-    result = await graph.isElementReadyToExecute(web3, id12);
+    //Set invalida address, not ready
+    loadedGraph.setExecutionData(id12, 0, "0x32938293232");
+    result = await loadedGraph.isElementReadyToExecute(web3, id12);
     expect(result).to.equal("Invalid address");
 
     //Set execution params for address
-    graph.setExecutionData(id12, 0, account);
-    result = await graph.isElementReadyToExecute(web3, id12);
+    loadedGraph.setExecutionData(id12, 0, account);
+    result = await loadedGraph.isElementReadyToExecute(web3, id12);
     expect(result).to.equal("ready");
 
     //Should not be ready to execute
-    result = await graph.isReadyToExecute();
+    result = await loadedGraph.isReadyToExecute();
     expect(result).to.be.true;
   });
 });

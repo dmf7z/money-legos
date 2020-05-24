@@ -13,10 +13,6 @@ const ETHER = "0x0000000000000000000000000000000000000000";
 const addCreationData = (element, creationData) => {
   for (const data of creationData) {
     element.executionData[data.index].data = data.value;
-    const result = validateElementData(element.executionData[data.index]);
-    if (result !== "ok") {
-      throw result;
-    }
   }
 };
 
@@ -138,9 +134,9 @@ class Graph {
   async isElementReadyToExecute(web3, elementId) {
     let result = "ready";
     const element = this.getElementById(elementId);
-    //////////  if (!this.address) {
-    ///////////////////     return "Graph has not been deployed yet";
-    ///////////////   }
+    if (!this.address) {
+      return "Graph has not been deployed yet";
+    }
     for (const data of element.executionData) {
       const elementResult = validateElementData(data);
       if (elementResult !== "ok") {
@@ -305,13 +301,14 @@ class Graph {
           typesList.push(
             data.dataType == "0xOrder"
               ? "bytes"
+              : data.dataType == "OasisOrder"
+              ? "uint256"
               : data.dataType == "timestamp"
               ? "uint256"
               : data.dataType
           );
           dataList.push(data.data);
         }
-        console.log(typesList, dataList);
         const params = ABICoder.encodeParameters(typesList, dataList);
         const outputsIndexes = [];
         const outputsInputIndexes = [];
@@ -329,7 +326,6 @@ class Graph {
           y: element.index[1],
         };
       });
-      console.log(elements);
       //Deploy contract
       const [account] = await web3.eth.getAccounts();
       const factoryContract = new web3.eth.Contract(
@@ -341,7 +337,6 @@ class Graph {
         gas: 5000000,
       });
       this.address = tx.events.GraphCreated.returnValues["0"];
-      console.log(this.address);
       return this.address;
     } else {
       throw "Not ready to deploy";
@@ -399,13 +394,14 @@ class Graph {
             typesList.push(
               data.dataType == "0xOrder"
                 ? "bytes"
+                : data.dataType == "OasisOrder"
+                ? "uint256"
                 : data.dataType == "timestamp"
                 ? "uint256"
                 : data.dataType
             );
             dataList.push(data.data);
           }
-          console.log(typesList, dataList);
           allParams.push(ABICoder.encodeParameters(typesList, dataList));
         }
       }

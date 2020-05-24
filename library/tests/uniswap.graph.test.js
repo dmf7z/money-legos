@@ -53,14 +53,14 @@ describe("Uniswap Graph", function() {
     expect(hash1).to.equal(hash2);
 
     //Set execution params
-    graph.setExecutionData(id1, 1, "1000000000000000000");
-    result = await graph.isElementReadyToExecute(web3, id1);
+    loadedGraph.setExecutionData(id1, 1, "1000000000000000000");
+    result = await loadedGraph.isElementReadyToExecute(web3, id1);
     expect(result).to.equal("ready");
 
     //Set execution params
     const toAddress = "0xa8f5e262b61b8C2308a1Cb81fB29739CfB87f97d";
-    graph.setExecutionData(id3, 0, toAddress);
-    result = await graph.isElementReadyToExecute(web3, id3);
+    loadedGraph.setExecutionData(id3, 0, toAddress);
+    result = await loadedGraph.isElementReadyToExecute(web3, id3);
     expect(result).to.equal("ready");
 
     //Address should not have DAI
@@ -68,10 +68,10 @@ describe("Uniswap Graph", function() {
     expect(daiBalance.toString(10)).to.equal("0");
 
     //Execute
-    result = await graph.isReadyToExecute(web3);
+    result = await loadedGraph.isReadyToExecute(web3);
     expect(result).to.be.true;
 
-    const txHash = await graph.execute(web3);
+    const txHash = await loadedGraph.execute(web3);
     console.log(txHash);
 
     daiBalance = await daiContract.methods.balanceOf(toAddress).call();

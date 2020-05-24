@@ -145,8 +145,8 @@ describe("Arbitrage Graph with Inputs", function() {
     expect(hash1).to.equal(hash2);
 
     //Set execution params for input
-    graph.setExecutionData(id1, 1, "1000000000000000");
-    result = await graph.isElementReadyToExecute(web3, id1);
+    loadedGraph.setExecutionData(id1, 1, "1000000000000000");
+    result = await loadedGraph.isElementReadyToExecute(web3, id1);
     expect(result).to.equal("ready");
 
     //Set execution params for oasis
@@ -157,26 +157,26 @@ describe("Arbitrage Graph with Inputs", function() {
     const offerId = await oasisContract.methods
       .getBestOffer(contracts.ASSETS.DAI, contracts.ASSETS.WETH)
       .call();
-    graph.setExecutionData(id4, 0, offerId);
-    result = await graph.isElementReadyToExecute(web3, id4);
+      loadedGraph.setExecutionData(id4, 0, offerId);
+    result = await loadedGraph.isElementReadyToExecute(web3, id4);
     expect(result).to.equal("ready");
 
     const offerResult = await oasisContract.methods.getOffer(offerId).call();
     console.log(offerResult);
 
     //Set execution params for 0x
-    graph.setExecutionData(id5, 0, order);
+    loadedGraph.setExecutionData(id5, 0, order);
 
     //Set execution params for address
-    graph.setExecutionData(id8, 0, account);
-    result = await graph.isElementReadyToExecute(web3, id8);
+    loadedGraph.setExecutionData(id8, 0, account);
+    result = await loadedGraph.isElementReadyToExecute(web3, id8);
     expect(result).to.equal("ready");
 
     //Execute
-    result = await graph.isReadyToExecute(web3);
+    result = await loadedGraph.isReadyToExecute(web3);
     expect(result).to.be.true;
 
-    result = await graph.execute(web3);
+    result = await loadedGraph.execute(web3);
     console.log(result);
 
     let finalBalance = await web3.eth.getBalance(account);
