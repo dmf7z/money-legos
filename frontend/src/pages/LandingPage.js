@@ -106,6 +106,7 @@ function LandingPage() {
                 <li className="has-text-centered">
                   <ArcherElement id={"ex2"}>
                     <button class="button is-danger is-outlined">
+                    Flash Swap 
                       <img
                         className="modal__op--img-uni"
                         src={require("../assets/icons/uniswapv2.svg")}
@@ -117,7 +118,7 @@ function LandingPage() {
                 <li className="has-text-centered">
                   <ArcherElement id={"ex3"}>
                     <button class="button is-danger is-outlined">
-                      Donate to 2 address
+                      Trade in Oasis and Curve
                     </button>
                   </ArcherElement>
                 </li>
@@ -130,28 +131,22 @@ function LandingPage() {
         {/* Q */}
         <h3 class="title is-3 has-text-warning is-spaced">How can I use it?</h3>
         <p class="subtitle is-5 is-spaced">
-          
-            Simply connect the DeFi pieces manually, create the graph and
-            execute it! Check this example:{" "}
-        
+          Simply connect the DeFi pieces manually, create the graph and execute
+          it! Check this example:{" "}
         </p>
         <img
-            className="is-fullwidth"
-            src={require("../assets/demo/gif1b.gif")}
-          />
+          className="is-fullwidth"
+          src={require("../assets/demo/gif1b.gif")}
+        />
         {/* Q */}
-        <p class="subtitle is-5 is-spaced">
-          
-           
-        
-        </p>
+        <p class="subtitle is-5 is-spaced"></p>
         <h3 class="title is-3 has-text-warning is-spaced">How does it work?</h3>
         <p class="subtitle is-5 is-spaced">
           A graph is deployed and executed as a smart contract. There is no
           central db involved, just writing/reading blockchain data.
         </p>
         {/* Q */}
-        <h3 class="title is-3 has-text-warning is-spaced">Who is this for??</h3>
+        <h3 class="title is-3 has-text-warning is-spaced">Who is this for?</h3>
         <p class="subtitle is-5 is-spaced">
           Teachers, students, newcomers, devs. This is a tool that anyone can
           use to play, learn, teach DeFi composability or even create custom
@@ -161,17 +156,35 @@ function LandingPage() {
           Why did you built it?
         </h3>
         <p class="subtitle is-5 is-spaced">
-          This was built for <a className="is-text landing__link" href="https://ethglobal.online/">HackMoney hackathon</a>.
+          This was built for{" "}
+          <a className="is-text landing__link" href="https://ethglobal.online/">
+            HackMoney hackathon
+          </a>
+          .
         </p>
         <h3 class="title is-3 has-text-warning is-spaced">
           Who is behind this project?
         </h3>
         <p class="subtitle is-5 is-spaced">
-          <a className="is-text landing__link" href="https://github.com/brunitob">Bruno Balzani</a> and <a className="is-text landing__link" href="https://github.com/dmf7z">Daniel Fernandez </a>
+          <a className="is-text landing__link" href="https://brunobalzani.com">
+            Bruno Balzani
+          </a>{" "}
+          and{" "}
+          <a
+            className="is-text landing__link"
+            href="https://www.linkedin.com/in/dmf7z"
+          >
+            Daniel Fernandez{" "}
+          </a>
         </p>
         <h3 class="title is-3 has-text-warning is-spaced">What's next?</h3>
         <p class="subtitle is-5 is-spaced">
           Oh well, if people like it, we promise to add more instruments.
+        </p>
+
+        <h3 class="title is-3 has-text-warning is-spaced">🚨 Caution! Use at your own risk!</h3>
+        <p class="subtitle is-5 is-spaced">
+          Its on mainnet
         </p>
       </div>
     </section>
