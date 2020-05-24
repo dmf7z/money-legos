@@ -492,3 +492,32 @@ body {
     -o-transform: rotate(-90deg);
   }
 }
+
+.landing {
+  &__sub{
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img { height: 30px;}
+  }
+  &__description{
+    padding-bottom: 25px;
+  }
+  &__el{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &__icon{
+    img {
+      height: 25px;
+    }
+  }
+  &__action{
+    img {
+      height: 40px;
+    }
+  }
+}
+

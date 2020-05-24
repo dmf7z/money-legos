@@ -15,7 +15,8 @@ import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
-function CreatePage() {
+function 
+CreatePage() {
   const { checkingForWeb3, web3, network, getAccounts } = useContext(
     Web3Context
   );
@@ -77,7 +78,7 @@ function CreatePage() {
         <div className="header">
           <div>
             <h1 className="title is-3 has-text-warning">compose.fi</h1>
-            <h2 className="subtitle">Experiments 🧪 with DeFi</h2>
+            <h2 className="subtitle landing__icon">Experiments <img src={require("../assets/icons/lab.svg")} /> with with DeFi</h2>
             <span class="tag is-danger is-light is-small">
               🚨 Caution! Use at your own risk!{" "}
             </span>
