@@ -81,7 +81,6 @@ const StackProvider = (props) => {
   async function executeGraph(web3){
     let result = await graph.execute(web3);
     console.log('EXECUTED ', result)
-    setGraphIsReady(result)
     return result
   }
 

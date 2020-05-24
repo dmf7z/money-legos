@@ -21,19 +21,12 @@ export function OperationsOption(props) {
   const handleAction = (addElement) => {
     console.log("Do de add Action", addElement);
 
-    // let addElement = {
-    //   parents: ids,
-    //   element: el,
-    //   limit: limitColumn,
-    // };
     let parent = graph.getElementById(addElement.parents)
   
 
 
     dispatchGraph({ type: "ADD_OPERATION", addElement });
     props.closeModal();
-    // parent.connections.length > 0 && setLimitColumn(parent.index[0]+ELEMENTS_OFFSET_MAP[parent.type]);
-    // console.log('SETTING NEW BORDER LIMIT', parent.connections.length , parent.index[0],limitColumn, parent.index[0]+ELEMENTS_OFFSET_MAP[parent.type])
 
   };
 

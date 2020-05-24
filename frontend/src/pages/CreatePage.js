@@ -16,7 +16,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function 
-CreatePage() {
+CreatePage(props) {
   const { checkingForWeb3, web3, network, getAccounts } = useContext(
     Web3Context
   );
@@ -26,12 +26,16 @@ CreatePage() {
   const [loadedGraph, setLoadedGraph] = useState([]);
   const [deployedContract, setDeployedContract] = useState(null);
 
-  useEffect(async () => {
+  async function fetchAccountsAndMore(commentId) {
     const account = await getAccounts();
     setHasAccount(!isEmpty(account));
     setIsWeb3Enabled(checkingForWeb3);
     console.log("checkingForWeb3", checkingForWeb3);
     console.log("isEmpty(account)", isEmpty(account));
+  }
+
+  useEffect(async () => {
+    fetchAccountsAndMore()
   }, []);
 
   const { deployGraph, limitColumn, loadGraph } = useContext(StackContext);
@@ -70,6 +74,7 @@ CreatePage() {
       toast.error("Oppps");
     }
   };
+
 
   return (
     <section className="view">
