@@ -24,7 +24,7 @@ module.exports = (contracts = mainnetContracts) => {
           description: `Please enter the amount of ${name} to execute`,
           required: true,
           data: "0",
-          min: "0",
+          min: "1",
         },
       ],
     };
