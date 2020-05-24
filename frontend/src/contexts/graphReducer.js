@@ -49,7 +49,7 @@ export const graphReducer = (state, action) => {
 
         for (const i of Object.keys(selectedElement.executionData)) {
           if (selectedElement.executionData[i].type == "input" && data[i]) {
-            console.log('adding data for index: ', i, data[i])
+            // console.log('adding data for index: ', i, data[i])
             // state.setExecutionData(selectedElement.id, i, data[i]);
             arrayData.push(
               {
@@ -98,7 +98,7 @@ export const graphReducer = (state, action) => {
           )
         }
       }
-      
+
       element = factory.getElements()[action.addElement.element.key];
       state.connectElements(arrayIds, element, maxX, maxY + 1, arrayData);
       return state;
@@ -133,7 +133,20 @@ export const graphReducer = (state, action) => {
         console.log(arrayIds, element, asset, inputIndex);
       }
 
-      state.connectElements(arrayIds, element, maxX, maxY + 1);
+      for (const i of Object.keys(selectedElement.executionData)) {
+        if (selectedElement.executionData[i].type == "input" && data[i]) {
+          console.log('adding data for index: ', i, data[i])
+          // state.setExecutionData(selectedElement.id, i, data[i]);
+          arrayData.push(
+            {
+              index: i,
+              value: data[i],
+            },
+          )
+        }
+      }
+
+      state.connectElements(arrayIds, element, maxX, maxY + 1, arrayData);
 
       return state;
 
