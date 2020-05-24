@@ -14,8 +14,11 @@ const DEMO = {
 };
 
 const SplitterStack = React.forwardRef((props, ref) => {
-  const { id, outputs, inputs, isSelected } = props;
+  const { id, outputs, inputs, isSelected, executionData } = props;
   let assetIn = ASSETS_NAMES[inputs[0]];
+
+  let percent =  50
+  percent = executionData &&  executionData[0].data
 
   const handleClickInit = () => {
     props.selectAction();
@@ -44,7 +47,7 @@ const SplitterStack = React.forwardRef((props, ref) => {
       </div>
       <div className="stack__common stack--round stack-color__content">
         <div className="stack-color__name">
-          SPLIT {assetIn} 50% / 50%
+      SPLIT {assetIn} {percent}% / {100-percent}%
         </div>
       </div>
     </div>
