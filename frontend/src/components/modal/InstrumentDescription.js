@@ -6,6 +6,8 @@ export const InstrumentDescription = (props) => {
   switch (props.instrument) {
     case "Uniswap":
       return <span className="modal__op--title">Uniswap 🦄</span>;
+      case "WETH":
+        return <span className="modal__op--title">Weth {" "}</span>;
     case "Compound":
       return (
         <span className="modal__op--title">
@@ -46,6 +48,21 @@ export const InstrumentDescription = (props) => {
           />
         </span>
       );
+
+    case "Uniswap V2":
+      return (
+        <span className="modal__op--title">
+          
+          Uniswap{" "}
+          <img
+            className="modal__op--img-uni"
+            src={require("../../assets/icons/uniswapv2.svg")}
+          />
+          <span class="tag is-rounded is-danger is-normal">V2</span>
+          {" "}
+        </span>
+
+      )
 
     default:
       return <span>{props.instrument}</span>;

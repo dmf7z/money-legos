@@ -7,7 +7,7 @@ import { isEmpty } from "lodash";
 import { AssetIcon } from "./AssetIcon";
 import ElementForm from "../ElementForm";
 
-export function AddressOption(props) {
+export function OutputsOption(props) {
   const [opSelected, setOpSelected] = useState(null);
   const [opCount, setOpCount] = useState(0);
   const [availableElements, setAvailableElements] = useState([]);
@@ -21,15 +21,16 @@ export function AddressOption(props) {
 
   const handleAction = (addElement) => {
     console.log("Do Action", addElement);
-    dispatchGraph({ type: "ADD_OPERATION", addElement });
+    dispatchGraph({ type: "ADD_OUTPUT", addElement });
     props.closeModal();
   };
 
   useEffect(() => {
     let elementsOfInteres = isEmpty(ids) ? [] : graph.getAvailableElements(ids);
     let filterElements = elementsOfInteres.filter(
-      (el) => el.type === "AddressElement"
+      (el) => el.type === "AddressElement" ||  el.type === "FlashSwapOut"
     );
+    console.log(elementsOfInteres)
     setAvailableElements(filterElements);
     setOpCount(filterElements.length);
   }, []);

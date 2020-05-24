@@ -12,12 +12,9 @@ import { isEmpty } from "lodash";
 import { StackContext } from "../contexts/stack";
 
 function CreatePage() {
-  const {
-    checkingForWeb3,
-    web3,
-    network,
-    getAccounts,
-  } = useContext(Web3Context);
+  const { checkingForWeb3, web3, network, getAccounts } = useContext(
+    Web3Context
+  );
   const [isWeb3Enabled, setIsWeb3Enabled] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
   const [loadedGraph, setLoadedGraph] = useState([]);
@@ -31,7 +28,7 @@ function CreatePage() {
   }, []);
 
   const { deployGraph, limitColumn, loadGraph } = useContext(StackContext);
- 
+
   async function mmReq() {
     try {
       window.ethereum
@@ -73,7 +70,7 @@ function CreatePage() {
                 onClick={() => doTheDeploy()}
                 class="button is-warning is-outlined"
               >
-                Deploy Graph {limitColumn}
+                Deploy Graph
               </button>
             ) : (
               <button
