@@ -1,4 +1,5 @@
 const ABICoder = require("web3-eth-abi");
+const ethUtils = require("ethereumjs-util");
 const BN = require("bn.js");
 const ERC20ABI = require("../abi/erc20");
 const GraphData = require("../abi/Graph.json");
@@ -23,6 +24,9 @@ const validateElementData = (data) => {
   if (data.type === "input") {
     switch (data.dataType) {
       case "uint256": {
+        if (data.data === null) {
+          return "Value is null";
+        }
         const bn = new BN(data.data, 10);
         if (data.min) {
           if (bn.lt(new BN(data.min))) {
@@ -34,36 +38,74 @@ const validateElementData = (data) => {
             return `${data.title} has to be lower than ${data.max}`;
           }
         }
+        break;
       }
       case "uint8": {
         if (data.data === null) {
           return "Value is null";
         }
-        //TODO
+        const bn = new BN(data.data, 10);
+        if (data.min) {
+          if (bn.lt(new BN(data.min))) {
+            return `${data.title} has to be greater than ${data.min}`;
+          }
+        }
+        if (data.max) {
+          if (bn.gt(new BN(data.max))) {
+            return `${data.title} has to be lower than ${data.max}`;
+          }
+        }
+        break;
       }
       case "timestamp": {
         if (data.data === null) {
           return "Value is null";
         }
-        //TODO
+        break;
       }
       case "address": {
         if (data.data === null) {
           return "Value is null";
         }
-        //TODO
+        if (!ethUtils.isValidAddress(data.data)) {
+          return "Invalid address";
+        }
+        if (data.data === ETHER) {
+          return "Please enter an output address";
+        }
+        break;
       }
       case "0xOrder": {
         if (data.data === null) {
           return "Value is null";
         }
-        //TODO
-      }
-      case "0xSignature": {
-        if (data.data === null) {
-          return "Value is null";
+        if (!hasOwnProperty.call(data.data, "order")) {
+          return "Invalid 0x order";
         }
-        //TODO
+        const order = data.data.order;
+        if (
+          !hasOwnProperty.call(order, "signature") ||
+          !hasOwnProperty.call(order, "makerAddress") ||
+          !hasOwnProperty.call(order, "takerAddress") ||
+          !hasOwnProperty.call(order, "makerAssetAmount") ||
+          !hasOwnProperty.call(order, "takerAssetAmount") ||
+          !hasOwnProperty.call(order, "makerAssetData") ||
+          !hasOwnProperty.call(order, "takerAssetData") ||
+          !hasOwnProperty.call(order, "salt") ||
+          !hasOwnProperty.call(order, "expirationTimeSeconds")
+        ) {
+          return "Invalid 0x order";
+        }
+        break;
+      }
+      case "OasisOrder": {
+        if (data.data === null) {
+          return "Order is null";
+        }
+        if (isNaN(data.data) || !parseInt(Number(data.data)) > 0) {
+          return "Invalid Oasis order";
+        }
+        break;
       }
     }
   }
@@ -94,14 +136,15 @@ class Graph {
     } else throw "Invalid param index";
   }
   async isElementReadyToExecute(web3, elementId) {
+    let result = "ready";
     const element = this.getElementById(elementId);
-    if (!this.address) {
-      return "Graph has not been deployed yet";
-    }
+    //////////  if (!this.address) {
+    ///////////////////     return "Graph has not been deployed yet";
+    ///////////////   }
     for (const data of element.executionData) {
-      const result = validateElementData(data);
-      if (result !== "ok") {
-        return result;
+      const elementResult = validateElementData(data);
+      if (elementResult !== "ok") {
+        result = elementResult;
       }
       if (
         element.type == "InputElement" &&
@@ -119,14 +162,15 @@ class Graph {
             .allowance(account, this.address)
             .call();
           if (new BN(value).gt(new BN(allowedBalance))) {
-            return "Not enough allowance for the input value";
+            result = "Not enough allowance for the input value";
           }
         }
       }
     }
-    return "ready";
+    return result;
   }
   async isReadyToDeploy() {
+    let result = true;
     let hasFlashSwapIn = false;
     let hasFlashSwapOut = false;
     for (const element of this.elements) {
@@ -135,23 +179,27 @@ class Graph {
       } else if (element.type == "FlashSwapOut") {
         hasFlashSwapOut = true;
       }
+      if (element.outputs.length !== element.connections.length) {
+        result = false;
+      }
     }
     if (
       (hasFlashSwapIn && !hasFlashSwapOut) ||
       (!hasFlashSwapIn && hasFlashSwapOut)
     ) {
-      return false;
+      result = false;
     }
-    return true;
+    return result;
   }
   async isReadyToExecute(web3) {
+    let result = true;
     for (const element of this.elements) {
-      const result = await this.isElementReadyToExecute(web3, element.id);
-      if (result !== "ready") {
-        return false;
+      let elementResult = await this.isElementReadyToExecute(web3, element.id);
+      if (elementResult !== "ready") {
+        result = false;
       }
     }
-    return true;
+    return result;
   }
   canConnectOutput(parent, parentOutputIndex, element, elementInputIndex) {
     if (
@@ -248,7 +296,7 @@ class Graph {
     return availableElements;
   }
   async deploy(web3) {
-    if (this.isReadyToDeploy()) {
+    if (await this.isReadyToDeploy()) {
       //Prepare elements
       const elements = this.elements.map((element) => {
         const typesList = [];
@@ -284,16 +332,6 @@ class Graph {
       console.log(elements);
       //Deploy contract
       const [account] = await web3.eth.getAccounts();
-      // const graphContract = new web3.eth.Contract(GraphData.abi);
-      // const graphInstance = await graphContract
-      //   .deploy({
-      //     data: GraphData.bytecode,
-      //     arguments: [elements],
-      //   })
-      //   .send({
-      //     from: account,
-      //     gas: 5000000,
-      //   });
       const factoryContract = new web3.eth.Contract(
         GraphFactoryData.abi,
         this.contracts.FACTORY
@@ -310,7 +348,7 @@ class Graph {
     }
   }
   async execute(web3) {
-    if (this.isReadyToExecute(web3)) {
+    if (await this.isReadyToExecute(web3)) {
       let maxElementInputs = 0;
       let ethValue = new BN(0);
       const allParams = [];
