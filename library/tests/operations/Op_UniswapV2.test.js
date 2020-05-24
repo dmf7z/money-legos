@@ -31,11 +31,11 @@ describe("Operation UniswapV2", function() {
     await web3.eth.sendTransaction({
       from: accounts[0],
       to: contracts.OPERATION_EXECUTOR,
-      value: "2000000000000000000",
+      value: "1000000000000000000",
     });
 
     let ethBalance = await web3.eth.getBalance(contracts.OPERATION_EXECUTOR);
-    expect(ethBalance.toString(10)).to.equal("2000000000000000000");
+    expect(ethBalance.toString(10)).to.equal("1000000000000000000");
 
     let wethBalance = await wethContract.methods
       .balanceOf(contracts.OPERATION_EXECUTOR)
@@ -73,6 +73,7 @@ describe("Operation UniswapV2", function() {
         contracts.ASSETS.DAI,
       ]
     );
+    
     await executorContract.methods
       .executeOperation(
         contracts.OPERATIONS.OP_UNISWAP_V2,

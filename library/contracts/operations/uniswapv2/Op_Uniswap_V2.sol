@@ -52,7 +52,7 @@ contract Op_Uniswap_V2 {
                 asset1 == token0 ? 0 : outAmounts[0],
                 asset1 == token0 ? outAmounts[0] : 0,
                 address(this),
-                "0x"
+                ""
             );
         }
     }

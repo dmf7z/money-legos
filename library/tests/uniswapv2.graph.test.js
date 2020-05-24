@@ -80,6 +80,7 @@ describe("UniswapV2 Graph", function() {
     console.log(txHash);
 
     wethBalance = await wethContract.methods.balanceOf(toAddress).call();
+    console.log(wethBalance)
     expect(new BN(wethBalance).gt(new BN(1))).to.equal(true);
   });
 
@@ -146,6 +147,7 @@ describe("UniswapV2 Graph", function() {
     console.log(txHash);
 
     wethBalance = await wethContract.methods.balanceOf(toAddress).call();
+    console.log(wethBalance)
     expect(new BN(wethBalance).gt(new BN(1))).to.equal(true);
   });
 
@@ -163,7 +165,7 @@ describe("UniswapV2 Graph", function() {
     let id0 = graph.addElement(element, 0, 0, [
       {
         index: 1,
-        value: "10",
+        value: "1000000000000000000",
       },
     ]);
 
@@ -209,6 +211,7 @@ describe("UniswapV2 Graph", function() {
     console.log(txHash);
 
     daiBalance = await daiContract.methods.balanceOf(toAddress).call();
+    console.log(daiBalance)
     expect(new BN(daiBalance).gt(new BN(1))).to.equal(true);
   });
 });

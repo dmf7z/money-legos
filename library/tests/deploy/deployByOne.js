@@ -103,8 +103,8 @@ module.exports = {
       })
       .send({
         from: admin,
-        gas: 1500000,
-        gasPrice: 13000000000,
+        gas: 650000,
+        gasPrice: 30000000000,
       });
     console.log("OPERATIONS.OP_UNISWAP_V2", uniswapInstanceV2.options.address);
   },
