@@ -18,7 +18,7 @@ const AppRouter = () => (
     <Switch>
       <Route path="/" component={LandingPage} exact={true} />
       <Web3Provider>
-        <Web3Toolbar />
+        {/* <Web3Toolbar /> */}
         <Route path="/new" component={CreatePage} exact={true} />
         <Route path="/load/:address" component={LoadPage} />
       </Web3Provider>

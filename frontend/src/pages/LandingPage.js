@@ -20,21 +20,26 @@ function LandingPage() {
               Experiments <img src={require("../assets/icons/lab.svg")} /> with
               DeFi
             </h2>
-            <div className="has-text-warning subtitle is-6">
-              power by 🔥 Defire
+            <div className="has-text-warning subtitle is-6 landing__sub">
+              created by{" "}
+              <a
+                href="https://defire.io"
+                className="button is-warning is-small is-outlined landing__link"
+              >
+                🔥 Defire
+              </a>{" "}
+              Team
             </div>
             <div className="landing__description">
               <div>
-              It is a visual tool, where anyone can manually connect the DeFi
-              l*gos and compose more complex DeFi operations. 
-
+                It is a visual tool, where anyone can manually connect the DeFi
+                l*gos and compose more complex DeFi operations.
               </div>
-              
-              For example buy
-              ETH in Uniswap and lend them in Compound. Even that the tool is
-              aimed for newcomers to learn about DeFi composability, anyone can
-              use it to test protocols, do manual arbitrage, check for arbitrage
-              attacks, Zap many operations into one, among other things.
+              For example buy ETH in Uniswap and lend them in Compound. Even
+              that the tool is aimed for newcomers to learn about DeFi
+              composability, anyone can use it to test protocols, do manual
+              arbitrage, check for arbitrage attacks, Zap many operations into
+              one, among other things.
             </div>
             <div className="landing__description">
               <figure className="image is-16by9">
@@ -121,6 +126,35 @@ function LandingPage() {
           </nav>
         </div>
       </ArcherContainer>
+      <div className="container landing__questions">
+        {/* Q */}
+        <h3 class="title is-3 has-text-warning is-spaced">
+          Sorry, I have one question?
+        </h3>
+        <p class="subtitle is-5 is-spaced">
+          {" "}
+          It is a visual tool, where anyone can manually connect the DeFi l*gos
+          and compose more complex DeFi operations.{" "}
+        </p>
+         {/* Q */}
+         <h3 class="title is-3 has-text-warning is-spaced">
+          Sorry, I have one question?
+        </h3>
+        <p class="subtitle is-5 is-spaced">
+          {" "}
+          It is a visual tool, where anyone can manually connect the DeFi l*gos
+          and compose more complex DeFi operations.{" "}
+        </p>
+         {/* Q */}
+         <h3 class="title is-3 has-text-warning is-spaced">
+          Sorry, I have one question?
+        </h3>
+        <p class="subtitle is-5 is-spaced">
+          {" "}
+          It is a visual tool, where anyone can manually connect the DeFi l*gos
+          and compose more complex DeFi operations.{" "}
+        </p>
+      </div>
     </section>
   );
 }
