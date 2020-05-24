@@ -2,7 +2,7 @@ const chaiAsPromised = require("chai-as-promised");
 const chai = require("chai");
 const Web3 = require("web3");
 const BN = require("bn.js");
-var md5 = require("md5")
+var md5 = require("md5");
 const fetch = require("node-fetch");
 const factory = require("../src");
 const Elements = require("../src/elements");
@@ -30,16 +30,19 @@ const getOrder = async (index, asset1, asset2) => {
     `https://api.0x.org/sra/v3/orders?makerAssetData=${makerAssetData}&takerAssetData=${takerAssetData}`
   );
   const orders = await response.json();
-  return orders.records[index]; 
+  return orders.records[index];
 };
 
 const getNotExpiringOrder = async (asset1, asset2) => {
   let order;
   let index = 0;
-  let time = new Date().getTime() / 1000 + 300; //+ 5 min
-  while (!order || parseInt(order.order.expirationTimeSeconds) < time) {
-    if(order)
-    console.log(time, parseInt(order.order.expirationTimeSeconds))
+  let time = new Date().getTime() / 1000 + 60; //+ 1 min
+  while (
+    !order ||
+    parseInt(order.order.expirationTimeSeconds) < time ||
+    order.order.takerFee != "0"
+  ) {
+    if (order) console.log(time, parseInt(order.order.expirationTimeSeconds));
     order = await getOrder(index, asset1, asset2);
     index++;
   }
@@ -51,12 +54,17 @@ describe("Arbitrage Graph with Inputs", function() {
   let elements;
   let order;
   before(async function() {
-    order = await getNotExpiringOrder(mainContracts.ASSETS.DAI, mainContracts.ASSETS.WETH); //get order first, so it does not expire
+    order = await getNotExpiringOrder(
+      mainContracts.ASSETS.DAI,
+      mainContracts.ASSETS.WETH
+    ); //get order first, so it does not expire
     contracts = await Deployer.deploy();
     elements = Elements(contracts);
   });
   it("Arbitrage Graph", async function() {
     const [account] = await web3.eth.getAccounts();
+
+    console.log(order);
 
     let initialBalance = await web3.eth.getBalance(account);
 
@@ -157,7 +165,7 @@ describe("Arbitrage Graph with Inputs", function() {
     const offerId = await oasisContract.methods
       .getBestOffer(contracts.ASSETS.DAI, contracts.ASSETS.WETH)
       .call();
-      loadedGraph.setExecutionData(id4, 0, offerId);
+    loadedGraph.setExecutionData(id4, 0, offerId);
     result = await loadedGraph.isElementReadyToExecute(web3, id4);
     expect(result).to.equal("ready");
 

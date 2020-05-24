@@ -22,8 +22,12 @@ const getOrder = async (index, asset1, asset2) => {
 const getNotExpiringOrder = async (asset1, asset2) => {
   let order;
   let index = 0;
-  let time = new Date().getTime() / 1000 + 300; //+ 5 min
-  while (!order || parseInt(order.order.expirationTimeSeconds) < time) {
+  let time = new Date().getTime() / 1000 + 60; //+ 1 min
+  while (
+    !order ||
+    parseInt(order.order.expirationTimeSeconds) < time ||
+    order.order.takerFee != "0"
+  ) {
     order = await getOrder(index, asset1, asset2);
     index++;
   }
@@ -45,4 +49,3 @@ module.exports = {
   get0xOrder: getNotExpiringOrder,
   getOasisOrder: getOasisOrder,
 };
-
