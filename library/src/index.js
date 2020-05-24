@@ -61,8 +61,8 @@ module.exports = {
         typesList.push(
           data.dataType == "0xOrder"
             ? "bytes"
-            : data.dataType == "0xSignature"
-            ? "bytes"
+            : data.dataType == "OasisOrder"
+            ? "uint256"
             : data.dataType == "timestamp"
             ? "uint256"
             : data.dataType

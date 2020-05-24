@@ -24,7 +24,6 @@ const getNotExpiringOrder = async (asset1, asset2) => {
   let index = 0;
   let time = new Date().getTime() / 1000 + 300; //+ 5 min
   while (!order || parseInt(order.order.expirationTimeSeconds) < time) {
-    if (order) console.log(time, parseInt(order.order.expirationTimeSeconds));
     order = await getOrder(index, asset1, asset2);
     index++;
   }

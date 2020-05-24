@@ -2,7 +2,7 @@ const chaiAsPromised = require("chai-as-promised");
 const chai = require("chai");
 const Web3 = require("web3");
 const BN = require("bn.js");
-var md5 = require("md5")
+var md5 = require("md5");
 const fetch = require("node-fetch");
 const factory = require("../src");
 const Elements = require("../src/elements");
@@ -30,7 +30,7 @@ const getOrder = async (index, asset1, asset2) => {
     `https://api.0x.org/sra/v3/orders?makerAssetData=${makerAssetData}&takerAssetData=${takerAssetData}`
   );
   const orders = await response.json();
-  return orders.records[index]; 
+  return orders.records[index];
 };
 
 const getNotExpiringOrder = async (asset1, asset2) => {
@@ -38,24 +38,26 @@ const getNotExpiringOrder = async (asset1, asset2) => {
   let index = 0;
   let time = new Date().getTime() / 1000 + 300; //+ 5 min
   while (!order || parseInt(order.order.expirationTimeSeconds) < time) {
-    if(order)
-    console.log(time, parseInt(order.order.expirationTimeSeconds))
+    if (order) console.log(time, parseInt(order.order.expirationTimeSeconds));
     order = await getOrder(index, asset1, asset2);
     index++;
   }
   return order;
 };
 
-describe("Arbitrage Graph with Inputs", function() {
+describe("Graph Validation", function() {
   let contracts;
   let elements;
   let order;
   before(async function() {
-    order = await getNotExpiringOrder(mainContracts.ASSETS.DAI, mainContracts.ASSETS.WETH); //get order first, so it does not expire
+    order = await getNotExpiringOrder(
+      mainContracts.ASSETS.DAI,
+      mainContracts.ASSETS.WETH
+    ); //get order first, so it does not expire
     contracts = await Deployer.deploy();
     elements = Elements(contracts);
   });
-  it("Arbitrage Graph", async function() {
+  it("Graph Validation", async function() {
     const [account] = await web3.eth.getAccounts();
 
     let initialBalance = await web3.eth.getBalance(account);
@@ -66,6 +68,17 @@ describe("Arbitrage Graph with Inputs", function() {
     //Create input elements
     let result, element;
 
+    const amountFlashSwap = new BN("997000000");
+    const returnFlashSwap = new BN("1000000000");
+
+    element = elements.FLASH_SWAP_IN_WETH;
+    let id00 = graph.addElement(element, 0, 0, [
+      {
+        index: 2,
+        value: amountFlashSwap.toString(10),
+      },
+    ]);
+
     element = elements.INPUT_ETH;
     let id0 = graph.addElement(element, 1, 0, [
       {
@@ -74,10 +87,15 @@ describe("Arbitrage Graph with Inputs", function() {
       },
     ]);
 
+    //Should not be ready to deploy as it does not have outpus
+    result = await graph.isReadyToDeploy();
+    expect(result).to.be.false;
+
     //Input
     element = elements.INPUT_ETH;
     let id1 = graph.addElement(element, 0, 0);
 
+    //Wrap ETH
     element = elements.OP_WRAPPER_ETH_TO_WETH;
     let id2 = graph.connectElements([[id1, 0, 0]], element, 0, 1);
 
@@ -89,16 +107,29 @@ describe("Arbitrage Graph with Inputs", function() {
 
     //Splitter
     element = elements.SPLITTER_WETH;
-    let id3 = graph.connectElements([[id2, 0, 0]], element, 0, 2, [
-      {
-        index: 0,
-        value: "50",
-      },
-    ]);
+    let id3 = graph.connectElements(
+      [
+        [id00, 0, 0],
+        [id2, 0, 0],
+      ],
+      element,
+      0,
+      2,
+      [
+        {
+          index: 0,
+          value: "50",
+        },
+      ]
+    );
 
     //Oasis
     element = elements.OP_OASIS_WETH_TO_DAI;
     let id4 = graph.connectElements([[id3, 0, 0]], element, 0, 3);
+
+    //Should not be ready to deploy as it does not have outpus
+    result = await graph.isReadyToDeploy();
+    expect(result).to.be.false;
 
     //0x
     element = elements.OP_0x_WETH_TO_DAI;
@@ -128,9 +159,38 @@ describe("Arbitrage Graph with Inputs", function() {
     element = elements.OP_UNISWAP_USDC_TO_ETH;
     let id7 = graph.connectElements([[id6, 0, 0]], element, 1, 6);
 
+    //Wrap ETH
+    element = elements.OP_WRAPPER_ETH_TO_WETH;
+    let id8 = graph.connectElements([[id7, 0, 0]], element, 0, 1);
+
+    //Fixed Splitter
+    element = elements.SPLITTER_FIXED_WETH;
+    let id9 = graph.connectElements([[id8, 0, 0]], element, 0, 2, [
+      {
+        index: 0,
+        value: returnFlashSwap.toString(10),
+      },
+    ]);
+
+    //FlashSwap out
+    element = elements.FLASH_SWAP_OUT_WETH;
+    let id10 = graph.connectElements([[id9, 0, 0]], element, 0, 3);
+
+    //Unwap WETH
+    element = elements.OP_WRAPPER_WETH_TO_ETH;
+    let id11 = graph.connectElements([[id9, 1, 0]], element, 0, 1);
+
+    //Should not be ready to deploy as it does not have outpus
+    result = await graph.isReadyToDeploy();
+    expect(result).to.be.false;
+
     //Create operation and connect them
     element = elements.ADDRESS;
-    let id8 = graph.connectElements([[id7, 0, 0]], element, 1, 7);
+    let id12 = graph.connectElements([[id11, 0, 0]], element, 1, 7);
+
+    //Should be ready to deploy!!
+    result = await graph.isReadyToDeploy();
+    expect(result).to.be.true;
 
     //Deploy
     const address = await graph.deploy(web3);
@@ -144,10 +204,18 @@ describe("Arbitrage Graph with Inputs", function() {
 
     expect(hash1).to.equal(hash2);
 
+    //Should not be ready to execute
+    result = await loadedGraph.isReadyToExecute();
+    expect(result).to.be.false;
+
     //Set execution params for input
     loadedGraph.setExecutionData(id1, 1, "1000000000000000");
     result = await loadedGraph.isElementReadyToExecute(web3, id1);
     expect(result).to.equal("ready");
+
+    //No Oasis order
+    result = await loadedGraph.isElementReadyToExecute(web3, id4);
+    expect(result).to.equal("Invalid Oasis order");
 
     //Set execution params for oasis
     const oasisContract = new web3.eth.Contract(
@@ -157,36 +225,38 @@ describe("Arbitrage Graph with Inputs", function() {
     const offerId = await oasisContract.methods
       .getBestOffer(contracts.ASSETS.DAI, contracts.ASSETS.WETH)
       .call();
-      loadedGraph.setExecutionData(id4, 0, offerId);
+    loadedGraph.setExecutionData(id4, 0, offerId);
     result = await loadedGraph.isElementReadyToExecute(web3, id4);
     expect(result).to.equal("ready");
 
-    const offerResult = await oasisContract.methods.getOffer(offerId).call();
-    console.log(offerResult);
-
+    //No 0x order yet
+    result = await loadedGraph.isElementReadyToExecute(web3, id5);
+    expect(result).to.equal("Invalid 0x order");
     //Set execution params for 0x
     loadedGraph.setExecutionData(id5, 0, order);
-
-    //Set execution params for address
-    loadedGraph.setExecutionData(id8, 0, account);
-    result = await loadedGraph.isElementReadyToExecute(web3, id8);
+    result = await loadedGraph.isElementReadyToExecute(web3, id5);
     expect(result).to.equal("ready");
 
-    //Execute
-    result = await loadedGraph.isReadyToExecute(web3);
+    //False: not valid address yet
+    result = await loadedGraph.isReadyToExecute();
+    expect(result).to.be.false;
+
+    //Invalid address 0x00.000
+    result = await loadedGraph.isElementReadyToExecute(web3, id12);
+    expect(result).to.equal("Please enter an output address");
+
+    //Set invalida address, not ready
+    loadedGraph.setExecutionData(id12, 0, "0x32938293232");
+    result = await loadedGraph.isElementReadyToExecute(web3, id12);
+    expect(result).to.equal("Invalid address");
+
+    //Set execution params for address
+    loadedGraph.setExecutionData(id12, 0, account);
+    result = await loadedGraph.isElementReadyToExecute(web3, id12);
+    expect(result).to.equal("ready");
+
+    //Should not be ready to execute
+    result = await loadedGraph.isReadyToExecute();
     expect(result).to.be.true;
-
-    result = await loadedGraph.execute(web3);
-    console.log(result);
-
-    let finalBalance = await web3.eth.getBalance(account);
-
-    console.log(`Started with ${initialBalance}`);
-    console.log(`Finished with ${finalBalance}`);
-    if (new BN(finalBalance).gt(new BN(initialBalance))) {
-      console.log(":) :) :) gains!");
-    } else {
-      console.log(":( :( no gains");
-    }
   });
 });

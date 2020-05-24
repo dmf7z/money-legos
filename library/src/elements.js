@@ -451,7 +451,7 @@ module.exports = (contracts = mainnetContracts) => {
       executionData: [
         {
           type: "input",
-          dataType: "uint256",
+          dataType: "OasisOrder",
           title: "Order Id",
           description: "Id of Oasis order",
           required: true,
@@ -471,7 +471,7 @@ module.exports = (contracts = mainnetContracts) => {
       executionData: [
         {
           type: "input",
-          dataType: "uint256",
+          dataType: "OasisOrder",
           title: "Order Id",
           description: "Id of Oasis order",
           required: true,
