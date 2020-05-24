@@ -82,6 +82,7 @@ export default function ModalAction() {
         contentLabel="onRequestClose Example"
         style={customStyles}
         overlayClassName="modal__overlay"
+        ariaHideApp={false}
         //  onRequestClose={}
       >
         <div className="modal__box">

@@ -8,6 +8,7 @@ export default function ElementForm(props) {
   const { element, limitColumn, parents, graphIsLoaded } = props;
   const [zeroxBestOrder, setZeroxBestOrder] = useState();
   const [oasisBestOrder, setOasisBestOrder] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const { web3 } = useContext(
     Web3Context
   );
@@ -28,6 +29,7 @@ export default function ElementForm(props) {
 
   const checkOrder0x = async (e) => {
     console.log("checking 0x", e);
+    setIsLoading(true)
 
     const order0x = await factory.helper.get0xOrder(
       element.inputs[0],
@@ -35,6 +37,7 @@ export default function ElementForm(props) {
     );
     console.log("checking 0x result ", order0x);
     setZeroxBestOrder(order0x);
+    setIsLoading(false)
   };
 
   const checkOrderOasis = async (e) => {
@@ -62,7 +65,7 @@ export default function ElementForm(props) {
                 let isRequired = graphIsLoaded
                   ? { required: input.required }
                   : {};
-                console.log("input!", name, index, isRequired, graphIsLoaded);
+                // console.log("input!", name, index, isRequired, graphIsLoaded);
 
                 return (
                   <div class="field">
@@ -87,7 +90,7 @@ export default function ElementForm(props) {
           <>
             <div
               onClick={(e) => checkOrder0x(e)}
-              class="button is-primary is-small is-outlined"
+              class={`button is-primary is-small is-outlined ${isLoading && 'is-loading'}`}
             >
               Check *best* 0x order
             </div>

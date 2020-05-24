@@ -9,6 +9,7 @@ export const graphReducer = (state, action) => {
   let arrayData = [];
   let elementPort = 0;
   let element;
+  let rawData;
   const { selectedElement, data } = action.addElement;
 
   switch (action.type) {
@@ -51,10 +52,12 @@ export const graphReducer = (state, action) => {
           if (selectedElement.executionData[i].type == "input" && data[i]) {
             // console.log('adding data for index: ', i, data[i])
             // state.setExecutionData(selectedElement.id, i, data[i]);
+            rawData = data[i]
+            if(selectedElement.key.includes('0x')){rawData = JSON.parse(data[i]) }
             arrayData.push(
               {
                 index: i,
-                value: data[i],
+                value: rawData,
               },
             )
           }

@@ -42,10 +42,12 @@ function WrapperStack(props) {
 
   useEffect(() => {
     // console.log("ELEMENTE!!! ->", id, outputs, type);
+    const abortController = new AbortController();
+    const signal = abortController.signal;
 
     const init = async () => {
       try {
-        let status = await checkElement(web3, id);
+        let status = await checkElement(web3, id, {signal: signal});
         console.log(status);
         setIsReady(status === 'ready' ? true : status)
       } catch (error) {
@@ -53,6 +55,9 @@ function WrapperStack(props) {
       }
     };
     init();
+    return function cleanup() {
+      abortController.abort();
+    };
   }, [uiStack]);
 
   const handleSelect = () => {
