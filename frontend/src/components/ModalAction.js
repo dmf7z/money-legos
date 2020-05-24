@@ -292,12 +292,14 @@ function SmallDescription(props) {
       return `${props.description}`;
     case "AddressElement":
       return `${props.description}`;
-    case "FlashSwapOut":
+      case "FlashSwapOut":
       return `${props.description}`;
 
-    case "FlashSwapIn":
-      return `${props.description}`;
-    default:
-      return `${props.description}`;
+      case "FlashSwapIn":
+        return `${props.description}`;
+      default:
+        return `${props.description}`;
+
+      
   }
 }

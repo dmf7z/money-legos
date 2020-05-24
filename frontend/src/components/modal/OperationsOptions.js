@@ -57,7 +57,7 @@ export function OperationsOption(props) {
                   key={`${element.instrument}-${element.id}`}
                   onClick={() => handleInputsData(element)}
                   className={`modal__op-btn button is-fullwidth is-medium ${opSelected &&
-                    "is-disabled"}`}
+                    "is-disabled is-light"}`}
                 >
                   <div className="modal__op-desc">
                     <InstrumentDescription instrument={element.instrument} />{" "}

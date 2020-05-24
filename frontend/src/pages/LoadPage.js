@@ -11,9 +11,8 @@ import { Web3Context } from "@dapperlabs/react-web3";
 import { isEmpty } from "lodash";
 import { StackContext } from "../contexts/stack";
 import { isAddress } from "../utils";
-import {
-  useWeb3Injected,
-} from "@openzeppelin/network/react";
+import { useWeb3Injected } from "@openzeppelin/network/react";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function LoadPage({ match }) {
   const {
@@ -30,11 +29,18 @@ export default function LoadPage({ match }) {
   const [isWeb3Enabled, setIsWeb3Enabled] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
   const [loadedGraph, setLoadedGraph] = useState([]);
-  const { dispatchGraph, loadGraphAddress, graph,graphIsReady,isReady,executeGraph  } = useContext(StackContext);
+  const {
+    dispatchGraph,
+    loadGraphAddress,
+    graph,
+    graphIsReady,
+    isReady,
+    executeGraph,
+    graphIsLoaded,
+  } = useContext(StackContext);
 
   let { address } = match.params;
   // console.log(address, web3);
-
 
   useEffect(() => {
     const init = async () => {
@@ -49,23 +55,22 @@ export default function LoadPage({ match }) {
         console.log(error);
       }
     };
-    init();
+    if (!graphIsLoaded) {
+      init();
+    }
   }, [injected.connected]);
-
 
   useEffect(() => {
     const check = async () => {
       try {
         console.log("account", injected);
-        isReady(web3)
+        isReady(web3);
       } catch (error) {
         console.log(error);
       }
     };
     check();
   }, [graph]);
-
-
 
   async function mmReq() {
     try {
@@ -84,10 +89,16 @@ export default function LoadPage({ match }) {
     }
   }
 
-  const doTheExecute = () => {
+  const doTheExecute = async () => {
     console.log("click EXECUTE");
-    let result = executeGraph(web3);
-    console.log(result)
+    try {
+      let result = await executeGraph(web3);
+
+      console.log(result);
+      toast(`Perfect!: ${result}`);
+    } catch (error) {
+      toast.error("Oppps");
+    }
   };
 
   return (
@@ -110,7 +121,7 @@ export default function LoadPage({ match }) {
                 Connect Metamask
               </button>
             )}
-             {graphIsReady && (
+            {graphIsReady && (
               <button
                 onClick={() => doTheExecute()}
                 class="button is-warning is-outlined"
@@ -125,6 +136,8 @@ export default function LoadPage({ match }) {
       {!hasAccount && <div>Sorry, we need Metamask</div>}
 
       <ModalAction />
+      <ToastContainer />
+
     </section>
   );
 }

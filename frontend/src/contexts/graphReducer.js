@@ -44,7 +44,10 @@ export const graphReducer = (state, action) => {
           console.log("New Max ", maxX);
         }
 
-        arrayIds.push([par, elementPort, 0]);
+        const asset = parent.outputs[0];
+        const inputIndex = element.inputs.indexOf(asset);
+
+        arrayIds.push([par, elementPort, inputIndex]);
       }
 
       //Add element to graph
@@ -132,8 +135,9 @@ export const graphReducer = (state, action) => {
       // element = state.getElementById(par);
 
       for (const i of Object.keys(selectedElement.executionData)) {
-        console.log("XOXOX", i, data[i]);
-        state.setExecutionData(selectedElement.id, i, data[i]);
+        if (selectedElement.executionData[i].type == "input"  && data[i]){
+           state.setExecutionData(selectedElement.id, i, data[i]);
+        }
       }
 
       console.log("2 state ", state);

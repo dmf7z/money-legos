@@ -38,15 +38,15 @@ const StackProvider = (props) => {
   const [graphIsReady, setGraphIsReady] = useState(false);
 
   useEffect(() => {
-    console.log("SELECTED ITEMS: ", uiStack);
     console.log("TOTAL GRAPG: ", JSON.stringify(graph.elements));
-    console.log("TOTAL GRAPG: ",limitColumn)
-  }, [uiStack, graph, limitColumn]);
+    console.log("Limit: ",limitColumn)
+  }, [graph, limitColumn]);
 
   async function deployGraph(web3){
     console.log('deployGraph action')
     const address = await graph.deploy(web3) 
     console.log(address)
+    return address
   }
 
   // 0xd176f11B673594698722c761BB5E9ce6C38207D1
@@ -60,18 +60,14 @@ const StackProvider = (props) => {
   }
 
   async function checkElement(web3, id){
-    console.log('checkElement graph...', web3, id)
-    console.log('checkElement graph...', graph)
     let result = await graph.isElementReadyToExecute(web3, id);
-    console.log('checking element', id)
+    console.log('checking element...', id, result)
     return result
   }
 
   async function allowElement(web3, id){
-    console.log('checkElement graph...', web3, id)
-    console.log('checkElement graph...', graph)
     let result = await graph.allowInputElement(web3, id);
-    console.log('checking element', result)
+    console.log('Allow element',  id, result)
     return result
   }
 
